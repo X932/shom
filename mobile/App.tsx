@@ -22,7 +22,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { TestComp } from './TestComp';
+import { TestComp } from '@shared';
 
 type SectionProps = PropsWithChildren<{
   title: string;

@@ -1,0 +1,48 @@
+{
+  "name": "shom",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "*---1---*": "develop app on your local machine with local data",
+    "local-not-ready:backend": "yarn --cwd backend dev",
+    "local:mobile-start": "yarn --cwd mobile start",
+    "local:run-android": "wait-on http://localhost:8081 && yarn --cwd mobile android",
+    "local": "cross-env FORCE_COLOR=1 npm-run-all -l -p local:*",
+    "*---2---*": "develop mobile with production data",
+    "dev:mobile:staging": "yarn --cwd mobile staging",
+    "*---3---*": "build app for dev server",
+    "build:backend:dev": "yarn --cwd backend build:dev",
+    "build:mobile:dev": "yarn --cwd mobile build:dev",
+    "*---4---*": "start app on dev server",
+    "start:backend:dev": "yarn --cwd backend start:dev",
+    "start:mobile:dev": "yarn --cwd mobile start:dev",
+    "*---5---*": "build app for production server",
+    "build:backend:prod": "yarn --cwd backend build:prod",
+    "build:mobile:prod": "yarn --cwd mobile build:prod",
+    "*---6---*": "start app on production server",
+    "start:backend:prod": "yarn --cwd backend start:prod",
+    "start:mobile:prod": "yarn --cwd mobile start:prod",
+    "*---7---*": "install dependencies for mobile and backend",
+    "install:all": "yarn --cwd backend && yarn --cwd mobile"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "npm-run-all": "^4.1.5",
+    "wait-on": "^6.0.1"
+  },
+  "author": {
+    "name": "Yusuf Gadoiboev"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "yarn --cwd mobile lint -- --quiet --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}

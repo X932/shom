@@ -1,0 +1,98 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "unused-imports"],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/quotes": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "import/no-unresolved": "off",
+    "unused-imports/no-unused-imports": "error",
+    "no-console": "warn",
+    "object-curly-newline": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-curly-newline": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/require-default-props": "off",
+    "react/function-component-definition": "off",
+    "react/react-in-jsx-scope": 0,
+    "object-curly-spacing": ["error", "always"],
+    "react/no-danger": "off",
+    "react/destructuring-assignment": "off",
+    "react/button-has-type": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "import/prefer-default-export": "off",
+    "prefer-template": "off",
+    "arrow-body-style": "off",
+    "operator-linebreak": "off",
+    "no-else-return": "off",
+    "implicit-arrow-linebreak": "off",
+    "no-confusing-arrow": "off",
+    "prefer-destructuring": "off",
+    "consistent-return": "off",
+    "function-paren-newline": "off",
+    "object-shorthand": ["error", "consistent"],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "import/ignore": ["node_modules/react-native/index\\.js$"]
+  },
+  "overrides": [
+    {
+      "files": ["*.tsx", "*.ts"],
+      "parserOptions": {
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": "./mobile"
+      },
+      "extends": [
+        "plugin:react/jsx-runtime",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto",
+            "singleQuote": true,
+            "bracketSpacing": true
+          }
+        ]
+      }
+    }
+  ],
+  "env": {
+    "node": true,
+    "browser": true,
+    "amd": true
+  },
+  "extends":[
+    "plugin:import/recommended"
+  ]
+}

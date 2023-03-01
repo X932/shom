@@ -44,7 +44,6 @@ export const Navigator = (): JSX.Element => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        useLegacyImplementation
         drawerContent={props => <CustomDrawerContent {...props} />}>
         <>
           {isLoggedIn ? (
@@ -54,18 +53,17 @@ export const Navigator = (): JSX.Element => {
                 component={HomeScreen}
                 options={{ title: 'Welcome' }}
               />
-              <Drawer.Screen
-                name="profile"
-                component={ProfileScreen}
-                options={{ title: 'Welcome to profile' }}
-              />
             </>
           ) : (
             <>
               <Drawer.Screen
                 name="profile"
                 component={ProfileScreen}
-                options={{ title: 'Welcome to profile' }}
+                options={{
+                  title: 'Welcome to profile',
+                  headerShown: false,
+                  swipeEnabled: false,
+                }}
               />
             </>
           )}

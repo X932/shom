@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@shared": ["src/shared/"],
-      "@pages": ["src/pages/"]
+      "@pages": ["src/pages/"],
+      "@styles": ["./src/shared/styles/"]
     },
     "incremental": true
   },

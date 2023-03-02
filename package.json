@@ -23,7 +23,7 @@
     "start:backend:prod": "yarn --cwd backend start:prod",
     "start:mobile:prod": "yarn --cwd mobile start:prod",
     "*---7---*": "install dependencies for mobile and backend",
-    "install:all": "yarn --cwd backend && yarn --cwd mobile"
+    "install:all": "yarn && yarn --cwd backend && yarn --cwd mobile"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Button, Text } from 'react-native';
+import { Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -7,6 +7,7 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { SignUp } from '@pages';
 
 const HomeScreen: FC<any> = ({ navigation }) => {
   return (
@@ -15,10 +16,6 @@ const HomeScreen: FC<any> = ({ navigation }) => {
       onPress={() => navigation.navigate('profile', { name: 'Jane' })}
     />
   );
-};
-
-const ProfileScreen: FC<any> = ({ navigation, route }) => {
-  return <Text>This is {route.params?.name}'s profile</Text>;
 };
 
 function CustomDrawerContent(props: any) {
@@ -58,7 +55,7 @@ export const Navigator = (): JSX.Element => {
             <>
               <Drawer.Screen
                 name="profile"
-                component={ProfileScreen}
+                component={SignUp}
                 options={{
                   title: 'Welcome to profile',
                   headerShown: false,

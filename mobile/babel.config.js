@@ -8,8 +8,10 @@ module.exports = {
         extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
         alias: {
           '@shared': './src/shared',
+          '@pages': './src/pages',
         },
       },
     ],
+    'react-native-reanimated/plugin',
   ],
 };

@@ -16,7 +16,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@shared": ["src/shared/"]
+      "@shared": ["src/shared/"],
+      "@pages": ["src/pages/"]
     },
     "incremental": true
   },

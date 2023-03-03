@@ -6,8 +6,18 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    gap: 40,
     padding: 20,
+  },
+  logo: {
+    width: 160,
+    height: 160,
+    borderRadius: 99,
+  },
+  inputsContainer: {
+    width: '100%',
+    gap: 20,
   },
   inputContainer: {
     width: '100%',

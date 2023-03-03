@@ -34,7 +34,7 @@ function CustomDrawerContent(props: any) {
   );
 }
 
-const isLoggedIn = true;
+const isLoggedIn = false;
 const Drawer = createDrawerNavigator();
 
 export const Navigator = (): JSX.Element => {
@@ -45,20 +45,17 @@ export const Navigator = (): JSX.Element => {
         <>
           {isLoggedIn ? (
             <>
-              <Drawer.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{ title: 'Welcome' }}
-              />
+              <Drawer.Screen name="Home" component={HomeScreen} />
             </>
           ) : (
             <>
               <Drawer.Screen
-                name="profile"
+                name="Sign Up"
                 component={SignUp}
                 options={{
-                  title: 'Welcome to profile',
-                  headerShown: false,
+                  title: 'Регистрация',
+                  headerLeft: () => <></>,
+                  headerTitleAlign: 'center',
                   swipeEnabled: false,
                 }}
               />

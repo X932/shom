@@ -16,9 +16,10 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@shared": ["src/shared/"],
       "@pages": ["src/pages/"],
-      "@styles": ["./src/shared/styles/"]
+      "@styles": ["src/shared/styles/"],
+      "@utils": ["src/shared/utils/"],
+      "@interfaces": ["src/shared/interfaces/"]
     },
     "incremental": true
   },

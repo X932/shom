@@ -1,12 +1,12 @@
-export interface IInputValidationOptions {
-  value: string | string[];
+export interface IInputValidationOptions<T = null> {
+  value: T;
   regexp?: RegExp;
   minLength?: number;
   maxLength?: number;
   exactLength?: number;
 }
 
-export interface IInput extends IInputValidationOptions {
+export interface IInput<T = string> extends IInputValidationOptions<T> {
   isValid: boolean;
   isTouched: boolean;
 }

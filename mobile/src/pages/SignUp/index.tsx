@@ -1,11 +1,27 @@
 import { useState } from 'react';
 import { Image, Text, TextInput, View } from 'react-native';
 import { colors } from '@styles';
+import { isInputValid } from '@utils';
 import { styles } from './styles';
+import { ISignUpForm } from './interface';
+import { validationSchema } from './validationSchema';
 
 export const SignUp = () => {
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState(validationSchema);
+
+  const onChangeHandler = (key: keyof ISignUpForm, value: string): void => {
+    if (isInputValid({ ...validationSchema[key], value })) {
+      setFormData({
+        ...formData,
+        [key]: {
+          ...formData[key],
+          value: value,
+          isTouched: true,
+          isValid: true,
+        },
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -17,8 +33,8 @@ export const SignUp = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Номер телефона</Text>
           <TextInput
-            onChangeText={setPhone}
-            value={phone}
+            onChangeText={text => onChangeHandler('phone', text)}
+            value={formData.phone.value}
             placeholder="900 000 000"
             keyboardType="numeric"
             textContentType="telephoneNumber"
@@ -32,8 +48,8 @@ export const SignUp = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Пароль</Text>
           <TextInput
-            onChangeText={setPassword}
-            value={password}
+            onChangeText={text => onChangeHandler('password', text)}
+            value={formData.password.value}
             placeholder="****"
             keyboardType="default"
             textContentType="password"

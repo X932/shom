@@ -1,6 +1,8 @@
 import { IInputValidationOptions } from '@interfaces';
 
-type FieldValidationFnType = (options: IInputValidationOptions) => boolean;
+type FieldValidationFnType = (
+  options: IInputValidationOptions<string | string[]>,
+) => boolean;
 
 export const isInputValid: FieldValidationFnType = ({
   regexp,

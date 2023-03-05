@@ -11,6 +11,8 @@ module.exports = {
           '@styles': './src/shared/styles',
           '@utils': './src/shared/utils',
           '@interfaces': './src/shared/interfaces',
+          '@components': './src/shared/components',
+          '@ui-layouts': './src/shared/ui-layouts',
         },
       },
     ],

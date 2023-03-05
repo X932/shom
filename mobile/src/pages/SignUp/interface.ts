@@ -1,4 +1,4 @@
-import { IInput } from '@interfaces';
+import { IInput } from '@components';
 
 export interface ISignUpForm {
   phone: IInput;

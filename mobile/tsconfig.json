@@ -17,9 +17,11 @@
     "baseUrl": ".",
     "paths": {
       "@pages": ["src/pages/"],
-      "@styles": ["src/shared/styles/"],
+      "@styles": ["src/shared/styles/index.ts"],
       "@utils": ["src/shared/utils/index.ts"],
-      "@interfaces": ["src/shared/interfaces/"]
+      "@interfaces": ["src/shared/interfaces/"],
+      "@components": ["src/shared/components/index.ts"],
+      "@ui-layouts": ["src/shared/ui-layouts"]
     },
     "incremental": true
   },

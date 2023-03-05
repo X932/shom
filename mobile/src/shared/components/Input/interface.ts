@@ -9,4 +9,5 @@ export interface IInputValidationOptions<T = null> {
 export interface IInput<T = string> extends IInputValidationOptions<T> {
   isValid: boolean;
   isTouched: boolean;
+  isActive: boolean;
 }

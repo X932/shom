@@ -1,16 +1,15 @@
 import { FC, useState } from 'react';
 import { View } from 'react-native';
-import type { DrawerScreenProps } from '@react-navigation/drawer';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Input } from '@components';
 import { colors } from '@styles';
-import { RootDrawerParamList } from '@interfaces';
+import { NavigatorScreenProps } from '@interfaces';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
 
-export const SignUp: FC<
-  DrawerScreenProps<RootDrawerParamList, keyof RootDrawerParamList>
-> = ({ navigation: { navigate } }) => {
+export const SignUp: FC<NavigatorScreenProps> = ({
+  navigation: { navigate },
+}) => {
   const [formData, setFormData] = useState(validationSchema);
 
   return (

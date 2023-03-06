@@ -1,13 +1,14 @@
-import type { ParamListBase } from '@react-navigation/native';
 import type { DrawerScreenProps } from '@react-navigation/drawer';
+import type { ParamListBase } from '@react-navigation/native';
 
-export type RootDrawerParamList =
+type DrawerParamList =
   | {
-      // check is types correct
-      SignUp: DrawerScreenProps<RootDrawerParamList, keyof RootDrawerParamList>;
+      SignUp: undefined;
       SuccessSignUp: undefined;
     }
   | ParamListBase;
 
-export type RootDrawerScreenProps<T extends keyof RootDrawerParamList> =
-  DrawerScreenProps<RootDrawerParamList, T>;
+export type NavigatorScreenProps = DrawerScreenProps<
+  DrawerParamList,
+  keyof DrawerParamList
+>;

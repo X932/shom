@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { AuthLayout } from '@ui-layouts';
-import { Input } from '@components';
+import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
@@ -39,6 +39,7 @@ export const SignUp = () => {
           secureTextEntry
         />
       </View>
+      <Button label="Зарегистрироваться" />
     </AuthLayout>
   );
 };

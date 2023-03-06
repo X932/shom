@@ -1,7 +1,10 @@
 export const colors = {
-  bluePrimary: '#09a9e7',
+  primaryBlue: '#09a9e7',
   white: '#fff',
   red: '#FF4444',
+  blue: {
+    100: '#0693ca',
+  },
   black: {
     100: '#000',
     90: '#73787D',

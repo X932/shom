@@ -7,7 +7,7 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { SignUp } from '@pages';
+import { SignUp, SuccessSignUp } from '@pages';
 
 const HomeScreen: FC<any> = ({ navigation }) => {
   return (
@@ -50,10 +50,20 @@ export const Navigator = (): JSX.Element => {
           ) : (
             <>
               <Drawer.Screen
-                name="Sign Up"
+                name="SignUp"
                 component={SignUp}
                 options={{
                   title: 'Регистрация',
+                  headerLeft: () => <></>,
+                  headerTitleAlign: 'center',
+                  swipeEnabled: false,
+                }}
+              />
+              <Drawer.Screen
+                name="SuccessSignUp"
+                component={SuccessSignUp}
+                options={{
+                  title: 'Регистрация пройдена',
                   headerLeft: () => <></>,
                   headerTitleAlign: 'center',
                   swipeEnabled: false,

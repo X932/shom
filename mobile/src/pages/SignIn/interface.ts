@@ -1,5 +1,5 @@
 import { IInput } from '@components';
 
-export interface ISignUpForm {
+export interface ISignInForm {
   password: IInput;
 }

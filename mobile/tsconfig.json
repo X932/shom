@@ -19,7 +19,7 @@
       "@pages": ["src/pages/"],
       "@styles": ["src/shared/styles/index.ts"],
       "@utils": ["src/shared/utils/index.ts"],
-      "@interfaces": ["src/shared/interfaces/"],
+      "@interfaces": ["src/shared/interfaces/index.ts"],
       "@components": ["src/shared/components/index.ts"],
       "@ui-layouts": ["src/shared/ui-layouts"]
     },

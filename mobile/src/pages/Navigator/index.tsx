@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -7,18 +6,21 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { SignUp } from '@pages';
+import type { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { SignUp, SuccessSignUp } from '@pages';
+import { PrivateNavigatorScreenProps } from '@interfaces';
+import { Button } from '@components';
 
-const HomeScreen: FC<any> = ({ navigation }) => {
+const HomeScreen: FC<PrivateNavigatorScreenProps> = ({ navigation }) => {
   return (
     <Button
-      title="Go to Jane's profile"
-      onPress={() => navigation.navigate('profile', { name: 'Jane' })}
+      label="Go to Jane's profile"
+      onPress={() => navigation.navigate('Home')}
     />
   );
 };
 
-function CustomDrawerContent(props: any) {
+function CustomDrawerContent(props: DrawerContentComponentProps) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
@@ -50,10 +52,20 @@ export const Navigator = (): JSX.Element => {
           ) : (
             <>
               <Drawer.Screen
-                name="Sign Up"
+                name="SignUp"
                 component={SignUp}
                 options={{
                   title: 'Регистрация',
+                  headerLeft: () => <></>,
+                  headerTitleAlign: 'center',
+                  swipeEnabled: false,
+                }}
+              />
+              <Drawer.Screen
+                name="SuccessSignUp"
+                component={SuccessSignUp}
+                options={{
+                  title: 'Регистрация пройдена',
                   headerLeft: () => <></>,
                   headerTitleAlign: 'center',
                   swipeEnabled: false,

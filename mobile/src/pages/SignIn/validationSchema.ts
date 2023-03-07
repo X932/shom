@@ -1,6 +1,6 @@
-import { ISignUpForm } from './interface';
+import { ISignInForm } from './interface';
 
-export const validationSchema: ISignUpForm = {
+export const validationSchema: ISignInForm = {
   password: {
     value: '',
     maxLength: 20,

@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Input } from '@components';
 import { colors } from '@styles';
-import { NavigatorScreenProps } from '@interfaces';
+import { PublicNavigatorScreenProps } from '@interfaces';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
 
-export const SignUp: FC<NavigatorScreenProps> = ({
+export const SignUp: FC<PublicNavigatorScreenProps> = ({
   navigation: { navigate },
 }) => {
   const [formData, setFormData] = useState(validationSchema);

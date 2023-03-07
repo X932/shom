@@ -7,7 +7,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { SignUp, SuccessSignUp } from '@pages';
+import { SignIn, SignUp, SuccessSignUp } from '@pages';
 import { PrivateNavigatorScreenProps } from '@interfaces';
 import { Button } from '@components';
 
@@ -66,6 +66,16 @@ export const Navigator = (): JSX.Element => {
                 component={SuccessSignUp}
                 options={{
                   title: 'Регистрация пройдена',
+                  headerLeft: () => <></>,
+                  headerTitleAlign: 'center',
+                  swipeEnabled: false,
+                }}
+              />
+              <Drawer.Screen
+                name="SignIn"
+                component={SignIn}
+                options={{
+                  title: 'Вход',
                   headerLeft: () => <></>,
                   headerTitleAlign: 'center',
                   swipeEnabled: false,

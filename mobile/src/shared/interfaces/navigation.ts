@@ -3,6 +3,7 @@ import type { ParamListBase } from '@react-navigation/native';
 
 type PublicScrenList = {
   SignUp: undefined;
+  SignIn: undefined;
   SuccessSignUp: undefined;
 };
 

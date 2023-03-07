@@ -9,8 +9,12 @@ export const SuccessSignUp: FC<PublicNavigatorScreenProps> = ({
 }) => {
   return (
     <AuthLayout>
-      <Text style={{ textAlign: 'center' }}>Well Done!</Text>
-      <Button label="Go to Sign In" onPress={() => navigate('SignUp')} />
+      <Text style={{ textAlign: 'center' }}>
+        Регистрация успешно завершена.
+        {'\n'}
+        Ожидайте ответа администратора в телеграме
+      </Text>
+      <Button label="Войти" onPress={() => navigate('SignIn')} />
     </AuthLayout>
   );
 };

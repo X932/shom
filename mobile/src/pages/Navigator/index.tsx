@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -10,12 +10,17 @@ import type { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { SignIn, SignUp, SuccessSignUp } from '@pages';
 import { PrivateNavigatorScreenProps } from '@interfaces';
 import { Button } from '@components';
+import { useAppDispatch, useAppSelector } from '@hooks';
+import { authentication } from '@slices';
 
 const HomeScreen: FC<PrivateNavigatorScreenProps> = ({ navigation }) => {
+  const dispatch = useAppDispatch();
   return (
     <Button
-      label="Go to Jane's profile"
-      onPress={() => navigation.navigate('Home')}
+      label="Log out"
+      onPress={() => {
+        dispatch(authentication({ isLoggedIn: false }));
+      }}
     />
   );
 };
@@ -36,10 +41,11 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
   );
 }
 
-const isLoggedIn = false;
 const Drawer = createDrawerNavigator();
 
 export const Navigator = (): JSX.Element => {
+  const { isLoggedIn, phoneNumber } = useAppSelector(state => state.user);
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -51,16 +57,18 @@ export const Navigator = (): JSX.Element => {
             </>
           ) : (
             <>
-              <Drawer.Screen
-                name="SignUp"
-                component={SignUp}
-                options={{
-                  title: 'Регистрация',
-                  headerLeft: () => <></>,
-                  headerTitleAlign: 'center',
-                  swipeEnabled: false,
-                }}
-              />
+              {!phoneNumber && (
+                <Drawer.Screen
+                  name="SignUp"
+                  component={SignUp}
+                  options={{
+                    title: 'Регистрация',
+                    headerLeft: () => <></>,
+                    headerTitleAlign: 'center',
+                    swipeEnabled: false,
+                  }}
+                />
+              )}
               <Drawer.Screen
                 name="SuccessSignUp"
                 component={SuccessSignUp}

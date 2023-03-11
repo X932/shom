@@ -4,13 +4,14 @@ import { AuthLayout } from '@ui-layouts';
 import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
+import { authentication } from '@slices';
+import { useAppDispatch } from '@hooks';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
 
-export const SignIn: FC<PublicNavigatorScreenProps> = ({
-  navigation: { navigate },
-}) => {
+export const SignIn: FC<PublicNavigatorScreenProps> = () => {
   const [formData, setFormData] = useState(validationSchema);
+  const dispatch = useAppDispatch();
 
   return (
     <AuthLayout>
@@ -28,7 +29,12 @@ export const SignIn: FC<PublicNavigatorScreenProps> = ({
           secureTextEntry
         />
       </View>
-      <Button label="Войти" onPress={() => navigate('SuccessSignUp')} />
+      <Button
+        label="Войти"
+        onPress={async () => {
+          dispatch(authentication({ isLoggedIn: true }));
+        }}
+      />
     </AuthLayout>
   );
 };

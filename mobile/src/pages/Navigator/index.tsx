@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -7,36 +6,20 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { SignIn, SignUp, SuccessSignUp } from '@pages';
-import { PrivateNavigatorScreenProps } from '@interfaces';
-import { Button } from '@components';
+import { Sales, SignIn, SignUp, SuccessSignUp } from '@pages';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
 
-const HomeScreen: FC<PrivateNavigatorScreenProps> = ({ navigation }) => {
-  const dispatch = useAppDispatch();
-  return (
-    <Button
-      label="Log out"
-      onPress={() => {
-        dispatch(authentication({ isLoggedIn: false }));
-      }}
-    />
-  );
-};
-
 function CustomDrawerContent(props: DrawerContentComponentProps) {
+  const dispatch = useAppDispatch();
+  const logOutHandler = () => {
+    dispatch(authentication({ isLoggedIn: false }));
+    props.navigation.closeDrawer();
+  };
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem
-        label="Close drawer"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
-        label="Toggle drawer22"
-        onPress={() => props.navigation.toggleDrawer()}
-      />
+      <DrawerItem label="Выйти" onPress={logOutHandler} />
     </DrawerContentScrollView>
   );
 }
@@ -53,7 +36,7 @@ export const Navigator = (): JSX.Element => {
         <>
           {isLoggedIn ? (
             <>
-              <Drawer.Screen name="Home" component={HomeScreen} />
+              <Drawer.Screen name="Sales" component={Sales} />
             </>
           ) : (
             <>
@@ -70,20 +53,20 @@ export const Navigator = (): JSX.Element => {
                 />
               )}
               <Drawer.Screen
-                name="SuccessSignUp"
-                component={SuccessSignUp}
+                name="SignIn"
+                component={SignIn}
                 options={{
-                  title: 'Регистрация пройдена',
+                  title: 'Вход',
                   headerLeft: () => <></>,
                   headerTitleAlign: 'center',
                   swipeEnabled: false,
                 }}
               />
               <Drawer.Screen
-                name="SignIn"
-                component={SignIn}
+                name="SuccessSignUp"
+                component={SuccessSignUp}
                 options={{
-                  title: 'Вход',
+                  title: 'Регистрация пройдена',
                   headerLeft: () => <></>,
                   headerTitleAlign: 'center',
                   swipeEnabled: false,

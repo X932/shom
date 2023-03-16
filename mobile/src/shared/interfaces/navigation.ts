@@ -13,7 +13,7 @@ export type PublicNavigatorScreenProps = DrawerScreenProps<
 >;
 
 type PrivateScreenList = {
-  Home: undefined;
+  Sales: undefined;
 };
 
 export type PrivateNavigatorScreenProps = DrawerScreenProps<

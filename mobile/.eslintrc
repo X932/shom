@@ -92,7 +92,5 @@
     "browser": true,
     "amd": true
   },
-  "extends":[
-    "plugin:import/recommended"
-  ]
+  "extends": ["plugin:import/recommended"]
 }

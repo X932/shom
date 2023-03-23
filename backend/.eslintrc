@@ -54,7 +54,6 @@
     "camelcase": ["warn", { "ignoreGlobals": true }],
     "new-cap": ["error", { "capIsNew": false }],
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single", { "avoidEscape": true }],
     "semi": ["error", "always"],
     "no-useless-escape": "off",

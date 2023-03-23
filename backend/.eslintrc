@@ -6,10 +6,6 @@
   "extends": ["plugin:import/recommended", "plugin:import/typescript"],
   "plugins": ["unused-imports"],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json",
-    "tsconfigRootDir": "./backend"
-  },
   "rules": {
     "no-var": "error",
     "max-len": [

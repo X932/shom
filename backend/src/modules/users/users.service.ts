@@ -12,7 +12,7 @@ export class UsersService {
 
   public create() {
     return this.usersRepository.save({
-      /** data */
+      /** some data */
     });
   }
 

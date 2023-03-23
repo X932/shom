@@ -12,8 +12,7 @@ export class UsersService {
 
   public create() {
     return this.usersRepository.save({
-      hashedPassword: 'dsmck',
-      phone: '1234',
+      /** data */
     });
   }
 

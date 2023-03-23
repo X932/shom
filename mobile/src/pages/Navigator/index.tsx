@@ -19,7 +19,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label="Выйти" onPress={logOutHandler} />
+      <DrawerItem label="Выйти " onPress={logOutHandler} />
     </DrawerContentScrollView>
   );
 }

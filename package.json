@@ -37,10 +37,10 @@
   },
   "lint-staged": {
     "./mobile/*.{js,jsx,ts,tsx}": [
-      "yarn --cwd mobile lint -- --quiet --fix"
+      "yarn lint -- --quiet --fix"
     ],
     "./backend/*.{js,ts}": [
-      "yarn --cwd backend lint -- --quiet --fix"
+      "yarn lint -- --quiet --fix"
     ]
   },
   "husky": {

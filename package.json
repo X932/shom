@@ -36,10 +36,10 @@
     "name": "Yusuf Gadoiboev"
   },
   "lint-staged": {
-    "./mobile/*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx,ts,tsx}": [
       "yarn --cwd mobile lint -- --quiet --fix"
     ],
-    "./backend/*.{js,ts}": [
+    "*.{js,ts}": [
       "yarn --cwd backend lint -- --quiet --fix"
     ]
   },

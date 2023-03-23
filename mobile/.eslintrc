@@ -62,10 +62,6 @@
   "overrides": [
     {
       "files": ["*.tsx", "*.ts"],
-      "parserOptions": {
-        "project": "./tsconfig.json",
-        "tsconfigRootDir": "./mobile"
-      },
       "extends": [
         "plugin:react/jsx-runtime",
         "eslint:recommended",
@@ -92,7 +88,5 @@
     "browser": true,
     "amd": true
   },
-  "extends":[
-    "plugin:import/recommended"
-  ]
+  "extends": ["plugin:import/recommended"]
 }

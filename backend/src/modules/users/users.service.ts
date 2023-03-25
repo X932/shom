@@ -10,13 +10,11 @@ export class UsersService {
     private usersRepository: Repository<UsersEntity>,
   ) {}
 
-  public create() {
-    return this.usersRepository.save({
-      /** some data */
-    });
-  }
-
   public find() {
     return this.usersRepository.find();
+  }
+
+  public clear() {
+    return this.usersRepository.clear();
   }
 }

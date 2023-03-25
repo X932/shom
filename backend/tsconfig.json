@@ -9,8 +9,12 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {},
+    "baseUrl": "src",
+    "paths": {
+      "@utils/*": ["shared/utils/*"],
+      "@interceptors/*": ["shared/interceptors/*"],
+      "@guards/*": ["shared/guards/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

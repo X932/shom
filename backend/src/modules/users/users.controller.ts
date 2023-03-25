@@ -1,17 +1,19 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { JwtAuthGuard } from '@guards/jwt.guard';
+import { Controller, Delete, Get, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Post()
-  create() {
-    return this.usersService.create();
-  }
-
   @Get()
   find() {
     return this.usersService.find();
+  }
+
+  @Delete()
+  clear() {
+    return this.usersService.clear();
   }
 }

@@ -5,8 +5,8 @@ export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'hashed_password' })
-  hashedPassword: string;
+  @Column()
+  password: string;
 
   @Column()
   phone: string;

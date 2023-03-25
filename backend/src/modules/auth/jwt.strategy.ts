@@ -16,8 +16,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(req: Request, parsedJWT: IJWT) {
     // user deleted but jwt is valid
-    console.log(req.method, req.url);
-    console.log({ parsedJWT });
+    // console.log(req.method, req.url);
+    // console.log({ parsedJWT });
     // throw new ForbiddenException();
     return true;
   }

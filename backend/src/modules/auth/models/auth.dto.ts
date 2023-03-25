@@ -1,21 +1,22 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString } from 'class-validator';
+import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 
 export class SignUpDto {
   @IsString()
-  @IsNotEmpty()
-  public phone: string;
+  @IsNotBlank()
+  phone: string;
 
   @IsString()
-  @IsNotEmpty()
-  public password: string;
+  @IsNotBlank()
+  password: string;
 }
 
 export class SignInDto {
   @IsString()
-  @IsNotEmpty()
-  public phone: string;
+  @IsNotBlank()
+  phone: string;
 
   @IsString()
-  @IsNotEmpty()
-  public password: string;
+  @IsNotBlank()
+  password: string;
 }

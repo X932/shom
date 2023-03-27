@@ -1,28 +1,47 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateRoleDto } from './models/roles.dto';
+import { IRole } from './models/roles.type';
+import { CreateRoleDto, UpdateRoleDto } from './models/roles.dto';
 import { RolesEntity } from './models/roles.entity';
+import { EndpointsService } from '../endpoints/endpoints.service';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectRepository(RolesEntity)
     private rolesRepository: Repository<RolesEntity>,
+    private endpointsService: EndpointsService,
   ) {}
 
-  public async find(roleTitle?: string) {
-    return await this.rolesRepository.find({ where: { title: roleTitle } });
+  public async find(parameters?: Partial<IRole>) {
+    return await this.rolesRepository.find({
+      relations: {
+        endpoints: true,
+      },
+      where: {
+        id: parameters?.id,
+        title: parameters?.title,
+      },
+    });
   }
 
   public async create(newRole: CreateRoleDto) {
-    const isRoleExist = (await this.find(newRole.title)).length > 0;
+    const isRoleExist = (await this.find({ title: newRole.title })).length > 0;
 
     if (isRoleExist) {
       throw new BadRequestException();
     }
 
     await this.rolesRepository.save(newRole);
-    return 'saved';
+  }
+
+  public async update(updatedRole: UpdateRoleDto) {
+    if (updatedRole.endpoints.length === 0) {
+      await this.rolesRepository.save(updatedRole);
+    } else {
+      const endpoints = await this.endpointsService.find(updatedRole.endpoints);
+      await this.rolesRepository.save({ ...updatedRole, endpoints: endpoints });
+    }
   }
 }

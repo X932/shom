@@ -1,7 +1,7 @@
-import { IsString } from 'class-validator';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class SignUpDto {
+class UserCredentials {
   @IsString()
   @IsNotBlank()
   phone: string;
@@ -11,12 +11,14 @@ export class SignUpDto {
   password: string;
 }
 
-export class SignInDto {
+export class SignInDto extends UserCredentials {}
+
+export class SignUpDto extends UserCredentials {
   @IsString()
-  @IsNotBlank()
-  phone: string;
+  @IsOptional()
+  firstName: string;
 
   @IsString()
-  @IsNotBlank()
-  password: string;
+  @IsOptional()
+  lastName: string;
 }

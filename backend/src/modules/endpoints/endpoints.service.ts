@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EndpointsEntity } from './models/endpoints.entity';
+import { EndpointMetaData } from './models/endpoints.type';
 
 @Injectable()
 export class EndpointsService {
@@ -10,7 +11,9 @@ export class EndpointsService {
     private endpointsRepository: Repository<EndpointsEntity>,
   ) {}
 
-  public find() {
-    return this.endpointsRepository.find();
+  public async find(endpoints: EndpointMetaData | EndpointMetaData[]) {
+    return await this.endpointsRepository.find({
+      where: endpoints,
+    });
   }
 }

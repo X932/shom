@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { RolesEntity } from '../../roles/models/roles.entity';
 
 @Entity('endpoints')
 export class EndpointsEntity {
@@ -10,4 +11,7 @@ export class EndpointsEntity {
 
   @Column()
   title: string;
+
+  @ManyToMany(() => RolesEntity, (role) => role.endpoints)
+  role: RolesEntity;
 }

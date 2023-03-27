@@ -9,7 +9,7 @@ export function IsNotBlank(validationOptions?: ValidationOptions) {
       constraints: [],
       options: validationOptions,
       validator: {
-        validate(value: string) {
+        validate: function (value: string) {
           return typeof value === 'string' && value?.trim().length > 0;
         },
       },

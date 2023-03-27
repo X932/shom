@@ -1,21 +1,24 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class SignUpDto {
+class UserCredentials {
   @IsString()
-  @IsNotEmpty()
-  public phone: string;
+  @IsNotBlank()
+  phone: string;
 
   @IsString()
-  @IsNotEmpty()
-  public password: string;
+  @IsNotBlank()
+  password: string;
 }
 
-export class SignInDto {
+export class SignInDto extends UserCredentials {}
+
+export class SignUpDto extends UserCredentials {
   @IsString()
-  @IsNotEmpty()
-  public phone: string;
+  @IsOptional()
+  firstName: string;
 
   @IsString()
-  @IsNotEmpty()
-  public password: string;
+  @IsOptional()
+  lastName: string;
 }

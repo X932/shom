@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { RolesEntity } from '../../roles/models/roles.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -10,4 +17,14 @@ export class UsersEntity {
 
   @Column()
   phone: string;
+
+  @Column({ name: 'first_name', default: '' })
+  firstName: string;
+
+  @Column({ name: 'last_name', default: '' })
+  lastName: string;
+
+  @OneToOne(() => RolesEntity)
+  @JoinColumn({ name: 'role_id' })
+  role: RolesEntity;
 }

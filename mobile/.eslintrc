@@ -40,7 +40,7 @@
     "prefer-destructuring": "off",
     "consistent-return": "off",
     "function-paren-newline": "off",
-    "object-shorthand": ["error", "consistent"],
+    "object-shorthand": ["warn", "never"],
     "import/order": [
       "error",
       {

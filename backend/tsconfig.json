@@ -13,6 +13,8 @@
     "paths": {
       "@utils/*": ["shared/utils/*"],
       "@interceptors/*": ["shared/interceptors/*"],
+      "@decorators/*": ["shared/decorators/*"],
+      "@pipes/*": ["shared/pipes/*"],
       "@guards/*": ["shared/guards/*"]
     },
     "incremental": true,

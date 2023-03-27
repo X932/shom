@@ -1,16 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SignInDto, SignUpDto } from './models/auth.dto';
+import { UsersService } from '../users/users.service';
 import { UsersEntity } from '../users/models/users.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UsersEntity)
-    private usersRepository: Repository<UsersEntity>,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
@@ -20,35 +18,20 @@ export class AuthService {
     return hash;
   }
 
-  private async getUserEntityByPhone(
+  private async getUserByPhone(
     phone: string,
-  ): Promise<UsersEntity | null> {
-    const user: UsersEntity = await this.usersRepository.findOne({
-      where: { phone: phone },
-    });
-    if (user) {
-      return user;
-    }
-    return null;
+  ): Promise<UsersEntity | undefined> {
+    const user = (await this.usersService.find({ phone: phone }))[0];
+    return user;
   }
 
-  public async signUp(newUser: SignUpDto): Promise<string> {
-    const user: UsersEntity | null = await this.getUserEntityByPhone(
-      newUser.phone,
-    );
-
-    if (user) {
-      throw new BadRequestException();
-    }
-
+  public async signUp(newUser: SignUpDto) {
     const hashedPassword: string = await this.hashPassword(newUser.password);
 
-    await this.usersRepository.save({
+    await this.usersService.create({
       ...newUser,
       password: hashedPassword,
     });
-
-    return 'saved!';
   }
 
   private async comparePassword(
@@ -64,9 +47,7 @@ export class AuthService {
   }
 
   public async signIn(authUser: SignInDto): Promise<string> {
-    const user: UsersEntity | null = await this.getUserEntityByPhone(
-      authUser.phone,
-    );
+    const user = await this.getUserByPhone(authUser.phone);
 
     if (!user) {
       throw new BadRequestException();

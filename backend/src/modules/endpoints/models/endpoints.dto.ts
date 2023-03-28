@@ -10,3 +10,11 @@ export class EndpointDto {
   @IsString()
   title: string;
 }
+
+export class CreateEndpointDto {
+  @IsString()
+  key: string;
+
+  @IsString()
+  title: string;
+}

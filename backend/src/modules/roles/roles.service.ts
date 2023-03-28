@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IRole } from './models/roles.type';
-import { CreateRoleDto, UpdateRoleDto } from './models/roles.dto';
+import { RoleDto, UpdateRoleDto } from './models/roles.dto';
 import { RolesEntity } from './models/roles.entity';
 import { EndpointsService } from '../endpoints/endpoints.service';
 
@@ -39,7 +39,7 @@ export class RolesService {
     await this.rolesRepository.delete({ id: id });
   }
 
-  public async create(newRole: CreateRoleDto): Promise<void> {
+  public async create(newRole: RoleDto): Promise<void> {
     await this.checkRole({ title: newRole.title });
     await this.rolesRepository.save(newRole);
   }

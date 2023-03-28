@@ -42,4 +42,14 @@ export class UsersService {
     await this.checkUser({ id: id });
     await this.usersRepository.delete({ id: id });
   }
+
+  public async update(params?: Partial<IUser>): Promise<void> {
+    const user = (await this.find({ id: params.id }))[0];
+
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    await this.usersRepository.save(params);
+  }
 }

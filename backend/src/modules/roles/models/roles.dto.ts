@@ -4,7 +4,7 @@ import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 import { IRole } from './roles.type';
 import { EndpointDto } from '../../endpoints/models/endpoints.dto';
 
-export class CreateRoleDto implements Pick<IRole, 'title'> {
+export class RoleDto implements Pick<IRole, 'title'> {
   @IsString()
   @IsNotBlank()
   title: string;

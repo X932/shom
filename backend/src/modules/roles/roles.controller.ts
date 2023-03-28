@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
-import { CreateRoleDto, UpdateRoleDto } from './models/roles.dto';
+import { RoleDto, UpdateRoleDto } from './models/roles.dto';
 import { RolesService } from './roles.service';
 
 @UseGuards(JwtAuthGuard)
@@ -26,7 +26,7 @@ export class RolesController {
 
   @Post()
   @UsePipes(TrimPipe)
-  create(@Body() newRole: CreateRoleDto) {
+  create(@Body() newRole: RoleDto) {
     return this.rolesService.create(newRole);
   }
 

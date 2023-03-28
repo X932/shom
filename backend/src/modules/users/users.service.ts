@@ -11,7 +11,7 @@ export class UsersService {
     private usersRepository: Repository<UsersEntity>,
   ) {}
 
-  public async find(parameters?: Partial<IUser>) {
+  public async find(params?: Partial<IUser>): Promise<UsersEntity[]> {
     return await this.usersRepository.find({
       relations: {
         role: {
@@ -19,23 +19,37 @@ export class UsersService {
         },
       },
       where: {
-        id: parameters?.id,
-        phone: parameters?.phone,
+        id: params?.id,
+        phone: params?.phone,
       },
     });
   }
 
-  public async create(newUser: Omit<IUser, 'id'>) {
-    const user = (await this.find({ phone: newUser.phone }))[0];
+  private async checkUser(params?: Partial<IUser>): Promise<void> {
+    const isUserExist = (await this.find(params)).length > 0;
 
-    if (user) {
+    if (isUserExist) {
       throw new BadRequestException();
     }
+  }
 
+  public async create(newUser: Omit<IUser, 'id'>): Promise<void> {
+    await this.checkUser({ phone: newUser.phone });
     await this.usersRepository.save(newUser);
   }
 
-  public clear() {
-    return 'ok bro ;)';
+  public async delete(id: number) {
+    await this.checkUser({ id: id });
+    await this.usersRepository.delete({ id: id });
+  }
+
+  public async update(params?: Partial<IUser>): Promise<void> {
+    const user = (await this.find({ id: params.id }))[0];
+
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    await this.usersRepository.save(params);
   }
 }

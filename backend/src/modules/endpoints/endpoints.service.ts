@@ -11,7 +11,9 @@ export class EndpointsService {
     private endpointsRepository: Repository<EndpointsEntity>,
   ) {}
 
-  public async find(endpoints: EndpointMetaData | EndpointMetaData[]) {
+  public async find(
+    endpoints: EndpointMetaData | EndpointMetaData[],
+  ): Promise<EndpointsEntity[]> {
     return await this.endpointsRepository.find({
       where: endpoints,
     });

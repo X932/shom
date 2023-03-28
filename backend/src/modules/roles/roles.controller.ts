@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
   UseGuards,
@@ -9,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
-import { CreateRoleDto, UpdateRoleDto } from './models/roles.dto';
+import { RoleDto, UpdateRoleDto } from './models/roles.dto';
 import { RolesService } from './roles.service';
 
 @UseGuards(JwtAuthGuard)
@@ -24,7 +26,7 @@ export class RolesController {
 
   @Post()
   @UsePipes(TrimPipe)
-  create(@Body() newRole: CreateRoleDto) {
+  create(@Body() newRole: RoleDto) {
     return this.rolesService.create(newRole);
   }
 
@@ -32,5 +34,10 @@ export class RolesController {
   @UsePipes(TrimPipe)
   update(@Body() updatedRole: UpdateRoleDto) {
     return this.rolesService.update(updatedRole);
+  }
+
+  @Delete()
+  delete(@Param('id') id: number) {
+    return this.rolesService.delete(id);
   }
 }

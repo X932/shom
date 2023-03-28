@@ -25,7 +25,7 @@ export class AuthService {
     return user;
   }
 
-  public async signUp(newUser: SignUpDto) {
+  public async signUp(newUser: SignUpDto): Promise<void> {
     const hashedPassword: string = await this.hashPassword(newUser.password);
 
     await this.usersService.create({

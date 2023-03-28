@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@guards/jwt.guard';
-import { Controller, Delete, Get, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @UseGuards(JwtAuthGuard)
@@ -13,7 +13,7 @@ export class UsersController {
   }
 
   @Delete()
-  clear() {
-    return this.usersService.clear();
+  delete(@Param('id') id: number) {
+    return this.usersService.delete(id);
   }
 }

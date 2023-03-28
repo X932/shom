@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
   UseGuards,
@@ -32,5 +34,10 @@ export class RolesController {
   @UsePipes(TrimPipe)
   update(@Body() updatedRole: UpdateRoleDto) {
     return this.rolesService.update(updatedRole);
+  }
+
+  @Delete()
+  delete(@Param('id') id: number) {
+    return this.rolesService.delete(id);
   }
 }

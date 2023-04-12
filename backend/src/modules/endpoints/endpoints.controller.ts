@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { CreateEndpointDto } from './models/endpoints.dto';
 import { EndpointsService } from './endpoints.service';
@@ -11,5 +11,10 @@ export class EndpointsController {
   @Post()
   create(@Body() endpoint: CreateEndpointDto) {
     return this.endpointsService.create(endpoint);
+  }
+
+  @Get()
+  find() {
+    return this.endpointsService.find();
   }
 }

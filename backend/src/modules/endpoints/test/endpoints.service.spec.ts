@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EndpointMetaData } from './models/endpoints.type';
-import { CreateEndpointDto } from './models/endpoints.dto';
-import { EndpointsService } from './endpoints.service';
-import { EndpointsEntity } from './models/endpoints.entity';
+import { EndpointMetaData } from '../models/endpoints.type';
+import { CreateEndpointDto } from '../models/endpoints.dto';
+import { EndpointsService } from '../endpoints.service';
+import { EndpointsEntity } from '../models/endpoints.entity';
 
 function getNewEndpointSub() {
   const endpoint = new CreateEndpointDto();

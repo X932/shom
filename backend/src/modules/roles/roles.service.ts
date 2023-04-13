@@ -26,21 +26,21 @@ export class RolesService {
     });
   }
 
-  private async checkRole(params?: Partial<IRole>): Promise<void> {
-    const isRoleExist = (await this.find(params)).length > 0;
+  public async delete(id: number): Promise<void> {
+    const isRoleExist = (await this.find({ id: id })).length > 0;
 
-    if (isRoleExist) {
+    if (!isRoleExist) {
       throw new BadRequestException();
     }
-  }
-
-  public async delete(id: number): Promise<void> {
-    await this.checkRole({ id: id });
     await this.rolesRepository.delete({ id: id });
   }
 
   public async create(newRole: RoleDto): Promise<void> {
-    await this.checkRole({ title: newRole.title });
+    const isRoleExist = (await this.find({ title: newRole.title })).length > 0;
+
+    if (isRoleExist) {
+      throw new BadRequestException();
+    }
     await this.rolesRepository.save(newRole);
   }
 

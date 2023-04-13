@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(req: Request, parsedJWT: IJWT) {
     const user = await this.findUserByID(parsedJWT.sub);
-    const currentEndpoint = req.method + ' ' + req.url;
+    const currentEndpoint = req.method + ' ' + req.path;
 
     const permission = user?.role?.endpoints.find(
       (endpoint) => endpoint.key === currentEndpoint,

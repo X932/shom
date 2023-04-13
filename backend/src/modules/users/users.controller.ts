@@ -4,8 +4,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  ParseIntPipe,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserDto } from './models/users.dto';
@@ -22,7 +23,7 @@ export class UsersController {
   }
 
   @Delete()
-  delete(@Param('id') id: number) {
+  delete(@Query('id', ParseIntPipe) id: number) {
     return this.usersService.delete(id);
   }
 

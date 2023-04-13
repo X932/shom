@@ -25,21 +25,21 @@ export class UsersService {
     });
   }
 
-  private async checkUser(params?: Partial<IUser>): Promise<void> {
-    const isUserExist = (await this.find(params)).length > 0;
+  public async create(newUser: Omit<IUser, 'id'>): Promise<void> {
+    const isUserExist = (await this.find({ phone: newUser.phone })).length > 0;
 
     if (isUserExist) {
       throw new BadRequestException();
     }
-  }
-
-  public async create(newUser: Omit<IUser, 'id'>): Promise<void> {
-    await this.checkUser({ phone: newUser.phone });
     await this.usersRepository.save(newUser);
   }
 
   public async delete(id: number) {
-    await this.checkUser({ id: id });
+    const isUserExist = (await this.find({ id: id })).length > 0;
+
+    if (!isUserExist) {
+      throw new BadRequestException();
+    }
     await this.usersRepository.delete({ id: id });
   }
 

@@ -20,26 +20,30 @@ export class EndpointsService {
     });
   }
 
-  private async checkEndpoint(
-    params?: Partial<EndpointMetaData>,
-  ): Promise<void> {
+  public async create(params: CreateEndpointDto) {
     const isEndpointExist = (await this.find(params)).length > 0;
 
     if (isEndpointExist) {
       throw new BadRequestException();
     }
+    await this.endpointsRepository.save(params);
   }
 
-  public async create(params: CreateEndpointDto) {
-    await this.checkEndpoint(params);
-    await this.endpointsRepository.save(params);
+  private async checkEndpoint(id: number) {
+    const isEndpointExist = (await this.find({ id: id })).length > 0;
+
+    if (!isEndpointExist) {
+      throw new BadRequestException();
+    }
   }
 
   public async update(params: EndpointDto) {
-    const oldEndpoint = (await this.find({ id: params.id }))[0];
-    if (!oldEndpoint) {
-      throw new BadRequestException();
-    }
+    await this.checkEndpoint(params.id);
     await this.endpointsRepository.save(params);
+  }
+
+  public async delete(id: number) {
+    await this.checkEndpoint(id);
+    await this.endpointsRepository.delete({ id: id });
   }
 }

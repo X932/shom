@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { CreateEndpointDto, EndpointDto } from './models/endpoints.dto';
 import { EndpointsService } from './endpoints.service';
@@ -21,5 +31,10 @@ export class EndpointsController {
   @Put()
   update(@Body() endpoint: EndpointDto) {
     return this.endpointsService.update(endpoint);
+  }
+
+  @Delete()
+  delete(@Query('id', ParseIntPipe) id: number) {
+    return this.endpointsService.delete(id);
   }
 }

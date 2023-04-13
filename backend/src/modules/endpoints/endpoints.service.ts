@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEndpointDto } from './models/endpoints.dto';
+import { CreateEndpointDto, EndpointDto } from './models/endpoints.dto';
 import { EndpointsEntity } from './models/endpoints.entity';
 import { EndpointMetaData } from './models/endpoints.type';
 
@@ -32,6 +32,14 @@ export class EndpointsService {
 
   public async create(params: CreateEndpointDto) {
     await this.checkEndpoint(params);
+    await this.endpointsRepository.save(params);
+  }
+
+  public async update(params: EndpointDto) {
+    const oldEndpoint = (await this.find({ id: params.id }))[0];
+    if (!oldEndpoint) {
+      throw new BadRequestException();
+    }
     await this.endpointsRepository.save(params);
   }
 }

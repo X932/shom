@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
-import { CreateEndpointDto } from './models/endpoints.dto';
+import { CreateEndpointDto, EndpointDto } from './models/endpoints.dto';
 import { EndpointsService } from './endpoints.service';
 
 @UseGuards(JwtAuthGuard)
@@ -16,5 +16,10 @@ export class EndpointsController {
   @Get()
   find() {
     return this.endpointsService.find();
+  }
+
+  @Put()
+  update(@Body() endpoint: EndpointDto) {
+    return this.endpointsService.update(endpoint);
   }
 }

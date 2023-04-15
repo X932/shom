@@ -12,12 +12,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  private async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
-  }
-
   private async getUserByPhone(
     phone: string,
   ): Promise<UsersEntity | undefined> {
@@ -26,12 +20,7 @@ export class AuthService {
   }
 
   public async signUp(newUser: SignUpDto): Promise<void> {
-    const hashedPassword: string = await this.hashPassword(newUser.password);
-
-    await this.usersService.create({
-      ...newUser,
-      password: hashedPassword,
-    });
+    await this.usersService.create(newUser);
   }
 
   private async comparePassword(

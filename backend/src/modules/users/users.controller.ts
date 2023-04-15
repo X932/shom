@@ -28,7 +28,7 @@ export class UsersController {
   }
 
   @Put()
-  update(@Body() user: UserDto) {
+  update(@Body() user: Partial<UserDto>) {
     return this.usersService.update(user);
   }
 }

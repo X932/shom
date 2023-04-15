@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { IUser } from './models/users.type';
 import { UsersEntity } from './models/users.entity';
 
@@ -25,13 +26,21 @@ export class UsersService {
     });
   }
 
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
+  }
+
   public async create(newUser: Omit<IUser, 'id'>): Promise<void> {
     const isUserExist = (await this.find({ phone: newUser.phone })).length > 0;
 
     if (isUserExist) {
       throw new BadRequestException();
     }
-    await this.usersRepository.save(newUser);
+
+    const hashedPassword: string = await this.hashPassword(newUser.password);
+    await this.usersRepository.save({ ...newUser, password: hashedPassword });
   }
 
   public async delete(id: number) {
@@ -43,13 +52,16 @@ export class UsersService {
     await this.usersRepository.delete({ id: id });
   }
 
-  public async update(params?: Partial<IUser>): Promise<void> {
-    const user = (await this.find({ id: params.id }))[0];
+  public async update(params: Partial<IUser>): Promise<void> {
+    const isUserExist = (await this.find({ id: params.id })).length > 0;
 
-    if (!user) {
+    if (!isUserExist || !params.id) {
       throw new BadRequestException();
     }
 
-    await this.usersRepository.save(params);
+    const hashedPassword =
+      params.password && (await this.hashPassword(params.password));
+
+    await this.usersRepository.save({ ...params, password: hashedPassword });
   }
 }

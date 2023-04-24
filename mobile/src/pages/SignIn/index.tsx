@@ -1,17 +1,54 @@
 import { FC, useState } from 'react';
 import { View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
+import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
-import { useAppDispatch } from '@hooks';
+import { isInputValid } from '@utils';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
+import { signInAPI } from './service';
 
 export const SignIn: FC<PublicNavigatorScreenProps> = () => {
   const [formData, setFormData] = useState(validationSchema);
+  const { phoneNumber } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
+
+  const dispatchLogIn = () => {
+    dispatch(authentication({ isLoggedIn: true }));
+  };
+
+  const showErrorToast = (message: string) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+    });
+  };
+
+  const submitHandler = () => {
+    if (
+      phoneNumber &&
+      isInputValid({
+        value: formData.password.value,
+        exactLength: validationSchema.password.exactLength,
+        maxLength: validationSchema.password.maxLength,
+        minLength: validationSchema.password.minLength,
+        regexp: validationSchema.password.regexp,
+      })
+    ) {
+      signInAPI({
+        phoneNumber: phoneNumber,
+        password: formData.password.value,
+        dispatchLogIn: dispatchLogIn,
+        showErrorToast: showErrorToast,
+      });
+    } else {
+      showErrorToast('Данные не верные');
+    }
+  };
 
   return (
     <AuthLayout>
@@ -32,7 +69,7 @@ export const SignIn: FC<PublicNavigatorScreenProps> = () => {
       <Button
         label="Войти"
         onPress={async () => {
-          dispatch(authentication({ isLoggedIn: true }));
+          submitHandler();
         }}
       />
     </AuthLayout>

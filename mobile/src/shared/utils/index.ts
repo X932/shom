@@ -1,2 +1,3 @@
 export * from './inputValidation';
-export * from './localStorage';
+export * from './phoneLocalStorage';
+export * from './tokenLocalStorage';

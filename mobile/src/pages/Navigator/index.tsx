@@ -12,10 +12,12 @@ import { authentication } from '@slices';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
+
   const logOutHandler = () => {
     dispatch(authentication({ isLoggedIn: false }));
     props.navigation.closeDrawer();
   };
+
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />

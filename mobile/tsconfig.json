@@ -21,12 +21,14 @@
       "@utils": ["src/shared/utils/index.ts"],
       "@interfaces": ["src/shared/interfaces/index.ts"],
       "@components": ["src/shared/components/index.ts"],
+      "@axios-instance": ["src/shared/axios-instance/index.ts"],
       "@ui-layouts": ["src/shared/ui-layouts"],
       "@hooks": ["src/shared/hooks/index.ts"],
       "@app-store": ["src/store/index.ts"],
       "@slices": ["src/store/slices/index.ts"]
     },
-    "incremental": true
+    "incremental": true,
+    "typeRoots": ["./src/types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

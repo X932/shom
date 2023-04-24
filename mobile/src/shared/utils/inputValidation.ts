@@ -1,4 +1,4 @@
-import { IInputValidationOptions } from '@interfaces';
+import { IInputValidationOptions } from '@components';
 
 type FieldValidationFnType = (
   options: IInputValidationOptions<string | string[]>,

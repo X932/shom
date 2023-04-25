@@ -9,11 +9,20 @@ import type { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { Sales, SignIn, SignUp, SuccessSignUp } from '@pages';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
+import { removePhoneNumber, removeToken } from '@utils';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
 
   const logOutHandler = () => {
+    dispatch(authentication({ isLoggedIn: false }));
+    removeToken();
+    props.navigation.closeDrawer();
+  };
+
+  const logOutAccountHandler = async () => {
+    await removePhoneNumber();
+    await removeToken();
     dispatch(authentication({ isLoggedIn: false }));
     props.navigation.closeDrawer();
   };
@@ -22,6 +31,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       <DrawerItem label="Выйти" onPress={logOutHandler} />
+      <DrawerItem label="Выход из акк" onPress={logOutAccountHandler} />
     </DrawerContentScrollView>
   );
 }

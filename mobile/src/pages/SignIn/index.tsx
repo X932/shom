@@ -1,13 +1,12 @@
 import { FC, useState } from 'react';
 import { View } from 'react-native';
-import Toast from 'react-native-toast-message';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
-import { isInputValid } from '@utils';
+import { isInputValid, showErrorToast } from '@utils';
 import { styles } from './styles';
 import { validationSchema } from './validationSchema';
 import { signInAPI } from './service';
@@ -17,15 +16,8 @@ export const SignIn: FC<PublicNavigatorScreenProps> = () => {
   const { phoneNumber } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
-  const dispatchLogIn = () => {
+  const dispatchSignIn = () => {
     dispatch(authentication({ isLoggedIn: true }));
-  };
-
-  const showErrorToast = (message: string) => {
-    Toast.show({
-      type: 'error',
-      text1: message,
-    });
   };
 
   const submitHandler = () => {
@@ -42,7 +34,7 @@ export const SignIn: FC<PublicNavigatorScreenProps> = () => {
       signInAPI({
         phoneNumber: phoneNumber,
         password: formData.password.value,
-        dispatchLogIn: dispatchLogIn,
+        dispatchSignIn: dispatchSignIn,
         showErrorToast: showErrorToast,
       });
     } else {

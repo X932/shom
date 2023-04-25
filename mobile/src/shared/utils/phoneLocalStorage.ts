@@ -18,3 +18,12 @@ export const getPhoneNumber = async (): Promise<string | null> => {
     return null;
   }
 };
+
+export const removePhoneNumber = async (): Promise<boolean> => {
+  try {
+    await AsyncStorage.removeItem(PHONE_NUMBER_KEY);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

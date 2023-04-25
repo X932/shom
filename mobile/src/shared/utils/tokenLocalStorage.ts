@@ -18,3 +18,12 @@ export const getToken = async (): Promise<string | null> => {
     return null;
   }
 };
+
+export const removeToken = async (): Promise<boolean> => {
+  try {
+    await AsyncStorage.removeItem(TOKEN_KEY);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

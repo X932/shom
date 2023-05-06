@@ -16,9 +16,6 @@ export class ProductsEntity {
   @Column()
   title: string;
 
-  @Column()
-  description: string;
-
   @Column({ name: 'img_path' })
   imgPath: string;
 
@@ -44,6 +41,9 @@ export class ProductsDetailsEntity {
 
   @Column()
   size: number;
+
+  @Column()
+  description: string;
 }
 
 @Entity('products_prices')

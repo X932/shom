@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  ProductsDetailsEntity,
-  ProductsEntity,
-  ProductsPricesEntity,
-} from './modules/products/models/products.entity';
+import { ProductsDetailsEntity } from './modules/products/models/products-details.entity';
+import { ProductsPricesEntity } from './modules/products/models/products-prices.entity';
+import { ProductsModule } from './modules/products/products.module';
+import { ProductsEntity } from './modules/products/models/products.entity';
 import { RolesEntity } from './modules/roles/models/roles.entity';
 import { EndpointsEntity } from './modules/endpoints/models/endpoints.entity';
 import { EndpointsModule } from './modules/endpoints/endpoints.module';
@@ -22,6 +21,7 @@ import { UsersModule } from './modules/users/users.module';
     EndpointsModule,
     AuthModule,
     UsersModule,
+    ProductsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',

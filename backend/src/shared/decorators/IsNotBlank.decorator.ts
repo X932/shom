@@ -1,5 +1,10 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
 
+/**
+ *
+ * @param validationOptions
+ * @returns trimmed string
+ */
 export function IsNotBlank(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({

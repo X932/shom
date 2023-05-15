@@ -4,9 +4,11 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProductsDetailsEntity } from './products-details.entity';
+import { ProductsPricesEntity } from './products-prices.entity';
 
 @Entity('products')
 export class ProductsEntity {
@@ -19,7 +21,7 @@ export class ProductsEntity {
   @Column({ name: 'img_path' })
   imgPath: string;
 
-  @ManyToMany(() => ProductsDetailsEntity)
+  @ManyToMany(() => ProductsDetailsEntity, (details) => details.product)
   @JoinTable({
     name: 'full_products_info',
     joinColumn: {
@@ -32,33 +34,8 @@ export class ProductsEntity {
     },
   })
   details: ProductsDetailsEntity[];
-}
 
-@Entity('products_details')
-export class ProductsDetailsEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  size: number;
-
-  @Column()
-  description: string;
-}
-
-@Entity('products_prices')
-export class ProductsPricesEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @OneToOne(() => ProductsEntity)
-  @JoinColumn({ name: 'product_id' })
-  product: ProductsEntity;
-
-  @OneToOne(() => ProductsDetailsEntity)
-  @JoinColumn({ name: 'product_details_id' })
-  productDetails: ProductsDetailsEntity;
-
-  @Column()
-  price: number;
+  @ManyToOne(() => ProductsPricesEntity, (productPrice) => productPrice.product)
+  @JoinColumn({ name: 'price_id' })
+  price: ProductsPricesEntity;
 }

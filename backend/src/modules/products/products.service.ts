@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { ProductsDetailsEntity } from './models/products-details.entity';
 import { ProductsPricesEntity } from './models/products-prices.entity';
+import { CreateProductDto } from './models/products.dto';
 import { ProductsEntity } from './models/products.entity';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ProductsService {
     private dataSource: DataSource,
   ) {}
 
-  public async create(product) {
+  public async create(product: CreateProductDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

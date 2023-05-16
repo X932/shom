@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@guards/jwt.guard';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { CreateProductDto } from './models/products.dto';
 import { ProductsService } from './products.service';
 
@@ -14,7 +14,7 @@ export class ProductsController {
   }
 
   @Get()
-  find() {
-    return 'list pf products';
+  find(@Query('id') id?: string) {
+    return this.productsService.find(Number(id) || undefined);
   }
 }

@@ -66,4 +66,14 @@ export class ProductsService {
       await queryRunner.release();
     }
   }
+
+  public async find(id?: number): Promise<ProductsEntity[]> {
+    return await this.productsRepository.find({
+      where: { id: id },
+      relations: {
+        details: true,
+        price: true,
+      },
+    });
+  }
 }

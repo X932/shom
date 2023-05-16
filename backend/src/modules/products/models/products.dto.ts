@@ -1,8 +1,8 @@
 import { IsString, IsNumber } from 'class-validator';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
-import { IProduct } from './products.type';
+import { BaseProduct } from './products.type';
 
-export class CreateProductDto implements Omit<IProduct, 'id'> {
+export class CreateProductDto extends BaseProduct {
   @IsString()
   @IsNotBlank()
   title: string;

@@ -72,6 +72,9 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
+    "moduleNameMapper": {
+      "^@decorators/(.*)$": "<rootDir>/shared/decorators/$1"
+    },
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

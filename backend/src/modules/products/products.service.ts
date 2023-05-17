@@ -29,9 +29,15 @@ export class ProductsService {
         title: newProduct.title,
       })) as ProductsEntity | undefined;
 
+      const newProductPrice = new ProductsPricesEntity();
+      newProductPrice.amount = product.price;
+      const savedProductPrice =
+        await queryRunner.manager.save<ProductsPricesEntity>(newProductPrice);
+
       const newProductDetails = new ProductsDetailsEntity();
       newProductDetails.size = product.size;
       newProductDetails.description = product.description;
+      newProductDetails.price = savedProductPrice;
       const savedProductDetails =
         await queryRunner.manager.save<ProductsDetailsEntity>(
           newProductDetails,
@@ -49,15 +55,7 @@ export class ProductsService {
         newProduct.details = [savedProductDetails];
       }
 
-      const savedProduct = await queryRunner.manager.save<ProductsEntity>(
-        newProduct,
-      );
-
-      const newProductPrice = new ProductsPricesEntity();
-      newProductPrice.price = product.price;
-      newProductPrice.product = [savedProduct];
-      newProductPrice.productDetails = savedProductDetails;
-      await queryRunner.manager.save<ProductsPricesEntity>(newProductPrice);
+      await queryRunner.manager.save<ProductsEntity>(newProduct);
 
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -77,8 +75,9 @@ export class ProductsService {
         title: params?.title,
       },
       relations: {
-        details: true,
-        priceDetails: true,
+        details: {
+          price: true,
+        },
       },
     });
     if (products?.length === 1) {

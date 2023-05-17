@@ -1,14 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductsDetailsEntity } from './products-details.entity';
-import { ProductsPricesEntity } from './products-prices.entity';
 
 @Entity('products')
 export class ProductsEntity {
@@ -34,8 +31,4 @@ export class ProductsEntity {
     },
   })
   details: ProductsDetailsEntity[];
-
-  @ManyToOne(() => ProductsPricesEntity, (productPrice) => productPrice.product)
-  @JoinColumn({ name: 'price_id' })
-  priceDetails: ProductsPricesEntity;
 }

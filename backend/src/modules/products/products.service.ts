@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { Product } from './models/products.type';
+import { BaseProduct } from './models/products.type';
 import { ProductsDetailsEntity } from './models/products-details.entity';
 import { ProductsPricesEntity } from './models/products-prices.entity';
-import { CreateProductDto } from './models/products.dto';
+import { CreateProductDto, UpdateProductDto } from './models/products.dto';
 import { ProductsEntity } from './models/products.entity';
 
 @Injectable()
@@ -29,9 +29,15 @@ export class ProductsService {
         title: newProduct.title,
       })) as ProductsEntity | undefined;
 
+      const newProductPrice = new ProductsPricesEntity();
+      newProductPrice.amount = product.price;
+      const savedProductPrice =
+        await queryRunner.manager.save<ProductsPricesEntity>(newProductPrice);
+
       const newProductDetails = new ProductsDetailsEntity();
       newProductDetails.size = product.size;
       newProductDetails.description = product.description;
+      newProductDetails.price = savedProductPrice;
       const savedProductDetails =
         await queryRunner.manager.save<ProductsDetailsEntity>(
           newProductDetails,
@@ -49,15 +55,7 @@ export class ProductsService {
         newProduct.details = [savedProductDetails];
       }
 
-      const savedProduct = await queryRunner.manager.save<ProductsEntity>(
-        newProduct,
-      );
-
-      const newProductPrice = new ProductsPricesEntity();
-      newProductPrice.price = product.price;
-      newProductPrice.product = [savedProduct];
-      newProductPrice.productDetails = savedProductDetails;
-      await queryRunner.manager.save<ProductsPricesEntity>(newProductPrice);
+      await queryRunner.manager.save<ProductsEntity>(newProduct);
 
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -69,7 +67,7 @@ export class ProductsService {
   }
 
   public async find(
-    params?: Partial<Product>,
+    params?: Partial<BaseProduct>,
   ): Promise<ProductsEntity | ProductsEntity[]> {
     const products = await this.productsRepository.find({
       where: {
@@ -77,13 +75,54 @@ export class ProductsService {
         title: params?.title,
       },
       relations: {
-        details: true,
-        priceDetails: true,
+        details: {
+          price: true,
+        },
       },
     });
     if (products?.length === 1) {
       return products[0];
     }
     return products;
+  }
+
+  public async update(product: UpdateProductDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    // before save check for existing
+
+    try {
+      const newProduct = new ProductsEntity();
+      newProduct.id = product.id;
+      newProduct.title = product.title;
+      newProduct.imgPath = product.imgPath;
+      await queryRunner.manager.save<ProductsEntity>(newProduct);
+
+      const newProductsDetails = product.details.map((detail) => {
+        const newDetail = new ProductsDetailsEntity();
+        newDetail.id = detail.id;
+        newDetail.size = detail.size;
+        newDetail.description = detail.description;
+        newDetail.price = detail.price;
+        newDetail.product = newProduct;
+        return newDetail;
+      });
+      await queryRunner.manager.save<ProductsDetailsEntity>(newProductsDetails);
+
+      const newProductsPrices = product.details.map((detail) => {
+        const newPrice = new ProductsPricesEntity();
+        newPrice.id = detail.price.id;
+        newPrice.amount = detail.price.amount;
+        return newPrice;
+      });
+      await queryRunner.manager.save<ProductsPricesEntity>(newProductsPrices);
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

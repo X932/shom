@@ -32,7 +32,7 @@ describe('ProductsService', () => {
         {
           provide: getRepositoryToken(ProductsEntity),
           useValue: {
-            findOne: jest.fn((params) =>
+            find: jest.fn((params) =>
               Promise.resolve(findOneProductSub(params)),
             ),
           },

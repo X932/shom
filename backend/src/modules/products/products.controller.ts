@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@guards/jwt.guard';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { CreateProductDto } from './models/products.dto';
 import { ProductsService } from './products.service';
 
@@ -11,5 +11,10 @@ export class ProductsController {
   @Post()
   create(@Body() product: CreateProductDto) {
     return this.productsService.create(product);
+  }
+
+  @Get()
+  find(@Query('id') id?: string) {
+    return this.productsService.find({ id: Number(id) || undefined });
   }
 }

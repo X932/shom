@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 import { BaseProduct } from './products.type';
 
@@ -8,10 +8,12 @@ export class CreateProductDto extends BaseProduct {
   title: string;
 
   @IsString()
+  @IsNotBlank()
   imgPath: string;
 
   @IsString()
   @IsNotBlank()
+  @IsOptional()
   description: string;
 
   @IsNumber()

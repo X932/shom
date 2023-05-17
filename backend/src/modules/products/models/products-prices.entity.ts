@@ -14,7 +14,7 @@ export class ProductsPricesEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => ProductsEntity, (product) => product.price)
+  @OneToMany(() => ProductsEntity, (product) => product.priceDetails)
   product: ProductsEntity[];
 
   @OneToOne(() => ProductsDetailsEntity)

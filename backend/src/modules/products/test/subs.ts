@@ -1,4 +1,3 @@
-import { Product } from '../models/products.type';
 import { CreateProductDto } from '../models/products.dto';
 
 export function getNewProductSub() {
@@ -15,14 +14,14 @@ export function findOneProductSub(params: {
   where: Pick<CreateProductDto, 'title'>;
 }) {
   const products = [1, 2].map((id) => {
-    const product = new Product();
-    product.id = id;
+    // product structure isn't correct
+    const product = new CreateProductDto();
     product.title = 'title' + id;
     product.imgPath = '/imgPath' + id;
     product.description = 'description' + id;
     product.size = id;
     product.price = id;
-    return product;
+    return { id: id, ...product };
   });
   return products.find((product) => product.title === params.where.title);
 }

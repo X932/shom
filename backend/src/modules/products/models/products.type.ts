@@ -1,4 +1,4 @@
-export class BaseProduct {
+export class CreateProduct {
   title: string;
   imgPath: string;
   description: string;
@@ -6,6 +6,7 @@ export class BaseProduct {
   price: number;
 }
 
-export class Product extends BaseProduct {
+export class BaseProduct extends CreateProduct {
   id: number;
+  title: string;
 }

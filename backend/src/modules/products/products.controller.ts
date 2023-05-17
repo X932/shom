@@ -15,6 +15,6 @@ export class ProductsController {
 
   @Get()
   find(@Query('id') id?: string) {
-    return this.productsService.find(Number(id) || undefined);
+    return this.productsService.find({ id: Number(id) || undefined });
   }
 }

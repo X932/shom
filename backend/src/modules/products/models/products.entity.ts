@@ -37,5 +37,5 @@ export class ProductsEntity {
 
   @ManyToOne(() => ProductsPricesEntity, (productPrice) => productPrice.product)
   @JoinColumn({ name: 'price_id' })
-  price: ProductsPricesEntity;
+  priceDetails: ProductsPricesEntity;
 }

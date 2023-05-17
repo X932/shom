@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { Product } from './models/products.type';
 import { ProductsDetailsEntity } from './models/products-details.entity';
 import { ProductsPricesEntity } from './models/products-prices.entity';
 import { CreateProductDto } from './models/products.dto';
@@ -24,9 +25,9 @@ export class ProductsService {
     newProduct.imgPath = product.imgPath;
 
     try {
-      const oldProduct = await this.productsRepository.findOne({
-        where: { title: newProduct.title },
-      });
+      const oldProduct = (await this.find({
+        title: newProduct.title,
+      })) as ProductsEntity | undefined;
 
       const newProductDetails = new ProductsDetailsEntity();
       newProductDetails.size = product.size;
@@ -39,7 +40,7 @@ export class ProductsService {
       if (oldProduct) {
         newProduct.id = oldProduct.id;
 
-        if (oldProduct.details) {
+        if (oldProduct.details?.length > 0) {
           newProduct.details = [...oldProduct.details, savedProductDetails];
         } else {
           newProduct.details = [savedProductDetails];
@@ -67,13 +68,22 @@ export class ProductsService {
     }
   }
 
-  public async find(id?: number): Promise<ProductsEntity[]> {
-    return await this.productsRepository.find({
-      where: { id: id },
+  public async find(
+    params?: Partial<Product>,
+  ): Promise<ProductsEntity | ProductsEntity[]> {
+    const products = await this.productsRepository.find({
+      where: {
+        id: params?.id,
+        title: params?.title,
+      },
       relations: {
         details: true,
-        price: true,
+        priceDetails: true,
       },
     });
+    if (products?.length === 1) {
+      return products[0];
+    }
+    return products;
   }
 }

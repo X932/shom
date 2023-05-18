@@ -3,10 +3,12 @@ import { colors } from '@styles';
 
 export const inputStyles = StyleSheet.create({
   structure: {
-    height: 40,
     width: '100%',
     borderWidth: 1,
     borderRadius: 4,
+  },
+  inputHeight: {
+    height: 40,
   },
   label: {
     color: colors.black[90],

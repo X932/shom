@@ -3,19 +3,17 @@ import { getToken } from '@utils';
 import { BACKEND_API } from '@env';
 
 async function getTokenFromStorage() {
-  return await getToken();
+  return 'Bearer ' + (await getToken());
 }
 
 export const axiosInstance = axios.create({
   baseURL: BACKEND_API,
-  headers: {
-    Authorization: 'Bearer ' + getTokenFromStorage(),
-  },
 });
 
 axiosInstance.interceptors.request.use(
-  function (config) {
+  async function (config) {
     // Do something before request is sent
+    config.headers.authorization = await getTokenFromStorage();
     return config;
   },
   function (error) {

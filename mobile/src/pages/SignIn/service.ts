@@ -1,20 +1,18 @@
 import { axiosInstance } from '@axios-instance';
 import { IResponseWrapper } from '@interfaces';
-import { saveToken } from '@utils';
+import { removeToken, saveToken, showErrorToast } from '@utils';
 
-interface ISignInAPIArgs {
+interface ISignInAPIParams {
   phoneNumber: string;
   password: string;
   dispatchSignIn: () => void;
-  showErrorToast: (message: string) => void;
 }
 
 export const signInAPI = async ({
   phoneNumber,
   password,
   dispatchSignIn,
-  showErrorToast,
-}: ISignInAPIArgs) => {
+}: ISignInAPIParams) => {
   try {
     const { data } = await axiosInstance<IResponseWrapper<string>>({
       method: 'POST',
@@ -24,6 +22,7 @@ export const signInAPI = async ({
         password: password,
       },
     });
+    await removeToken();
     saveToken(data.payload);
     dispatchSignIn();
   } catch (error: any) {

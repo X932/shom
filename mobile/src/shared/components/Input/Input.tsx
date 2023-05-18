@@ -17,6 +17,7 @@ export const Input = <T,>({
   formData,
   setFormData,
   style,
+  multiline,
   ...props
 }: IInputProps<T>) => {
   const onChangeHandler = (key: keyof T, value: string): void => {
@@ -93,7 +94,12 @@ export const Input = <T,>({
         onBlur={() => onBlurHandler(inputKey)}
         value={formData[inputKey].value}
         maxLength={formData[inputKey].exactLength}
-        style={[style, inputStyles.structure, getStylesByValidity()]}
+        style={[
+          style,
+          inputStyles.structure,
+          getStylesByValidity(),
+          !multiline && inputStyles.inputHeight,
+        ]}
         {...props}
       />
     </>

@@ -35,7 +35,6 @@ export const SignIn: FC<PublicNavigatorScreenProps> = () => {
         phoneNumber: phoneNumber,
         password: formData.password.value,
         dispatchSignIn: dispatchSignIn,
-        showErrorToast: showErrorToast,
       });
     } else {
       showErrorToast('Данные не верные');

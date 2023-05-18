@@ -1,6 +1,6 @@
 import { axiosInstance } from '@axios-instance';
 
-interface ISignUpAPIArgs {
+interface ISignUpAPIParams {
   phoneNumber: string;
   password: string;
   dispatchSignUp: () => void;
@@ -12,7 +12,7 @@ export const signUpAPI = async ({
   password,
   dispatchSignUp,
   showErrorToast,
-}: ISignUpAPIArgs) => {
+}: ISignUpAPIParams) => {
   try {
     await axiosInstance({
       method: 'POST',

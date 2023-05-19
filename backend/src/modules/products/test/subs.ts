@@ -23,5 +23,5 @@ export function findOneProductSub(params: {
     product.price = id;
     return { id: id, ...product };
   });
-  return products.find((product) => product.title === params.where.title);
+  return products.filter((product) => product.title === params.where.title);
 }

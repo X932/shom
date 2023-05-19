@@ -8,11 +8,11 @@ interface ICreateProductAPIParams {
   size: number;
   description: string;
   price: number;
-  setIsLoadind: (state: boolean) => void;
+  setIsLoading: (state: boolean) => void;
 }
 
 export const createProductAPI = async (params: ICreateProductAPIParams) => {
-  const { setIsLoadind, ...payload } = params;
+  const { setIsLoading, ...payload } = params;
   try {
     const { data } = await axiosInstance<IResponseWrapper>({
       method: 'POST',
@@ -27,6 +27,6 @@ export const createProductAPI = async (params: ICreateProductAPIParams) => {
       showErrorToast(error.message);
     }
   } finally {
-    setIsLoadind(false);
+    setIsLoading(false);
   }
 };

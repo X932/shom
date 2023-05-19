@@ -6,7 +6,14 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { ProductCreate, Sales, SignIn, SignUp, SuccessSignUp } from '@pages';
+import {
+  ProductCreate,
+  ProductsList,
+  Sales,
+  SignIn,
+  SignUp,
+  SuccessSignUp,
+} from '@pages';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
 import { removePhoneNumber, removeToken } from '@utils';
@@ -53,6 +60,14 @@ export const Navigator = (): JSX.Element => {
                 component={ProductCreate}
                 options={{
                   title: 'Создание продукта',
+                  headerTitleAlign: 'center',
+                }}
+              />
+              <Drawer.Screen
+                name="ProductsList"
+                component={ProductsList}
+                options={{
+                  title: 'Список продуктов',
                   headerTitleAlign: 'center',
                 }}
               />

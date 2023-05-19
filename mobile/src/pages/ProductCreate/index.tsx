@@ -9,7 +9,7 @@ import { createProductAPI } from './service';
 
 export const ProductCreate = () => {
   const [formData, setFormData] = useState(validationSchema);
-  const [isLoadind, setIsLoadind] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // const [photo, setPhoto] = useState<Asset | undefined>();
 
   // const createFormData = (photo: any, body: Record<string, any> = {}) => {
@@ -51,14 +51,14 @@ export const ProductCreate = () => {
       formData.imgPath.isValid &&
       formData.size.isValid
     ) {
-      setIsLoadind(true);
+      setIsLoading(true);
       createProductAPI({
         title: formData.title.value,
         description: formData.description.value,
         imgPath: formData.imgPath.value,
         price: Number(formData.price.value),
         size: Number(formData.size.value),
-        setIsLoadind: setIsLoadind,
+        setIsLoading: setIsLoading,
       });
     } else {
       showErrorToast('Данные не верные');
@@ -117,7 +117,7 @@ export const ProductCreate = () => {
         keyboardType="numeric"
         cursorColor={colors.black[100]}
       />
-      <Button label="Создать" disabled={isLoadind} onPress={submitHandler} />
+      <Button label="Создать" disabled={isLoading} onPress={submitHandler} />
     </View>
   );
 };

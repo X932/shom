@@ -23,11 +23,14 @@ export class ProductsService {
     const newProduct = new ProductsEntity();
     newProduct.title = product.title;
     newProduct.imgPath = product.imgPath;
+    newProduct.description = product.description;
 
     try {
-      const oldProduct = (await this.find({
-        title: newProduct.title,
-      })) as ProductsEntity | undefined;
+      const oldProduct: ProductsEntity = (
+        await this.find({
+          title: newProduct.title,
+        })
+      )[0];
 
       const newProductPrice = new ProductsPricesEntity();
       newProductPrice.amount = product.price;
@@ -36,7 +39,6 @@ export class ProductsService {
 
       const newProductDetails = new ProductsDetailsEntity();
       newProductDetails.size = product.size;
-      newProductDetails.description = product.description;
       newProductDetails.price = savedProductPrice;
       const savedProductDetails =
         await queryRunner.manager.save<ProductsDetailsEntity>(
@@ -69,7 +71,7 @@ export class ProductsService {
   public async find(
     params?: Partial<BaseProduct>,
   ): Promise<ProductsEntity | ProductsEntity[]> {
-    const products = await this.productsRepository.find({
+    return await this.productsRepository.find({
       where: {
         id: params?.id,
         title: params?.title,
@@ -80,10 +82,6 @@ export class ProductsService {
         },
       },
     });
-    if (products?.length === 1) {
-      return products[0];
-    }
-    return products;
   }
 
   public async update(product: UpdateProductDto) {
@@ -97,13 +95,13 @@ export class ProductsService {
       newProduct.id = product.id;
       newProduct.title = product.title;
       newProduct.imgPath = product.imgPath;
+      newProduct.description = product.description;
       await queryRunner.manager.save<ProductsEntity>(newProduct);
 
       const newProductsDetails = product.details.map((detail) => {
         const newDetail = new ProductsDetailsEntity();
         newDetail.id = detail.id;
         newDetail.size = detail.size;
-        newDetail.description = detail.description;
         newDetail.price = detail.price;
         newDetail.product = newProduct;
         return newDetail;

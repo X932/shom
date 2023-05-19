@@ -31,14 +31,21 @@ export class CreateProductDto extends CreateProduct {
 }
 
 class ProductPriceDto {
+  @IsNumber()
   id: number;
+
+  @IsNumber()
   amount: number;
 }
 
 class ProductDetailsDto {
+  @IsNumber()
   id: number;
+
+  @IsNumber()
   size: number;
-  description: string;
+
+  @Type(() => ProductPriceDto)
   price: ProductPriceDto;
 }
 
@@ -51,6 +58,12 @@ export class UpdateProductDto {
   title: string;
 
   @IsString()
+  @IsOptional()
+  @IsNotBlank()
+  description: string;
+
+  @IsString()
+  @IsNotBlank()
   @IsNotBlank()
   imgPath: string;
 

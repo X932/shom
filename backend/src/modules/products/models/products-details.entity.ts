@@ -17,9 +17,6 @@ export class ProductsDetailsEntity {
   @Column()
   size: number;
 
-  @Column()
-  description: string;
-
   @ManyToMany(() => ProductsEntity, (product) => product.details)
   product: ProductsEntity;
 

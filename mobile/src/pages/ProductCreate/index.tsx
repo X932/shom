@@ -43,6 +43,10 @@ export const ProductCreate = () => {
   //     });
   // };
 
+  const successResponseHandler = () => {
+    setFormData(validationSchema);
+  };
+
   const submitHandler = () => {
     if (
       formData.title.isValid &&
@@ -59,6 +63,7 @@ export const ProductCreate = () => {
         price: Number(formData.price.value),
         size: Number(formData.size.value),
         setIsLoading: setIsLoading,
+        successResponseHandler: successResponseHandler,
       });
     } else {
       showErrorToast('Данные не верные');

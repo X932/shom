@@ -7,15 +7,18 @@ import { getProductsAPI } from './service';
 
 export const ProductsList = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState<IProduct[] | undefined>();
+  const [products, setProducts] = useState<IProduct[]>([]);
 
-  const responseHandler = (data?: IProduct[]) => {
+  const successResponseHandler = (data: IProduct[]) => {
     setProducts(data);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    getProductsAPI({ responseHandler: responseHandler });
+    getProductsAPI({
+      successResponseHandler: successResponseHandler,
+      setIsLoading: setIsLoading,
+    });
   }, []);
 
   return (

@@ -64,7 +64,6 @@ export class UpdateProductDto {
 
   @IsString()
   @IsNotBlank()
-  @IsNotBlank()
   imgPath: string;
 
   @IsArray()

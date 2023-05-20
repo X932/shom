@@ -9,10 +9,11 @@ interface ICreateProductAPIParams {
   description: string;
   price: number;
   setIsLoading: (state: boolean) => void;
+  successResponseHandler: () => void;
 }
 
 export const createProductAPI = async (params: ICreateProductAPIParams) => {
-  const { setIsLoading, ...payload } = params;
+  const { setIsLoading, successResponseHandler, ...payload } = params;
   try {
     const { data } = await axiosInstance<IResponseWrapper>({
       method: 'POST',
@@ -20,6 +21,7 @@ export const createProductAPI = async (params: ICreateProductAPIParams) => {
       data: payload,
     });
     showSuccessToast(data.message);
+    successResponseHandler();
   } catch (error: any) {
     if (error.response) {
       showErrorToast(error.response.data.message);

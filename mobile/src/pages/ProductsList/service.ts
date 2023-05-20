@@ -4,24 +4,27 @@ import { showErrorToast } from '@utils';
 import { IProduct } from './interface';
 
 interface IGetProductsAPIParams {
-  responseHandler: (data?: IProduct[]) => void;
+  successResponseHandler: (data: IProduct[]) => void;
+  setIsLoading: (state: boolean) => void;
 }
 
 export const getProductsAPI = async ({
-  responseHandler,
+  successResponseHandler,
+  setIsLoading,
 }: IGetProductsAPIParams) => {
   try {
     const { data } = await axiosInstance<IResponseWrapper<IProduct[]>>({
       method: 'GET',
       url: '/products',
     });
-    responseHandler(data.payload);
+    successResponseHandler(data.payload);
   } catch (error: any) {
-    responseHandler();
     if (error.response) {
       showErrorToast(error.response.data.message);
     } else {
       showErrorToast(error.message);
     }
+  } finally {
+    setIsLoading(false);
   }
 };

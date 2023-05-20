@@ -15,6 +15,9 @@ export class ProductsEntity {
   @Column()
   title: string;
 
+  @Column()
+  description: string;
+
   @Column({ name: 'img_path' })
   imgPath: string;
 

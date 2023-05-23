@@ -12,8 +12,10 @@ export type PublicNavigatorScreenProps = DrawerScreenProps<
   keyof PublicScrenList
 >;
 
-type PrivateScreenList = {
+export type PrivateScreenList = {
   Sales: undefined;
+  ProductCreate: undefined;
+  ProductsList: undefined;
 };
 
 export type PrivateNavigatorScreenProps = DrawerScreenProps<

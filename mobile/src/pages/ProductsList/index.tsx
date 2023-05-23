@@ -19,7 +19,7 @@ export const ProductsList = () => {
       successResponseHandler: successResponseHandler,
       setIsLoading: setIsLoading,
     });
-  }, []);
+  });
 
   return (
     <MainLayout>

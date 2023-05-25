@@ -86,9 +86,13 @@ export class ProductsService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    // before save check for existing
 
     try {
+      const isProductExist = (await this.find({ id: product.id })).length === 1;
+      if (!isProductExist) {
+        throw new BadRequestException();
+      }
+
       const newProduct = new ProductsEntity();
       newProduct.id = product.id;
       newProduct.title = product.title;

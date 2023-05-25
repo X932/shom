@@ -2,7 +2,9 @@ import { JwtAuthGuard } from '@guards/jwt.guard';
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -33,5 +35,10 @@ export class ProductsController {
   @UsePipes(TrimPipe)
   update(@Body() product: UpdateProductDto) {
     return this.productsService.update(product);
+  }
+
+  @Delete()
+  delete(@Query('id', ParseIntPipe) id: number) {
+    return this.productsService.delete({ id: id });
   }
 }

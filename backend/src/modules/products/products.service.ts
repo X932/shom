@@ -68,9 +68,7 @@ export class ProductsService {
     }
   }
 
-  public async find(
-    params?: Partial<BaseProduct>,
-  ): Promise<ProductsEntity | ProductsEntity[]> {
+  public async find(params?: Partial<BaseProduct>): Promise<ProductsEntity[]> {
     return await this.productsRepository.find({
       where: {
         id: params?.id,
@@ -115,6 +113,38 @@ export class ProductsService {
         return newPrice;
       });
       await queryRunner.manager.save<ProductsPricesEntity>(newProductsPrices);
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  public async delete(params?: Partial<BaseProduct>) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const product: ProductsEntity = (await this.find({ id: params.id }))[0];
+
+      if (!product) {
+        throw new BadRequestException();
+      }
+
+      await queryRunner.manager.delete(ProductsEntity, {
+        id: params.id,
+      });
+
+      await queryRunner.manager.delete(ProductsDetailsEntity, product.details);
+
+      const prices = product.details.map(
+        (productDetail) => productDetail.price,
+      );
+      await queryRunner.manager.delete(ProductsPricesEntity, prices);
+
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();

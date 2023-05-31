@@ -7,49 +7,64 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
-import { CreateProduct } from './products.type';
 
-export class CreateProductDto extends CreateProduct {
+class CreateProductPriceDto {
+  @IsNumber()
+  amount: number;
+}
+
+class CreateProductDetailsDto {
+  @IsNumber()
+  size: number;
+
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductPriceDto)
+  price: CreateProductPriceDto;
+}
+
+export class CreateProductDto {
   @IsString()
   @IsNotBlank()
   title: string;
 
   @IsString()
+  @IsOptional()
   @IsNotBlank()
-  imgPath: string;
+  description: string;
 
   @IsString()
   @IsNotBlank()
-  @IsOptional()
-  description: string;
+  imgPath: string;
 
-  @IsNumber()
-  size: number;
-
-  @IsNumber()
-  price: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductDetailsDto)
+  details: CreateProductDetailsDto[];
 }
 
-class ProductPriceDto {
+class UpdateProductPriceDto extends CreateProductPriceDto {
+  @IsOptional()
   @IsNumber()
-  id: number;
+  id?: number;
 
   @IsNumber()
   amount: number;
 }
 
-class ProductDetailsDto {
+class UpdateProductDetailsDto extends CreateProductDetailsDto {
+  @IsOptional()
   @IsNumber()
-  id: number;
+  id?: number;
 
   @IsNumber()
   size: number;
 
-  @Type(() => ProductPriceDto)
-  price: ProductPriceDto;
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductPriceDto)
+  price: UpdateProductPriceDto;
 }
 
-export class UpdateProductDto {
+export class UpdateProductDto extends CreateProductDto {
   @IsNumber()
   id: number;
 
@@ -68,6 +83,6 @@ export class UpdateProductDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ProductDetailsDto)
-  details: ProductDetailsDto[];
+  @Type(() => UpdateProductDetailsDto)
+  details: UpdateProductDetailsDto[];
 }

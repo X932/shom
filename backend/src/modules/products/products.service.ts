@@ -20,43 +20,40 @@ export class ProductsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const newProduct = new ProductsEntity();
-    newProduct.title = product.title;
-    newProduct.imgPath = product.imgPath;
-    newProduct.description = product.description;
-
     try {
-      const oldProduct: ProductsEntity = (
-        await this.find({
-          title: newProduct.title,
-        })
-      )[0];
+      const isProductExist =
+        (
+          await this.find({
+            title: product.title,
+          })
+        ).length > 0;
 
-      const newProductPrice = new ProductsPricesEntity();
-      newProductPrice.amount = product.price;
-      const savedProductPrice =
-        await queryRunner.manager.save<ProductsPricesEntity>(newProductPrice);
-
-      const newProductDetails = new ProductsDetailsEntity();
-      newProductDetails.size = product.size;
-      newProductDetails.price = savedProductPrice;
-      const savedProductDetails =
-        await queryRunner.manager.save<ProductsDetailsEntity>(
-          newProductDetails,
-        );
-
-      if (oldProduct) {
-        newProduct.id = oldProduct.id;
-
-        if (oldProduct.details?.length > 0) {
-          newProduct.details = [...oldProduct.details, savedProductDetails];
-        } else {
-          newProduct.details = [savedProductDetails];
-        }
-      } else {
-        newProduct.details = [savedProductDetails];
+      if (isProductExist) {
+        throw new BadRequestException();
       }
 
+      const newProductPrices: ProductsPricesEntity[] = [];
+      const newProductDetails: ProductsDetailsEntity[] = [];
+
+      product.details.forEach((detail) => {
+        const newPrice = new ProductsPricesEntity();
+        newPrice.amount = detail.price.amount;
+        newProductPrices.push(newPrice);
+
+        const newDetails = new ProductsDetailsEntity();
+        newDetails.size = detail.size;
+        newDetails.price = newPrice;
+        newProductDetails.push(newDetails);
+      });
+
+      const newProduct = new ProductsEntity();
+      newProduct.title = product.title;
+      newProduct.imgPath = product.imgPath;
+      newProduct.description = product.description;
+      newProduct.details = newProductDetails;
+
+      await queryRunner.manager.save<ProductsPricesEntity>(newProductPrices);
+      await queryRunner.manager.save<ProductsDetailsEntity>(newProductDetails);
       await queryRunner.manager.save<ProductsEntity>(newProduct);
 
       await queryRunner.commitTransaction();
@@ -88,35 +85,38 @@ export class ProductsService {
     await queryRunner.startTransaction();
 
     try {
-      const isProductExist = (await this.find({ id: product.id })).length === 1;
+      const isProductExist = (await this.find({ id: product.id })).length > 0;
       if (!isProductExist) {
         throw new BadRequestException();
       }
+
+      const newProductDetails: ProductsDetailsEntity[] = [];
+      const newProductPrices: ProductsPricesEntity[] = [];
+
+      product.details.forEach((detail) => {
+        const newPrice = new ProductsPricesEntity();
+        newPrice.id = detail.price.id;
+        newPrice.amount = detail.price.amount;
+        newProductPrices.push(newPrice);
+
+        const newDetails = new ProductsDetailsEntity();
+        newDetails.id = detail.id;
+        newDetails.size = detail.size;
+        newDetails.price = newPrice;
+        newProductDetails.push(newDetails);
+      });
+
+      await queryRunner.manager.save<ProductsPricesEntity>(newProductPrices);
+      await queryRunner.manager.save<ProductsDetailsEntity>(newProductDetails);
 
       const newProduct = new ProductsEntity();
       newProduct.id = product.id;
       newProduct.title = product.title;
       newProduct.imgPath = product.imgPath;
       newProduct.description = product.description;
+      newProduct.details = newProductDetails;
       await queryRunner.manager.save<ProductsEntity>(newProduct);
 
-      const newProductsDetails = product.details.map((detail) => {
-        const newDetail = new ProductsDetailsEntity();
-        newDetail.id = detail.id;
-        newDetail.size = detail.size;
-        newDetail.price = detail.price;
-        newDetail.product = newProduct;
-        return newDetail;
-      });
-      await queryRunner.manager.save<ProductsDetailsEntity>(newProductsDetails);
-
-      const newProductsPrices = product.details.map((detail) => {
-        const newPrice = new ProductsPricesEntity();
-        newPrice.id = detail.price.id;
-        newPrice.amount = detail.price.amount;
-        return newPrice;
-      });
-      await queryRunner.manager.save<ProductsPricesEntity>(newProductsPrices);
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();

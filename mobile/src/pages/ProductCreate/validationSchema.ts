@@ -34,10 +34,4 @@ export const validationSchema: ICreateProductForm = {
     isActive: false,
     regexp: /^\d*$/,
   },
-  imgPath: {
-    value: '/test',
-    isValid: true,
-    isTouched: false,
-    isActive: false,
-  },
 };

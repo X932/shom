@@ -4,21 +4,52 @@ import { showErrorToast, showSuccessToast } from '@utils';
 
 interface ICreateProductAPIParams {
   title: string;
-  imgPath: string;
-  size: number;
+  size?: number;
   description: string;
-  price: number;
+  price?: number;
+  file: any;
   setIsLoading: (state: boolean) => void;
   successResponseHandler: () => void;
 }
 
+const uploadImage = async (file: any) => {
+  if (file != null) {
+    const formData = new FormData();
+    formData.append('name', 'Image New');
+    formData.append('file', file);
+    const { data } = await axiosInstance<IResponseWrapper<string>>('/media', {
+      method: 'post',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return data.payload;
+  } else {
+    showErrorToast('Выберите фото');
+  }
+};
+
 export const createProductAPI = async (params: ICreateProductAPIParams) => {
-  const { setIsLoading, successResponseHandler, ...payload } = params;
+  const { setIsLoading, successResponseHandler, file, ...payload } = params;
   try {
+    const filePath = await uploadImage(file);
+
+    if (!filePath) {
+      return;
+    }
+    // refactoring
+    const details = [
+      {
+        size: payload.size,
+        price: { amount: payload.price },
+      },
+    ];
+    // /refactoring
     const { data } = await axiosInstance<IResponseWrapper>({
       method: 'POST',
       url: '/products',
-      data: payload,
+      data: { ...payload, imgPath: filePath, details: details },
     });
     showSuccessToast(data.message);
     successResponseHandler();

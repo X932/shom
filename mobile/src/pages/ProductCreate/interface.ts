@@ -5,5 +5,4 @@ export interface ICreateProductForm {
   size: IInput;
   description: IInput;
   price: IInput;
-  imgPath: IInput;
 }

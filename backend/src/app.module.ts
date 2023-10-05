@@ -1,6 +1,9 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { MediaModule } from './modules/media/media.module';
 import { ProductsDetailsEntity } from './modules/products/models/products-details.entity';
 import { ProductsPricesEntity } from './modules/products/models/products-prices.entity';
 import { ProductsModule } from './modules/products/products.module';
@@ -22,7 +25,12 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     UsersModule,
     ProductsModule,
+    MediaModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..'),
+      renderPath: 'files',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,

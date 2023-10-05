@@ -1,8 +1,9 @@
 import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import { showErrorToast } from '@utils';
+import { pick, types } from 'react-native-document-picker';
 import { validationSchema } from './validationSchema';
 import { styles } from './styles';
 import { createProductAPI } from './service';
@@ -10,38 +11,18 @@ import { createProductAPI } from './service';
 export const ProductCreate = () => {
   const [formData, setFormData] = useState(validationSchema);
   const [isLoading, setIsLoading] = useState(false);
-  // const [photo, setPhoto] = useState<Asset | undefined>();
+  const [file, setFile] = useState<any>();
 
-  // const createFormData = (photo: any, body: Record<string, any> = {}) => {
-  //   const data = new FormData();
-  //   data.append('photo', photo);
-
-  //   Object.keys(body).forEach(key => {
-  //     data.append(key, body[key]);
-  //   });
-  //   return data;
-  // };
-
-  // const choosePhotoHandler = (response: ImagePickerResponse) => {
-  //   if (response.assets && response.assets?.length > 0) {
-  //     setPhoto(response.assets[0]);
-  //     createFormData(response.assets[0], { userId: '123' });
-  //   }
-  // };
-
-  // const handleUploadPhoto = () => {
-  //   //////////// create route
-  //   axiosInstance(`/api/upload`, {
-  //     method: 'POST',
-  //     data: createFormData(photo, { userId: '123' }),
-  //   })
-  //     .then(response => {
-  //       console.log('response', response.data);
-  //     })
-  //     .catch(error => {
-  //       console.log('error', error);
-  //     });
-  // };
+  const selectFile = async () => {
+    try {
+      const res = await pick({
+        type: [types.images],
+      });
+      setFile(res[0]);
+    } catch (error) {
+      setFile(null);
+    }
+  };
 
   const successResponseHandler = () => {
     setFormData(validationSchema);
@@ -52,18 +33,17 @@ export const ProductCreate = () => {
       formData.title.isValid &&
       formData.description.isValid &&
       formData.price.isValid &&
-      formData.imgPath.isValid &&
       formData.size.isValid
     ) {
       setIsLoading(true);
       createProductAPI({
         title: formData.title.value,
         description: formData.description.value,
-        imgPath: formData.imgPath.value,
         price: Number(formData.price.value),
         size: Number(formData.size.value),
         setIsLoading: setIsLoading,
         successResponseHandler: successResponseHandler,
+        file: file,
       });
     } else {
       showErrorToast('Данные не верные');
@@ -71,58 +51,63 @@ export const ProductCreate = () => {
   };
 
   return (
-    <View style={styles.inputsContainer}>
-      {/* <Button
-        label="Choose Photo"
-        onPress={() => {
-          launchImageLibrary({ mediaType: 'photo' }, choosePhotoHandler);
-        }}
-      />
-      <Button
-        label="Take Photo"
-        onPress={() => {
-          launchCamera(
-            { mediaType: 'photo', saveToPhotos: true },
-            choosePhotoHandler,
-          );
-        }}
-      /> */}
-      <Input
-        formData={formData}
-        setFormData={setFormData}
-        inputKey="title"
-        label="Название"
-        keyboardType="default"
-        cursorColor={colors.black[100]}
-      />
-      <Input
-        formData={formData}
-        setFormData={setFormData}
-        inputKey="description"
-        label="Описание"
-        keyboardType="default"
-        cursorColor={colors.black[100]}
-        numberOfLines={4}
-        textAlignVertical="top"
-        multiline
-      />
-      <Input
-        formData={formData}
-        setFormData={setFormData}
-        inputKey="size"
-        label="Размер"
-        keyboardType="numeric"
-        cursorColor={colors.black[100]}
-      />
-      <Input
-        formData={formData}
-        setFormData={setFormData}
-        inputKey="price"
-        label="Цена"
-        keyboardType="numeric"
-        cursorColor={colors.black[100]}
-      />
-      <Button label="Создать" disabled={isLoading} onPress={submitHandler} />
-    </View>
+    <ScrollView style={styles.viewContainer}>
+      <View style={styles.formContainer}>
+        <Button
+          label="Выбрать фото"
+          disabled={isLoading}
+          onPress={selectFile}
+        />
+
+        {file && (
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: file.uri,
+              }}
+            />
+          </View>
+        )}
+        <Input
+          formData={formData}
+          setFormData={setFormData}
+          inputKey="title"
+          label="Название"
+          keyboardType="default"
+          cursorColor={colors.black[100]}
+        />
+        <Input
+          formData={formData}
+          setFormData={setFormData}
+          inputKey="description"
+          label="Описание"
+          keyboardType="default"
+          cursorColor={colors.black[100]}
+          numberOfLines={4}
+          textAlignVertical="top"
+          multiline
+        />
+        <View style={styles.productTypesContainer}>
+          <Input
+            formData={formData}
+            setFormData={setFormData}
+            inputKey="size"
+            label="Размер"
+            keyboardType="numeric"
+            cursorColor={colors.black[100]}
+          />
+          <Input
+            formData={formData}
+            setFormData={setFormData}
+            inputKey="price"
+            label="Цена"
+            keyboardType="numeric"
+            cursorColor={colors.black[100]}
+          />
+        </View>
+        <Button label="Создать" disabled={isLoading} onPress={submitHandler} />
+      </View>
+    </ScrollView>
   );
 };

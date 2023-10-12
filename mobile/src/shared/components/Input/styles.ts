@@ -10,10 +10,6 @@ export const inputStyles = StyleSheet.create({
   inputHeight: {
     height: 40,
   },
-  label: {
-    color: colors.black[90],
-    fontSize: 16,
-  },
   default: {
     borderColor: colors.black[90],
     color: colors.black[90],

@@ -2,16 +2,33 @@ import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
-import { showErrorToast } from '@utils';
+import { allowOnlyNumber, showErrorToast } from '@utils';
 import { pick, types } from 'react-native-document-picker';
-import { validationSchema } from './validationSchema';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { styles } from './styles';
 import { createProductAPI } from './service';
+import { ICreateProductForm } from './interface';
 
 export const ProductCreate = () => {
-  const [formData, setFormData] = useState(validationSchema);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<any>();
+  const { control, reset, handleSubmit } = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+      details: [
+        {
+          size: '',
+          price: { amount: '' },
+        },
+      ],
+    },
+  });
+  const { fields } = useFieldArray({
+    name: 'details',
+    control: control,
+    rules: { minLength: 1 },
+  });
 
   const selectFile = async () => {
     try {
@@ -25,22 +42,17 @@ export const ProductCreate = () => {
   };
 
   const successResponseHandler = () => {
-    setFormData(validationSchema);
+    reset();
   };
 
-  const submitHandler = () => {
-    if (
-      formData.title.isValid &&
-      formData.description.isValid &&
-      formData.price.isValid &&
-      formData.size.isValid
-    ) {
+  const submitHandler = (values: ICreateProductForm) => {
+    console.log(values);
+    console.log(values.details);
+
+    if (values.title && values.description) {
       setIsLoading(true);
       createProductAPI({
-        title: formData.title.value,
-        description: formData.description.value,
-        price: Number(formData.price.value),
-        size: Number(formData.size.value),
+        product: values,
         setIsLoading: setIsLoading,
         successResponseHandler: successResponseHandler,
         file: file,
@@ -69,44 +81,72 @@ export const ProductCreate = () => {
             />
           </View>
         )}
-        <Input
-          formData={formData}
-          setFormData={setFormData}
-          inputKey="title"
-          label="Название"
-          keyboardType="default"
-          cursorColor={colors.black[100]}
+        <Controller
+          name="title"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChangeText={value => field.onChange(value)}
+              placeholder="Название"
+              keyboardType="default"
+              cursorColor={colors.black[100]}
+            />
+          )}
         />
-        <Input
-          formData={formData}
-          setFormData={setFormData}
-          inputKey="description"
-          label="Описание"
-          keyboardType="default"
-          cursorColor={colors.black[100]}
-          numberOfLines={4}
-          textAlignVertical="top"
-          multiline
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChangeText={value => field.onChange(value)}
+              placeholder="Описание"
+              keyboardType="default"
+              cursorColor={colors.black[100]}
+              numberOfLines={4}
+              textAlignVertical="top"
+              multiline
+            />
+          )}
         />
         <View style={styles.productTypesContainer}>
-          <Input
-            formData={formData}
-            setFormData={setFormData}
-            inputKey="size"
-            label="Размер"
-            keyboardType="numeric"
-            cursorColor={colors.black[100]}
-          />
-          <Input
-            formData={formData}
-            setFormData={setFormData}
-            inputKey="price"
-            label="Цена"
-            keyboardType="numeric"
-            cursorColor={colors.black[100]}
-          />
+          {fields.map((field, index) => (
+            <View key={field.id}>
+              <Controller
+                name={`details.${index}.size`}
+                control={control}
+                render={({ field: { onChange, ...props } }) => (
+                  <Input
+                    placeholder="Размер"
+                    keyboardType="numeric"
+                    cursorColor={colors.black[100]}
+                    onChangeText={value => onChange(allowOnlyNumber(value))}
+                    {...props}
+                  />
+                )}
+              />
+              <Controller
+                name={`details.${index}.price.amount`}
+                control={control}
+                render={({ field: { onChange, ...props } }) => (
+                  <Input
+                    placeholder="Цена"
+                    keyboardType="numeric"
+                    cursorColor={colors.black[100]}
+                    onChangeText={value => onChange(allowOnlyNumber(value))}
+                    {...props}
+                  />
+                )}
+              />
+            </View>
+          ))}
         </View>
-        <Button label="Создать" disabled={isLoading} onPress={submitHandler} />
+        <Button
+          label="Создать"
+          disabled={isLoading}
+          onPress={handleSubmit(submitHandler)}
+        />
       </View>
     </ScrollView>
   );

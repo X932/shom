@@ -1,8 +1,14 @@
-import { IInput } from '@components';
+interface IPrice {
+  amount: string;
+}
+
+interface IDetail {
+  size: string;
+  price: IPrice;
+}
 
 export interface ICreateProductForm {
-  title: IInput;
-  size: IInput;
-  description: IInput;
-  price: IInput;
+  title: string;
+  description: string;
+  details: IDetail[];
 }

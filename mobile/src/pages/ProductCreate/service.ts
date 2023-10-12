@@ -1,12 +1,10 @@
 import { axiosInstance } from '@axios-instance';
 import { IResponseWrapper } from '@interfaces';
 import { showErrorToast, showSuccessToast } from '@utils';
+import { ICreateProductForm } from './interface';
 
 interface ICreateProductAPIParams {
-  title: string;
-  size?: number;
-  description: string;
-  price?: number;
+  product: ICreateProductForm;
   file: any;
   setIsLoading: (state: boolean) => void;
   successResponseHandler: () => void;
@@ -38,18 +36,11 @@ export const createProductAPI = async (params: ICreateProductAPIParams) => {
     if (!filePath) {
       return;
     }
-    // refactoring
-    const details = [
-      {
-        size: payload.size,
-        price: { amount: payload.price },
-      },
-    ];
-    // /refactoring
+
     const { data } = await axiosInstance<IResponseWrapper>({
       method: 'POST',
       url: '/products',
-      data: { ...payload, imgPath: filePath, details: details },
+      data: { ...payload, imgPath: filePath },
     });
     showSuccessToast(data.message);
     successResponseHandler();

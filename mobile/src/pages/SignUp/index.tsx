@@ -1,84 +1,48 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { View } from 'react-native';
 import { AuthLayout } from '@ui-layouts';
-import { Button, Input } from '@components';
+import { Button, Divider, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
-import {
-  savePhoneNumber,
-  getPhoneNumber,
-  isInputValid,
-  showErrorToast,
-} from '@utils';
+import { savePhoneNumber, getPhoneNumber, showErrorToast } from '@utils';
 import { setPhoneNumber } from '@slices';
 import { useAppDispatch } from '@hooks';
+import { Controller, useForm } from 'react-hook-form';
 import { styles } from './styles';
-import { validationSchema } from './validationSchema';
 import { signUpAPI } from './service';
+import { ISignUpForm } from './interface';
 
 export const SignUp: FC<PublicNavigatorScreenProps> = ({
   navigation: { navigate },
 }) => {
-  const [formData, setFormData] = useState(validationSchema);
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISignUpForm>({
+    mode: 'onBlur',
+    defaultValues: {
+      phone: '',
+      password: '',
+    },
+  });
+
   const dispatch = useAppDispatch();
 
-  const dispatchSignUp = () => {
-    savePhoneNumber(formData.phone.value);
-    dispatch(setPhoneNumber({ phoneNumber: formData.phone.value }));
+  const dispatchSignUp = (phone: string) => {
+    savePhoneNumber(phone);
+    dispatch(setPhoneNumber({ phoneNumber: phone }));
+    reset();
     navigate('SuccessSignUp');
   };
 
-  const signUpHandler = () => {
-    if (
-      isInputValid({
-        value: formData.phone.value,
-        exactLength: formData.phone.exactLength,
-        regexp: formData.phone.regexp,
-      }) &&
-      isInputValid({
-        value: formData.password.value,
-        maxLength: formData.password.maxLength,
-        minLength: formData.password.minLength,
-      })
-    ) {
-      setFormData({
-        ...formData,
-        password: {
-          ...formData.password,
-          isActive: false,
-          isTouched: true,
-        },
-        phone: {
-          ...formData.phone,
-          isActive: false,
-          isTouched: true,
-        },
-      });
-
-      signUpAPI({
-        dispatchSignUp: dispatchSignUp,
-        showErrorToast: showErrorToast,
-        phoneNumber: formData.phone.value,
-        password: formData.password.value,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        password: {
-          ...formData.password,
-          isValid: false,
-          isActive: false,
-          isTouched: true,
-        },
-        phone: {
-          ...formData.phone,
-          isValid: false,
-          isActive: false,
-          isTouched: true,
-        },
-      });
-      showErrorToast('Данные не верные');
-    }
+  const signUpHandler = (credentials: ISignUpForm) => {
+    signUpAPI({
+      dispatchSignUp: dispatchSignUp,
+      showErrorToast: showErrorToast,
+      credentials: credentials,
+    });
   };
 
   useEffect(() => {
@@ -95,37 +59,61 @@ export const SignUp: FC<PublicNavigatorScreenProps> = ({
   return (
     <AuthLayout>
       <View style={styles.inputContainer}>
-        <Input
-          formData={formData}
-          setFormData={setFormData}
-          inputKey="phone"
-          keyboardType="numeric"
-          label="Номер телефона"
-          placeholderTextColor={colors.black[90]}
-          cursorColor={colors.black[100]}
-          textContentType="telephoneNumber"
-          placeholder="900 000 000"
+        <Controller
+          name="phone"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Это обязательное поле' },
+            minLength: { value: 9, message: 'Минимум 9 цифр' },
+          }}
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChangeText={value => field.onChange(value)}
+              keyboardType="numeric"
+              placeholderTextColor={colors.black[90]}
+              cursorColor={colors.black[100]}
+              textContentType="telephoneNumber"
+              placeholder="900 000 000"
+              errorMessage={errors.phone?.message}
+            />
+          )}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Input
-          formData={formData}
-          setFormData={setFormData}
-          inputKey="password"
-          label="Пароль"
-          placeholder="****"
-          keyboardType="default"
-          textContentType="password"
-          placeholderTextColor={colors.black[90]}
-          cursorColor={colors.black[100]}
-          secureTextEntry
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Это обязательное поле' },
+            minLength: { value: 4, message: 'Минимум 4 символов' },
+          }}
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChangeText={value => field.onChange(value)}
+              placeholder="****"
+              keyboardType="default"
+              textContentType="password"
+              placeholderTextColor={colors.black[90]}
+              cursorColor={colors.black[100]}
+              errorMessage={errors.password?.message}
+              secureTextEntry
+            />
+          )}
         />
       </View>
       <Button
         label="Зарегистрироваться"
+        onPress={handleSubmit(signUpHandler)}
+      />
+      <Divider />
+      <Button
+        label="Войти"
         onPress={() => {
-          signUpHandler();
+          reset();
+          navigate('SignIn');
         }}
       />
     </AuthLayout>

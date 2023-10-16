@@ -1,6 +1,4 @@
-import { IInput } from '@components';
-
 export interface ISignUpForm {
-  phone: IInput;
-  password: IInput;
+  phone: string;
+  password: string;
 }

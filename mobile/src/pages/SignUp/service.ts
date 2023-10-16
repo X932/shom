@@ -1,15 +1,14 @@
 import { axiosInstance } from '@axios-instance';
+import { ISignUpForm } from './interface';
 
 interface ISignUpAPIParams {
-  phoneNumber: string;
-  password: string;
-  dispatchSignUp: () => void;
+  credentials: ISignUpForm;
+  dispatchSignUp: (phone: string) => void;
   showErrorToast: (message: string) => void;
 }
 
 export const signUpAPI = async ({
-  phoneNumber,
-  password,
+  credentials,
   dispatchSignUp,
   showErrorToast,
 }: ISignUpAPIParams) => {
@@ -17,12 +16,9 @@ export const signUpAPI = async ({
     await axiosInstance({
       method: 'POST',
       url: '/auth/sign-up',
-      data: {
-        phone: phoneNumber,
-        password: password,
-      },
+      data: credentials,
     });
-    dispatchSignUp();
+    dispatchSignUp(credentials.phone);
   } catch (error: any) {
     if (error.response) {
       showErrorToast(error.response.data.message);

@@ -5,15 +5,17 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 
 class CreateProductPriceDto {
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   amount: number;
 }
 
 class CreateProductDetailsDto {
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   size: number;
 
@@ -29,7 +31,6 @@ export class CreateProductDto {
 
   @IsString()
   @IsOptional()
-  @IsNotBlank()
   description: string;
 
   @IsString()

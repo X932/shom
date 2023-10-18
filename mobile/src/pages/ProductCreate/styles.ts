@@ -12,6 +12,12 @@ export const styles = StyleSheet.create({
   productTypesContainer: {
     gap: 8,
   },
+  productType: {
+    gap: 8,
+    marginTop: 12,
+    borderBottomWidth: 1,
+    paddingBottom: 8,
+  },
   imageContainer: {
     flexDirection: 'row',
   },

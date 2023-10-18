@@ -58,7 +58,7 @@ export const SignIn: FC<PublicNavigatorScreenProps> = ({
               placeholder="900 000 000"
               keyboardType="numeric"
               placeholderTextColor={colors.black[90]}
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
               textContentType="telephoneNumber"
               errorMessage={errors.phone?.message}
             />
@@ -81,7 +81,7 @@ export const SignIn: FC<PublicNavigatorScreenProps> = ({
               keyboardType="default"
               textContentType="password"
               placeholderTextColor={colors.black[90]}
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
               errorMessage={errors.password?.message}
               secureTextEntry
             />

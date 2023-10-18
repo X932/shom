@@ -29,7 +29,7 @@ const uploadImage = async (file: any) => {
 };
 
 export const createProductAPI = async (params: ICreateProductAPIParams) => {
-  const { setIsLoading, successResponseHandler, file, ...payload } = params;
+  const { setIsLoading, successResponseHandler, file, product } = params;
   try {
     const filePath = await uploadImage(file);
 
@@ -40,7 +40,7 @@ export const createProductAPI = async (params: ICreateProductAPIParams) => {
     const { data } = await axiosInstance<IResponseWrapper>({
       method: 'POST',
       url: '/products',
-      data: { ...payload, imgPath: filePath },
+      data: { ...product, imgPath: filePath },
     });
     showSuccessToast(data.message);
     successResponseHandler();

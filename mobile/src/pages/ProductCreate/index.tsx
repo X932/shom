@@ -2,7 +2,7 @@ import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
-import { allowOnlyNumber, showErrorToast } from '@utils';
+import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { styles } from './styles';
@@ -12,7 +12,12 @@ import { ICreateProductForm } from './interface';
 export const ProductCreate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<any>();
-  const { control, reset, handleSubmit } = useForm({
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -43,23 +48,17 @@ export const ProductCreate = () => {
 
   const successResponseHandler = () => {
     reset();
+    setFile(undefined);
   };
 
   const submitHandler = (values: ICreateProductForm) => {
-    console.log(values);
-    console.log(values.details);
-
-    if (values.title && values.description) {
-      setIsLoading(true);
-      createProductAPI({
-        product: values,
-        setIsLoading: setIsLoading,
-        successResponseHandler: successResponseHandler,
-        file: file,
-      });
-    } else {
-      showErrorToast('Данные не верные');
-    }
+    setIsLoading(true);
+    createProductAPI({
+      product: values,
+      setIsLoading: setIsLoading,
+      successResponseHandler: successResponseHandler,
+      file: file,
+    });
   };
 
   return (
@@ -69,6 +68,7 @@ export const ProductCreate = () => {
           label="Выбрать фото"
           disabled={isLoading}
           onPress={selectFile}
+          variant="outline"
         />
 
         {file && (
@@ -84,13 +84,15 @@ export const ProductCreate = () => {
         <Controller
           name="title"
           control={control}
+          rules={{ required: { value: true, message: 'Обязательное поле' } }}
           render={({ field }) => (
             <Input
               {...field}
               onChangeText={value => field.onChange(value)}
               placeholder="Название"
               keyboardType="default"
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
+              errorMessage={errors.title?.message}
             />
           )}
         />
@@ -103,25 +105,33 @@ export const ProductCreate = () => {
               onChangeText={value => field.onChange(value)}
               placeholder="Описание"
               keyboardType="default"
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
               numberOfLines={4}
               textAlignVertical="top"
+              errorMessage={errors.description?.message}
               multiline
             />
           )}
         />
         <View style={styles.productTypesContainer}>
           {fields.map((field, index) => (
-            <View key={field.id}>
+            <View style={styles.productType} key={field.id}>
               <Controller
                 name={`details.${index}.size`}
                 control={control}
+                rules={{
+                  required: { value: true, message: 'Обязательное поле' },
+                  pattern: { value: /^\d*$/, message: 'Только цифры' },
+                }}
                 render={({ field: { onChange, ...props } }) => (
                   <Input
                     placeholder="Размер"
                     keyboardType="numeric"
-                    cursorColor={colors.black[100]}
+                    cursorColor={colors.black['100']}
                     onChangeText={value => onChange(allowOnlyNumber(value))}
+                    errorMessage={
+                      errors.details && errors.details[index]?.size?.message
+                    }
                     {...props}
                   />
                 )}
@@ -129,12 +139,20 @@ export const ProductCreate = () => {
               <Controller
                 name={`details.${index}.price.amount`}
                 control={control}
+                rules={{
+                  required: { value: true, message: 'Обязательное поле' },
+                  pattern: { value: /^\d*$/, message: 'Только цифры' },
+                }}
                 render={({ field: { onChange, ...props } }) => (
                   <Input
                     placeholder="Цена"
                     keyboardType="numeric"
-                    cursorColor={colors.black[100]}
+                    cursorColor={colors.black['100']}
                     onChangeText={value => onChange(allowOnlyNumber(value))}
+                    errorMessage={
+                      errors.details &&
+                      errors.details[index]?.price?.amount?.message
+                    }
                     {...props}
                   />
                 )}
@@ -144,7 +162,7 @@ export const ProductCreate = () => {
         </View>
         <Button
           label="Создать"
-          disabled={isLoading}
+          disabled={isLoading || !isValid}
           onPress={handleSubmit(submitHandler)}
         />
       </View>

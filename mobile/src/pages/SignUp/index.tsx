@@ -72,7 +72,7 @@ export const SignUp: FC<PublicNavigatorScreenProps> = ({
               onChangeText={value => field.onChange(value)}
               keyboardType="numeric"
               placeholderTextColor={colors.black[90]}
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
               textContentType="telephoneNumber"
               placeholder="900 000 000"
               errorMessage={errors.phone?.message}
@@ -97,7 +97,7 @@ export const SignUp: FC<PublicNavigatorScreenProps> = ({
               keyboardType="default"
               textContentType="password"
               placeholderTextColor={colors.black[90]}
-              cursorColor={colors.black[100]}
+              cursorColor={colors.black['100']}
               errorMessage={errors.password?.message}
               secureTextEntry
             />

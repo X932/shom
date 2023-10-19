@@ -4,7 +4,7 @@ import { buttonStyles } from './styles';
 
 interface IButtonProps extends PressableProps {
   label: string;
-  variant?: keyof Pick<typeof buttonStyles, 'primary' | 'outline'>;
+  variant?: keyof Pick<typeof buttonStyles, 'primary' | 'outline' | 'danger'>;
 }
 
 export const Button: FC<IButtonProps> = ({

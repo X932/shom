@@ -29,7 +29,7 @@ export const ProductCreate = () => {
       ],
     },
   });
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: 'details',
     control: control,
     rules: { minLength: 1 },
@@ -157,12 +157,31 @@ export const ProductCreate = () => {
                   />
                 )}
               />
+              <View style={styles.actionTypeButton}>
+                <Button
+                  label="-"
+                  onPress={() => {
+                    remove(index);
+                  }}
+                  variant="danger"
+                />
+              </View>
             </View>
           ))}
+
+          <View style={styles.actionTypeButton}>
+            <Button
+              label="+"
+              onPress={() => {
+                append({ price: { amount: '' }, size: '' });
+              }}
+              variant="outline"
+            />
+          </View>
         </View>
         <Button
           label="Создать"
-          disabled={isLoading || !isValid}
+          disabled={isLoading || !isValid || !file}
           onPress={handleSubmit(submitHandler)}
         />
       </View>

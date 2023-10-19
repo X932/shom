@@ -11,8 +11,16 @@ export const styles = StyleSheet.create({
   },
   productTypesContainer: {
     gap: 8,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  actionTypeButton: {
+    width: 48,
   },
   productType: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    width: '100%',
     gap: 8,
     marginTop: 12,
     borderBottomWidth: 1,

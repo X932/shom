@@ -5,8 +5,9 @@ import { Button, Divider, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
 import { useAppDispatch, useAppSelector } from '@hooks';
-import { authentication } from '@slices';
+import { authentication, setPhoneNumber } from '@slices';
 import { Controller, useForm } from 'react-hook-form';
+import { savePhoneNumber } from '@utils';
 import { styles } from './styles';
 import { signInAPI } from './service';
 import { ISignInForm } from './interface';
@@ -30,8 +31,10 @@ export const SignIn: FC<PublicNavigatorScreenProps> = ({
     },
   });
 
-  const dispatchSignIn = () => {
+  const dispatchSignIn = (phoneNumber: string) => {
     dispatch(authentication({ isLoggedIn: true }));
+    dispatch(setPhoneNumber({ phoneNumber: phoneNumber }));
+    savePhoneNumber(phoneNumber);
     reset();
   };
   const signIn = (values: ISignInForm) => {

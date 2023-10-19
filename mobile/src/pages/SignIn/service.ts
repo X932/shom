@@ -5,7 +5,7 @@ import { ISignInForm } from './interface';
 
 interface ISignInAPIParams {
   signInCredentials: ISignInForm;
-  dispatchSignIn: () => void;
+  dispatchSignIn: (phoneNumber: string) => void;
 }
 
 export const signInAPI = async ({
@@ -20,7 +20,7 @@ export const signInAPI = async ({
     });
     await removeToken();
     saveToken(data.payload);
-    dispatchSignIn();
+    dispatchSignIn(signInCredentials.phone);
   } catch (error: any) {
     if (error.response) {
       showErrorToast(error.response.data.message);

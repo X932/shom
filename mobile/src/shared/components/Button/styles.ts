@@ -24,6 +24,12 @@ export const buttonStyles = StyleSheet.create({
     borderWidth: 1,
     color: colors.black['100'],
   },
+  danger: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.red,
+    color: colors.red,
+  },
   pressed: {
     backgroundColor: colors.blue['100'],
   },

@@ -8,6 +8,10 @@ interface IGetProductsAPIParams {
   setIsLoading: (state: boolean) => void;
 }
 
+enum Endpoints {
+  PRODUCTS = '/products',
+}
+
 export const getProductsAPI = async ({
   successResponseHandler,
   setIsLoading,
@@ -15,7 +19,7 @@ export const getProductsAPI = async ({
   try {
     const { data } = await axiosInstance<IResponseWrapper<IProduct[]>>({
       method: 'GET',
-      url: '/products',
+      url: Endpoints.PRODUCTS,
     });
     successResponseHandler(data.payload);
   } catch (error: any) {

@@ -1,9 +1,10 @@
 import { MainLayout } from '@ui-layouts';
 import { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, Text } from 'react-native';
-import { Card } from './components/Card';
+import { Product } from './components/Product';
 import { IProduct } from './interface';
 import { getProductsAPI } from './service';
+import { styles } from './styles';
 
 export const ProductsList = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,15 +20,15 @@ export const ProductsList = () => {
       successResponseHandler: successResponseHandler,
       setIsLoading: setIsLoading,
     });
-  });
+  }, []);
 
   return (
     <MainLayout>
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         {isLoading && <Text>Loading . . .</Text>}
         <FlatList
           data={products}
-          renderItem={({ item }) => <Card {...item} />}
+          renderItem={({ item }) => <Product {...item} />}
           keyExtractor={item => String(item.id)}
         />
       </SafeAreaView>

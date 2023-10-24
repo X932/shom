@@ -23,11 +23,7 @@ export const Product: FC<IProduct> = ({
       activeOpacity={1}
       style={styles.container}>
       <Card>
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
+        <View>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
           <Image
@@ -35,7 +31,7 @@ export const Product: FC<IProduct> = ({
               uri: MEDIA_BASE_URL + imgPath,
               method: 'GET',
             }}
-            style={{ width: 400, height: 400 }}
+            style={styles.image}
           />
         </View>
       </Card>

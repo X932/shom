@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RolesEntity } from '../../roles/models/roles.entity';
@@ -24,7 +24,7 @@ export class UsersEntity {
   @Column({ name: 'last_name', default: '' })
   lastName: string;
 
-  @OneToOne(() => RolesEntity)
+  @ManyToOne(() => RolesEntity, (role) => role.users, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'role_id' })
   role: RolesEntity;
 }

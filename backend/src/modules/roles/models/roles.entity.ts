@@ -3,7 +3,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UsersEntity } from '../../users/models/users.entity';
@@ -31,6 +31,6 @@ export class RolesEntity {
   })
   endpoints: EndpointsEntity[];
 
-  @OneToOne(() => UsersEntity)
-  user: UsersEntity;
+  @OneToMany(() => UsersEntity, (user) => user.role)
+  users: UsersEntity[];
 }

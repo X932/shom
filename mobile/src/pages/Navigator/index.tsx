@@ -17,6 +17,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
 import { removePhoneNumber, removeToken } from '@utils';
+import { ProductView } from '../ProductView';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
@@ -68,6 +69,14 @@ export const Navigator = (): JSX.Element => {
                 component={ProductsList}
                 options={{
                   title: 'Список продуктов',
+                  headerTitleAlign: 'center',
+                }}
+              />
+              <Drawer.Screen
+                name="ProductView"
+                component={ProductView}
+                options={{
+                  title: 'Продукт',
                   headerTitleAlign: 'center',
                 }}
               />

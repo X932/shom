@@ -1,5 +1,6 @@
 import type { DrawerScreenProps } from '@react-navigation/drawer';
 import type { ParamListBase } from '@react-navigation/native';
+import { IProduct } from '../../pages/ProductsList/interface';
 
 type PublicScrenList = {
   SignUp: undefined;
@@ -16,6 +17,7 @@ export type PrivateScreenList = {
   Sales: undefined;
   ProductCreate: undefined;
   ProductsList: undefined;
+  ProductView: IProduct;
 };
 
 export type PrivateNavigatorScreenProps = DrawerScreenProps<

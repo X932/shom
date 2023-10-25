@@ -12,14 +12,20 @@ export const Product: FC<IProduct> = ({
   title,
   description,
   imgPath,
-  details,
+  ...restProps
 }) => {
   const navigation = useNavigation<DrawerNavigationProp<PrivateScreenList>>();
 
   return (
-    // navigate onPress to page for delete | update
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductCreate')}
+      onPress={() =>
+        navigation.navigate('ProductView', {
+          title: title,
+          description: description,
+          imgPath: imgPath,
+          ...restProps,
+        })
+      }
       activeOpacity={1}
       style={styles.container}>
       <Card>

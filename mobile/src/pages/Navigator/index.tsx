@@ -17,27 +17,37 @@ import {
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
 import { removePhoneNumber, removeToken } from '@utils';
+import { PrivateScreenList } from '@interfaces';
 import { ProductView } from '../ProductView';
 
+const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = ['ProductView'];
+
 function CustomDrawerContent(props: DrawerContentComponentProps) {
+  const { state, ...restProps } = props;
   const dispatch = useAppDispatch();
 
   const logOutHandler = () => {
     dispatch(authentication({ isLoggedIn: false }));
     removeToken();
-    props.navigation.closeDrawer();
+    restProps.navigation.closeDrawer();
   };
 
   const logOutAccountHandler = async () => {
     await removePhoneNumber();
     await removeToken();
     dispatch(authentication({ isLoggedIn: false }));
-    props.navigation.closeDrawer();
+    restProps.navigation.closeDrawer();
   };
+
+  const newState = { ...state };
+  newState.routes = newState.routes.filter(
+    ({ name }) =>
+      !EXCLUDED_DRAWER_ROUTES.includes(name as keyof PrivateScreenList),
+  );
 
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
+      <DrawerItemList {...restProps} state={newState} />
       <DrawerItem label="Выйти" onPress={logOutHandler} />
       <DrawerItem label="Выход из акк" onPress={logOutAccountHandler} />
     </DrawerContentScrollView>
@@ -52,7 +62,8 @@ export const Navigator = (): JSX.Element => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        drawerContent={props => <CustomDrawerContent {...props} />}>
+        drawerContent={props => <CustomDrawerContent {...props} />}
+        backBehavior="history">
         <>
           {isLoggedIn ? (
             <>

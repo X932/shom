@@ -19,7 +19,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
         <Button
           label="Назад"
           variant="outline"
-          onPress={() => navigation.navigate('ProductsList')}
+          onPress={() => navigation.goBack()}
         />
       </View>
 

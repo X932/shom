@@ -35,6 +35,7 @@ export const ProductsList = () => {
     <MainLayout>
       <SafeAreaView style={styles.container}>
         {isLoading && <Text>Loading . . .</Text>}
+        {/* todo change to flash */}
         <FlatList
           data={products}
           renderItem={({ item }) => <Product {...item} />}

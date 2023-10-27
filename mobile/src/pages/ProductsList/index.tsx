@@ -21,6 +21,7 @@ export const ProductsList = () => {
 
   useFocusEffect(
     useCallback(() => {
+      isActive = true;
       getProductsAPI({
         successResponseHandler: successResponseHandler,
         setIsLoading: setIsLoading,

@@ -2,6 +2,23 @@ import { colors, fontSizes } from '@styles';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  modalContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: 300,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  modalHeader: {
+    marginBottom: 8,
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 16,
+  },
   buttonContainer: {
     width: 140,
     marginVertical: 12,

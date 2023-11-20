@@ -18,6 +18,7 @@ export type PrivateScreenList = {
   ProductCreate: undefined;
   ProductsList: undefined;
   ProductView: IProduct;
+  ProductUpdate: IProduct;
 };
 
 export type PrivateNavigatorScreenProps = DrawerScreenProps<

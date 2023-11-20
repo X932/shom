@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   },
   buttonsContainer: {
     display: 'flex',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     gap: 16,
   },
@@ -26,6 +27,7 @@ export const styles = StyleSheet.create({
   content: {
     display: 'flex',
     gap: 12,
+    marginBottom: 20,
   },
   textColor: {
     color: colors.black['100'],
@@ -55,5 +57,8 @@ export const styles = StyleSheet.create({
     width: 300,
     height: 380,
     borderRadius: 8,
+  },
+  buttonUpdate: {
+    marginBottom: 16,
   },
 });

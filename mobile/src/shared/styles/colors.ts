@@ -5,6 +5,8 @@ export const colors = {
   grey: '#a5a8ab',
   blue: {
     100: '#0693ca',
+    90: '#007cff',
+    80: '#dcf0ff',
   },
   black: {
     100: '#000',

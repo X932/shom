@@ -3,7 +3,6 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList,
 } from '@react-navigation/drawer';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
 import {
@@ -19,8 +18,13 @@ import { authentication } from '@slices';
 import { removePhoneNumber, removeToken } from '@utils';
 import { PrivateScreenList } from '@interfaces';
 import { ProductView } from '../ProductView';
+import { ProductUpdate } from '../ProductUpdate';
+import { styles } from './styles';
 
-const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = ['ProductView'];
+const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = [
+  'ProductView',
+  'ProductUpdate',
+];
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { state, ...restProps } = props;
@@ -39,15 +43,38 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
     restProps.navigation.closeDrawer();
   };
 
+  const currentRoute = {
+    index: state.index,
+    name: '',
+  };
+
   const newState = { ...state };
-  newState.routes = newState.routes.filter(
-    ({ name }) =>
-      !EXCLUDED_DRAWER_ROUTES.includes(name as keyof PrivateScreenList),
-  );
+  newState.routes = newState.routes.filter(({ name }, index) => {
+    if (currentRoute.index === index) {
+      currentRoute.name = name;
+    }
+    return !EXCLUDED_DRAWER_ROUTES.includes(name as keyof PrivateScreenList);
+  });
 
   return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...restProps} state={newState} />
+    <DrawerContentScrollView {...restProps}>
+      {newState.routes.map(route => (
+        <DrawerItem
+          labelStyle={
+            currentRoute.name === route.name
+              ? styles.activeDrawerItemLabel
+              : styles.defaultDrawerItemLabel
+          }
+          style={
+            currentRoute.name === route.name
+              ? styles.activeDrawerItemBg
+              : styles.defaultDrawerItemBg
+          }
+          key={route.key}
+          label={props.descriptors[route.key]?.options.title || route.name}
+          onPress={() => props.navigation.navigate(route.name)}
+        />
+      ))}
       <DrawerItem label="Выйти" onPress={logOutHandler} />
       <DrawerItem label="Выход из акк" onPress={logOutAccountHandler} />
     </DrawerContentScrollView>
@@ -91,7 +118,22 @@ export const Navigator = (): JSX.Element => {
                   headerTitleAlign: 'center',
                 }}
               />
-              <Drawer.Screen name="Sales" component={Sales} />
+              <Drawer.Screen
+                name="ProductUpdate"
+                component={ProductUpdate}
+                options={{
+                  title: 'Обновление продукта',
+                  headerTitleAlign: 'center',
+                }}
+              />
+              <Drawer.Screen
+                name="Sales"
+                component={Sales}
+                options={{
+                  title: 'Продажи',
+                  headerTitleAlign: 'center',
+                }}
+              />
             </>
           ) : (
             <>

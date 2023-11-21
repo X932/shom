@@ -36,11 +36,13 @@ export const ProductsList = () => {
     <MainLayout>
       <SafeAreaView style={styles.container}>
         {isLoading && <Text>Loading . . .</Text>}
-        {/* todo change to flash */}
+        {/* todo create fetch more logic */}
         <FlatList
           data={products}
           renderItem={({ item }) => <Product {...item} />}
           keyExtractor={item => String(item.id)}
+          onEndReachedThreshold={0.7}
+          onEndReached={() => console.log('end of list')}
         />
       </SafeAreaView>
     </MainLayout>

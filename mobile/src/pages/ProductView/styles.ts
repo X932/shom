@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     height: 380,
     borderRadius: 8,
   },
-  buttonUpdate: {
+  buttonDelete: {
     marginBottom: 16,
   },
 });

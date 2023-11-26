@@ -79,9 +79,11 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
           </View>
           <View style={styles.buttonContainer}>
             <Button
-              label="Удалить"
-              variant="danger"
-              onPress={() => setIsModalOpen(true)}
+              label="Изменить"
+              variant="outline"
+              onPress={() =>
+                navigation.navigate('ProductUpdate', { ...product })
+              }
             />
           </View>
         </View>
@@ -118,11 +120,11 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
             style={styles.image}
           />
         </View>
-        <View style={styles.buttonUpdate}>
+        <View style={styles.buttonDelete}>
           <Button
-            label="Изменить"
-            variant="outline"
-            onPress={() => navigation.navigate('ProductUpdate', { ...product })}
+            label="Удалить"
+            variant="danger"
+            onPress={() => setIsModalOpen(true)}
           />
         </View>
       </MainLayout>

@@ -5,17 +5,26 @@ import { IUpdateProductForm } from './interface';
 
 interface IUpdateProductAPIParams {
   product: IUpdateProductForm;
-  file: any;
+  image: any;
+  oldImagePath: string;
   setIsLoading: (state: boolean) => void;
   successResponseHandler: () => void;
 }
 
-const uploadImage = async (file: any) => {
-  if (file != null) {
+const deleteImage = async (path: string) => {
+  await axiosInstance<IResponseWrapper>('/media', {
+    method: 'delete',
+    data: {
+      path: path,
+    },
+  });
+};
+
+const uploadImage = async (image: any) => {
+  if (image != null) {
     const formData = new FormData();
-    formData.append('name', 'Image New');
-    formData.append('file', file);
-    const { data } = await axiosInstance<IResponseWrapper<string>>('/medias', {
+    formData.append('file', image);
+    const { data } = await axiosInstance<IResponseWrapper<string>>('/media', {
       method: 'post',
       data: formData,
       headers: {
@@ -29,11 +38,15 @@ const uploadImage = async (file: any) => {
 };
 
 export const updateProductAPI = async (params: IUpdateProductAPIParams) => {
-  const { setIsLoading, successResponseHandler, file, product } = params;
+  const { setIsLoading, successResponseHandler, image, oldImagePath, product } =
+    params;
   try {
-    // todo - delete old photo (files/) before upload if set new photo
-    // const filePath = await uploadImage(file);
-    const filePath = file.uri;
+    let filePath: string | undefined = image.uri;
+
+    if (!image.uri?.includes('files/')) {
+      await deleteImage(oldImagePath);
+      filePath = await uploadImage(image);
+    }
 
     if (!filePath) {
       return;

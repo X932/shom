@@ -19,14 +19,12 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   navigation,
 }) => {
   const product = route.params as IProduct;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [file, setFile] = useState<any>();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    defaultValues: {
+  const [image, setImage] = useState<any>();
+
+  const setDefaultFormValue = (product: IProduct) => {
+    return {
       ...product,
       details: product.details.map<IUpdateDetail>(detail => ({
         id: detail.id,
@@ -36,7 +34,16 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
           amount: String(detail.price.amount),
         },
       })),
-    },
+    };
+  };
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: setDefaultFormValue(product),
   });
   const { fields, append, remove } = useFieldArray({
     name: 'details',
@@ -49,9 +56,9 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       const res = await pick({
         type: [types.images],
       });
-      setFile(res[0]);
+      setImage(res[0]);
     } catch {
-      setFile(null);
+      setImage(null);
     }
   };
 
@@ -72,7 +79,8 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       product: values,
       setIsLoading: setIsLoading,
       successResponseHandler: successResponseHandler,
-      file: file,
+      image: image,
+      oldImagePath: product.imgPath,
     });
   };
 
@@ -86,7 +94,8 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
 
   useFocusEffect(
     useCallback(() => {
-      setFile({ uri: product.imgPath });
+      setImage({ uri: product.imgPath });
+      reset(setDefaultFormValue(product));
     }, [product.imgPath]),
   );
 
@@ -100,12 +109,12 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
           variant="outline"
         />
 
-        {file && (
+        {image?.uri && (
           <View style={styles.imageContainer}>
             <Image
               style={styles.image}
               source={{
-                uri: getImageUri(file.uri),
+                uri: getImageUri(image.uri),
               }}
             />
           </View>
@@ -210,8 +219,13 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         </View>
         <Button
           label="Сохранить"
-          disabled={isLoading || !isValid || !file}
+          disabled={isLoading || !isValid || !image}
           onPress={handleSubmit(submitHandler)}
+        />
+        <Button
+          label="Отменить"
+          onPress={() => redirectToViewProduct(product)}
+          variant="outline"
         />
       </View>
     </ScrollView>

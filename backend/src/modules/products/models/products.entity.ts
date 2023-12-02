@@ -1,11 +1,14 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductsDetailsEntity } from './products-details.entity';
+import { InventoryEntity } from '../../inventory/models/inventory.entity';
 
 @Entity('products')
 export class ProductsEntity {
@@ -34,4 +37,11 @@ export class ProductsEntity {
     },
   })
   details: ProductsDetailsEntity[];
+
+  @ManyToOne(
+    () => InventoryEntity,
+    (inventory: InventoryEntity) => inventory.products,
+  )
+  @JoinColumn({ name: 'inventory_id' })
+  inventory: InventoryEntity;
 }

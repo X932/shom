@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { InventoryEntity } from './modules/inventory/models/inventory.entity';
 import { MediaModule } from './modules/media/media.module';
 import { ProductsDetailsEntity } from './modules/products/models/products-details.entity';
 import { ProductsPricesEntity } from './modules/products/models/products-prices.entity';
@@ -26,6 +28,7 @@ import { UsersModule } from './modules/users/users.module';
     UsersModule,
     ProductsModule,
     MediaModule,
+    InventoryModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..'),
@@ -45,6 +48,7 @@ import { UsersModule } from './modules/users/users.module';
         ProductsEntity,
         ProductsDetailsEntity,
         ProductsPricesEntity,
+        InventoryEntity,
       ],
       synchronize: true,
     }),

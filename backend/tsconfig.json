@@ -12,6 +12,7 @@
     "baseUrl": "src",
     "paths": {
       "@utils/*": ["shared/utils/*"],
+      "@common-types/*": ["shared/common-types/*"],
       "@interceptors/*": ["shared/interceptors/*"],
       "@decorators/*": ["shared/decorators/*"],
       "@pipes/*": ["shared/pipes/*"],

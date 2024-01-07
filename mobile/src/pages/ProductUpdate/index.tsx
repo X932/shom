@@ -1,7 +1,7 @@
 import { Button, Input } from '@components';
 import { colors } from '@styles';
 import { FC, useCallback, useState } from 'react';
-import { Image, ScrollView, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
 import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import { PrivateNavigatorScreenProps } from '@interfaces';
 import { useFocusEffect } from '@react-navigation/native';
 import { MEDIA_BASE_URL } from '@env';
 import { IProduct } from '../ProductsList/interface';
-import { getProductsAPI } from '../ProductsList/service';
+import { getProductAPI } from '../ProductView/service';
 import { styles } from './styles';
 import { updateProductAPI } from './service';
 import { IUpdateDetail, IUpdateProductForm } from './interface';
@@ -18,8 +18,9 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   route,
   navigation,
 }) => {
-  const product = route.params as IProduct;
+  const { id: productID } = route.params as Pick<IProduct, 'id'>;
 
+  const [product, setProduct] = useState<IProduct | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState<any>();
 
@@ -29,6 +30,10 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       details: product.details.map<IUpdateDetail>(detail => ({
         id: detail.id,
         size: String(detail.size),
+        inventory: {
+          ...detail.inventory,
+          quantity: String(detail.inventory.quantity),
+        },
         price: {
           id: detail.price.id,
           amount: String(detail.price.amount),
@@ -42,8 +47,8 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm({
-    defaultValues: setDefaultFormValue(product),
+  } = useForm<IUpdateProductForm>({
+    defaultValues: {},
   });
   const { fields, append, remove } = useFieldArray({
     name: 'details',
@@ -66,10 +71,11 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
     navigation.navigate('ProductView', product);
   };
 
-  const successResponseHandler = () => {
-    getProductsAPI({
+  const successResponseHandler = (id: number) => {
+    getProductAPI({
       setIsLoading: setIsLoading,
-      successResponseHandler: products => redirectToViewProduct(products[0]),
+      successResponseHandler: product => redirectToViewProduct(product),
+      id: id,
     });
   };
 
@@ -80,7 +86,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       setIsLoading: setIsLoading,
       successResponseHandler: successResponseHandler,
       image: image,
-      oldImagePath: product.imgPath,
+      oldImagePath: product?.imgPath || '',
     });
   };
 
@@ -94,9 +100,16 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
 
   useFocusEffect(
     useCallback(() => {
-      setImage({ uri: product.imgPath });
-      reset(setDefaultFormValue(product));
-    }, [product.imgPath]),
+      getProductAPI({
+        id: productID,
+        setIsLoading: setIsLoading,
+        successResponseHandler: product => {
+          setImage({ uri: product.imgPath });
+          reset(setDefaultFormValue(product));
+          setProduct(product);
+        },
+      });
+    }, []),
   );
 
   return (
@@ -119,21 +132,24 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
             />
           </View>
         )}
-        <Controller
-          name="title"
-          control={control}
-          rules={{ required: { value: true, message: 'Обязательное поле' } }}
-          render={({ field }) => (
-            <Input
-              {...field}
-              onChangeText={value => field.onChange(value)}
-              placeholder="Название"
-              keyboardType="default"
-              cursorColor={colors.black['100']}
-              errorMessage={errors.title?.message}
-            />
-          )}
-        />
+        <View style={styles.productTypesContainer}>
+          <Text style={{ textAlign: 'left' }}>Название</Text>
+          <Controller
+            name="title"
+            control={control}
+            rules={{ required: { value: true, message: 'Обязательное поле' } }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                onChangeText={value => field.onChange(value)}
+                placeholder="Название"
+                keyboardType="default"
+                cursorColor={colors.black['100']}
+                errorMessage={errors.title?.message}
+              />
+            )}
+          />
+        </View>
         <Controller
           name="description"
           control={control}
@@ -154,6 +170,27 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         <View style={styles.productTypesContainer}>
           {fields.map((field, index) => (
             <View style={styles.productType} key={field.id}>
+              <Controller
+                name={`details.${index}.inventory.quantity`}
+                control={control}
+                rules={{
+                  required: { value: true, message: 'Обязательное поле' },
+                  pattern: { value: /^\d*$/, message: 'Только цифры' },
+                }}
+                render={({ field: { onChange, ...props } }) => (
+                  <Input
+                    placeholder="Количество"
+                    keyboardType="numeric"
+                    cursorColor={colors.black['100']}
+                    onChangeText={value => onChange(allowOnlyNumber(value))}
+                    errorMessage={
+                      errors.details &&
+                      errors.details[index]?.inventory?.quantity?.message
+                    }
+                    {...props}
+                  />
+                )}
+              />
               <Controller
                 name={`details.${index}.size`}
                 control={control}
@@ -211,7 +248,15 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
             <Button
               label="+"
               onPress={() => {
-                append({ price: { amount: '' }, size: '' });
+                append({
+                  price: {
+                    amount: '',
+                  },
+                  size: '',
+                  inventory: {
+                    quantity: '1',
+                  },
+                });
               }}
               variant="outline"
             />
@@ -224,7 +269,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         />
         <Button
           label="Отменить"
-          onPress={() => redirectToViewProduct(product)}
+          onPress={() => redirectToViewProduct(product as IProduct)}
           variant="outline"
         />
       </View>

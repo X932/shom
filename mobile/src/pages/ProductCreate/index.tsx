@@ -17,18 +17,20 @@ export const ProductCreate = () => {
     reset,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<ICreateProductForm>({
     defaultValues: {
       title: '',
       description: '',
       details: [
         {
+          quantity: '1',
           size: '',
           price: { amount: '' },
         },
       ],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     name: 'details',
     control: control,
@@ -117,6 +119,26 @@ export const ProductCreate = () => {
           {fields.map((field, index) => (
             <View style={styles.productType} key={field.id}>
               <Controller
+                name={`details.${index}.quantity`}
+                control={control}
+                rules={{
+                  required: { value: true, message: 'Обязательное поле' },
+                  pattern: { value: /^\d*$/, message: 'Только цифры' },
+                }}
+                render={({ field: { onChange, ...props } }) => (
+                  <Input
+                    placeholder="Количество"
+                    keyboardType="numeric"
+                    cursorColor={colors.black['100']}
+                    onChangeText={value => onChange(allowOnlyNumber(value))}
+                    errorMessage={
+                      errors.details && errors.details[index]?.quantity?.message
+                    }
+                    {...props}
+                  />
+                )}
+              />
+              <Controller
                 name={`details.${index}.size`}
                 control={control}
                 rules={{
@@ -173,7 +195,13 @@ export const ProductCreate = () => {
             <Button
               label="+"
               onPress={() => {
-                append({ price: { amount: '' }, size: '' });
+                append({
+                  size: '',
+                  quantity: '1',
+                  price: {
+                    amount: '',
+                  },
+                });
               }}
               variant="outline"
             />

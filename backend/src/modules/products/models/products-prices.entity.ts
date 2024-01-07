@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('products_prices')
 export class ProductsPricesEntity {
@@ -8,4 +14,8 @@ export class ProductsPricesEntity {
 
   @Column()
   amount: number;
+
+  @Exclude()
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date;
 }

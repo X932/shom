@@ -3,6 +3,7 @@ interface IPrice {
 }
 
 interface IDetail {
+  quantity: string;
   size: string;
   price: IPrice;
 }

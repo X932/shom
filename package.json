@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "*---1---*": "develop app on your local machine with local data",
-    "local:backend": "yarn --cwd backend start:dev",
+    "local:backend": "yarn --cwd backend start",
     "local:mobile-start": "yarn --cwd mobile start",
     "local:run-android": "wait-on http://localhost:8081 && yarn --cwd mobile android",
     "local": "cross-env FORCE_COLOR=1 npm-run-all -l -p local:*",

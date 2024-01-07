@@ -1,3 +1,5 @@
+import { IInventory } from '@interfaces';
+
 interface IPrice {
   id: number;
   amount: number;
@@ -7,6 +9,7 @@ interface IDetail {
   id: number;
   size: number;
   price: IPrice;
+  inventory: IInventory;
 }
 
 export interface IProduct {

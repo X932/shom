@@ -5,10 +5,11 @@ import { ProductsPricesEntity } from './models/products-prices.entity';
 import { ProductsEntity } from './models/products.entity';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import { MediaService } from '../media/media.service';
 
 @Module({
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, MediaService],
   imports: [
     TypeOrmModule.forFeature([
       ProductsEntity,

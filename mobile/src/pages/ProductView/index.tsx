@@ -82,7 +82,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
               label="Изменить"
               variant="outline"
               onPress={() =>
-                navigation.navigate('ProductUpdate', { ...product })
+                navigation.navigate('ProductUpdate', { id: product.id })
               }
             />
           </View>
@@ -95,7 +95,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
           </Text>
           <Card>
             <View style={styles.detailsContainer}>
-              {product.details.map(({ id, price, size }, index) => (
+              {product.details.map(({ id, price, size, inventory }, index) => (
                 <View
                   style={[
                     styles.detailContainer,
@@ -103,10 +103,13 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
                   ]}
                   key={id}>
                   <Text style={[styles.textColor, styles.detailText]}>
-                    {price.amount} сом
+                    {inventory.quantity} шт
                   </Text>
                   <Text style={[styles.textColor, styles.detailText]}>
                     Возраст: {size}
+                  </Text>
+                  <Text style={[styles.textColor, styles.detailText]}>
+                    {price.amount} сом
                   </Text>
                 </View>
               ))}

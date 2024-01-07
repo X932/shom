@@ -1,7 +1,11 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -10,30 +14,30 @@ import { ProductsEntity } from '../../products/models/products.entity';
 
 @Entity('inventory')
 export class InventoryEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   quantity: number;
 
-  @OneToMany(
+  @ManyToOne(
     () => ProductsEntity,
-    (product: ProductsEntity) => product.inventory,
-    {
-      cascade: true,
-    },
+    (product: ProductsEntity) => product.inventories,
   )
-  products: ProductsEntity[];
+  @JoinColumn({ name: 'product_id' })
+  product: ProductsEntity;
 
   @OneToMany(
     () => ProductsDetailsEntity,
     (productDetails: ProductsDetailsEntity) => productDetails.inventory,
-    {
-      cascade: true,
-    },
   )
   productsDetails: ProductsDetailsEntity[];
 
+  @Exclude()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 }

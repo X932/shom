@@ -8,7 +8,7 @@ interface IUpdateProductAPIParams {
   image: any;
   oldImagePath: string;
   setIsLoading: (state: boolean) => void;
-  successResponseHandler: () => void;
+  successResponseHandler: (id: number) => void;
 }
 
 const deleteImage = async (path: string) => {
@@ -58,7 +58,7 @@ export const updateProductAPI = async (params: IUpdateProductAPIParams) => {
       data: { ...product, imgPath: filePath },
     });
     showSuccessToast(data.message);
-    successResponseHandler();
+    successResponseHandler(product.id);
   } catch (error: any) {
     if (error.response) {
       showErrorToast(error.response.data.message);

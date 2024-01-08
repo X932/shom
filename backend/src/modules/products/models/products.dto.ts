@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
+import { CreateUpdateInventoryDto } from '../../inventory/models/inventory.dto';
 
 class CreateProductPriceDto {
   @IsNumber()
@@ -15,6 +16,10 @@ class CreateProductPriceDto {
 }
 
 class CreateProductDetailsDto {
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  quantity: number;
+
   @Transform(({ value }) => Number(value))
   @IsNumber()
   size: number;
@@ -47,25 +52,27 @@ class UpdateProductPriceDto extends CreateProductPriceDto {
   @IsOptional()
   @IsNumber()
   id?: number;
-
-  @IsNumber()
-  amount: number;
 }
 
-class UpdateProductDetailsDto extends CreateProductDetailsDto {
+class UpdateProductDetailsDto {
   @IsOptional()
   @IsNumber()
   id?: number;
 
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   size: number;
 
   @ValidateNested({ each: true })
   @Type(() => UpdateProductPriceDto)
   price: UpdateProductPriceDto;
+
+  @ValidateNested({ each: true })
+  @Type(() => CreateUpdateInventoryDto)
+  inventory: CreateUpdateInventoryDto;
 }
 
-export class UpdateProductDto extends CreateProductDto {
+export class UpdateProductDto {
   @IsNumber()
   id: number;
 

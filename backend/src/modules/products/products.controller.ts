@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   ParseIntPipe,
   Post,
   Put,
@@ -31,6 +32,11 @@ export class ProductsController {
     return this.productsService.find({ id: Number(id) || undefined });
   }
 
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.findOne(id);
+  }
+
   @Put()
   @UsePipes(TrimPipe)
   update(@Body() product: UpdateProductDto) {
@@ -39,6 +45,6 @@ export class ProductsController {
 
   @Delete()
   delete(@Query('id', ParseIntPipe) id: number) {
-    return this.productsService.delete({ id: id });
+    return this.productsService.delete(id);
   }
 }

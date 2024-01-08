@@ -18,7 +18,7 @@ export class InventoryService {
     const { rowsLimit, rowsOffset } = getInventoryDto;
     const [list, totalCount] = await this.inventoryRepository.findAndCount({
       relations: {
-        products: true,
+        product: true,
         productsDetails: {
           price: true,
         },

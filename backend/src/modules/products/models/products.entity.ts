@@ -1,12 +1,13 @@
 import {
   Column,
+  DeleteDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { ProductsDetailsEntity } from './products-details.entity';
 import { InventoryEntity } from '../../inventory/models/inventory.entity';
 
@@ -24,7 +25,12 @@ export class ProductsEntity {
   @Column({ name: 'img_path' })
   imgPath: string;
 
-  @ManyToMany(() => ProductsDetailsEntity, (details) => details.product)
+  @ManyToMany(() => ProductsDetailsEntity, (details) => details.product, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    orphanedRowAction: 'soft-delete',
+  })
   @JoinTable({
     name: 'full_products_info',
     joinColumn: {
@@ -38,10 +44,18 @@ export class ProductsEntity {
   })
   details: ProductsDetailsEntity[];
 
-  @ManyToOne(
+  @OneToMany(
     () => InventoryEntity,
-    (inventory: InventoryEntity) => inventory.products,
+    (inventory: InventoryEntity) => inventory.product,
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      cascade: true,
+    },
   )
-  @JoinColumn({ name: 'inventory_id' })
-  inventory: InventoryEntity;
+  inventories: InventoryEntity[];
+
+  @Exclude()
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 }

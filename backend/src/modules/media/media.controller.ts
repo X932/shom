@@ -1,6 +1,4 @@
-import { rmSync } from 'fs';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,10 +7,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { MediaService } from './media.service';
 import { DeleteMediaDto } from './models/media.dto';
 
 @Controller('media')
 export class MediaController {
+  constructor(private readonly mediaService: MediaService) {}
+
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File) {
@@ -21,12 +22,6 @@ export class MediaController {
 
   @Delete()
   delete(@Body() file: DeleteMediaDto) {
-    try {
-      if (file.path.match(/^files\//)) {
-        rmSync(file.path, { force: true });
-      }
-    } catch {
-      throw new BadRequestException();
-    }
+    return this.mediaService.delete(file.path);
   }
 }

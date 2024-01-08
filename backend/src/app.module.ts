@@ -1,8 +1,9 @@
 import { join } from 'path';
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { InventoryEntity } from './modules/inventory/models/inventory.entity';
 import { MediaModule } from './modules/media/media.module';
@@ -54,6 +55,12 @@ import { UsersModule } from './modules/users/users.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}

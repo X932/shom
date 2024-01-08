@@ -6,6 +6,7 @@ export function getNewProductSub() {
   product.imgPath = '/imgPath98';
   product.details = [
     {
+      quantity: 1,
       size: 1,
       price: {
         amount: 100,
@@ -27,6 +28,7 @@ export function findOneProductSub(params: {
     product.description = 'description' + id;
     product.details = [
       {
+        quantity: 1,
         size: 1,
         price: {
           amount: 100,

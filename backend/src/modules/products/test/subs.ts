@@ -11,6 +11,7 @@ export function getNewProductSub() {
       price: {
         amount: 100,
       },
+      branchId: 1,
     },
   ];
   product.description = 'description98';
@@ -33,6 +34,7 @@ export function findOneProductSub(params: {
         price: {
           amount: 100,
         },
+        branchId: 1,
       },
     ];
     return { id: id, ...product };

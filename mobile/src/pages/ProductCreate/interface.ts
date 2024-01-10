@@ -4,6 +4,7 @@ interface IPrice {
 
 interface IDetail {
   quantity: string;
+  branchId: string;
   size: string;
   price: IPrice;
 }

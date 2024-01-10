@@ -22,6 +22,10 @@ class CreateProductDetailsDto {
 
   @Transform(({ value }) => Number(value))
   @IsNumber()
+  branchId: number;
+
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   size: number;
 
   @ValidateNested({ each: true })

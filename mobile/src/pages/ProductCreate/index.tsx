@@ -1,17 +1,24 @@
 import { Button, Input } from '@components';
 import { colors } from '@styles';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Dropdown } from 'react-native-element-dropdown';
+import { useFocusEffect } from '@react-navigation/native';
+import { getBranchesAPI } from '@services';
+import { IList } from '@interfaces';
 import { styles } from './styles';
 import { createProductAPI } from './service';
 import { ICreateProductForm } from './interface';
 
 export const ProductCreate = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownFocus, setIsDropdownFocus] = useState(false);
+  const [branches, setBranches] = useState<IList[]>([]);
   const [file, setFile] = useState<any>();
+
   const {
     control,
     reset,
@@ -26,6 +33,7 @@ export const ProductCreate = () => {
           quantity: '1',
           size: '',
           price: { amount: '' },
+          branchId: '',
         },
       ],
     },
@@ -63,6 +71,29 @@ export const ProductCreate = () => {
     });
   };
 
+  const getBranches = async () => {
+    const data = await getBranchesAPI();
+
+    if (data) {
+      const parsedBranches: IList[] = data.map(({ id, title }) => ({
+        value: id,
+        label: title,
+      }));
+      setBranches(parsedBranches);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getBranches();
+
+      return () => {
+        reset();
+        setFile(undefined);
+      };
+    }, []),
+  );
+
   return (
     <ScrollView style={styles.viewContainer}>
       <View style={styles.formContainer}>
@@ -86,7 +117,7 @@ export const ProductCreate = () => {
         <Controller
           name="title"
           control={control}
-          rules={{ required: { value: true, message: 'Обязательное поле' } }}
+          rules={{ required: 'Обязательное поле' }}
           render={({ field }) => (
             <Input
               {...field}
@@ -122,7 +153,7 @@ export const ProductCreate = () => {
                 name={`details.${index}.quantity`}
                 control={control}
                 rules={{
-                  required: { value: true, message: 'Обязательное поле' },
+                  required: 'Обязательное поле',
                   pattern: { value: /^\d*$/, message: 'Только цифры' },
                 }}
                 render={({ field: { onChange, ...props } }) => (
@@ -142,7 +173,7 @@ export const ProductCreate = () => {
                 name={`details.${index}.size`}
                 control={control}
                 rules={{
-                  required: { value: true, message: 'Обязательное поле' },
+                  required: 'Обязательное поле',
                   pattern: { value: /^\d*$/, message: 'Только цифры' },
                 }}
                 render={({ field: { onChange, ...props } }) => (
@@ -162,7 +193,7 @@ export const ProductCreate = () => {
                 name={`details.${index}.price.amount`}
                 control={control}
                 rules={{
-                  required: { value: true, message: 'Обязательное поле' },
+                  required: 'Обязательное поле',
                   pattern: { value: /^\d*$/, message: 'Только цифры' },
                 }}
                 render={({ field: { onChange, ...props } }) => (
@@ -179,6 +210,47 @@ export const ProductCreate = () => {
                   />
                 )}
               />
+              <View style={styles.dropdownContainer}>
+                <Controller
+                  name={`details.${index}.branchId`}
+                  control={control}
+                  rules={{
+                    required: 'Выберите место',
+                  }}
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.dropdownText}
+                      selectedTextStyle={styles.dropdownText}
+                      inputSearchStyle={[
+                        styles.inputSearch,
+                        styles.dropdownText,
+                      ]}
+                      containerStyle={styles.listContainer}
+                      backgroundColor={'#c8c4c452'}
+                      data={branches}
+                      search
+                      maxHeight={250}
+                      labelField="label"
+                      dropdownPosition="top"
+                      valueField="value"
+                      placeholder={isDropdownFocus ? '...' : 'Место'}
+                      searchPlaceholder="Поиск..."
+                      value={value}
+                      onFocus={() => setIsDropdownFocus(true)}
+                      onBlur={() => {
+                        onBlur();
+                        setIsDropdownFocus(false);
+                      }}
+                      onChange={item => {
+                        onChange(item.value);
+                        setIsDropdownFocus(false);
+                      }}
+                    />
+                  )}
+                />
+              </View>
+
               <View style={styles.actionTypeButton}>
                 <Button
                   label="-"
@@ -201,6 +273,7 @@ export const ProductCreate = () => {
                   price: {
                     amount: '',
                   },
+                  branchId: '',
                 });
               }}
               variant="outline"

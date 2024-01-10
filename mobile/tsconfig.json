@@ -18,6 +18,7 @@
     "paths": {
       "@pages": ["src/pages/"],
       "@styles": ["src/shared/styles/index.ts"],
+      "@services": ["src/shared/services/index.ts"],
       "@utils": ["src/shared/utils/index.ts"],
       "@interfaces": ["src/shared/interfaces/index.ts"],
       "@components": ["src/shared/components/index.ts"],

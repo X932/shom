@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BranchesEntity } from '../../branches/models/branches.entity';
 import { ProductsDetailsEntity } from '../../products/models/products-details.entity';
 import { ProductsEntity } from '../../products/models/products.entity';
 
@@ -26,6 +27,13 @@ export class InventoryEntity {
   )
   @JoinColumn({ name: 'product_id' })
   product: ProductsEntity;
+
+  @ManyToOne(
+    () => BranchesEntity,
+    (branch: BranchesEntity) => branch.inventories,
+  )
+  @JoinColumn({ name: 'branch_id' })
+  branch: BranchesEntity;
 
   @OneToMany(
     () => ProductsDetailsEntity,

@@ -7,6 +7,7 @@ import { ProductsPricesEntity } from './models/products-prices.entity';
 import { CreateProductDto, UpdateProductDto } from './models/products.dto';
 import { ProductsEntity } from './models/products.entity';
 import { InventoryEntity } from '../inventory/models/inventory.entity';
+import { BranchesEntity } from '../branches/models/branches.entity';
 
 @Injectable()
 export class ProductsService {
@@ -56,6 +57,8 @@ export class ProductsService {
         const newInventory = new InventoryEntity();
         newInventory.product = createdProduct;
         newInventory.quantity = productDetails.quantity;
+        newInventory.branch = new BranchesEntity();
+        newInventory.branch.id = productDetails.branchId;
 
         newDetails.inventory = newInventory;
         newProductDetails.push(newDetails);

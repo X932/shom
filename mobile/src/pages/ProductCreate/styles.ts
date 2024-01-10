@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: '100%',
     gap: 8,
-    marginTop: 12,
+    marginTop: 20,
     borderBottomWidth: 1,
     paddingBottom: 8,
   },
@@ -33,5 +33,25 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     flex: 1,
     aspectRatio: 1,
+  },
+  dropdownContainer: {
+    width: '100%',
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  listContainer: {
+    borderRadius: 8,
+  },
+  dropdownText: {
+    fontSize: 16,
+  },
+  inputSearch: {
+    height: 40,
+    borderRadius: 8,
   },
 });

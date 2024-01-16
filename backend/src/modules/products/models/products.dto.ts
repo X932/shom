@@ -81,12 +81,11 @@ export class UpdateProductDto {
   id: number;
 
   @IsString()
-  @IsNotBlank()
+  @IsOptional()
   title: string;
 
   @IsString()
   @IsOptional()
-  @IsNotBlank()
   description: string;
 
   @IsString()

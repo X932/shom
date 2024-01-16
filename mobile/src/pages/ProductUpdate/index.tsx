@@ -1,13 +1,15 @@
-import { Button, Input } from '@components';
+import { Button, dropdownStyles, Input } from '@components';
 import { colors } from '@styles';
 import { FC, useCallback, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { PrivateNavigatorScreenProps } from '@interfaces';
+import { IList, PrivateNavigatorScreenProps } from '@interfaces';
 import { useFocusEffect } from '@react-navigation/native';
 import { MEDIA_BASE_URL } from '@env';
+import { Dropdown } from 'react-native-element-dropdown';
+import { getBranchesAPI } from '@services';
 import { IProduct } from '../ProductsList/interface';
 import { getProductAPI } from '../ProductView/service';
 import { styles } from './styles';
@@ -22,7 +24,8 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
 
   const [product, setProduct] = useState<IProduct | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [image, setImage] = useState<any>();
+  const [file, setFile] = useState<any>();
+  const [branches, setBranches] = useState<IList[]>([]);
 
   const setDefaultFormValue = (product: IProduct) => {
     return {
@@ -32,6 +35,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         size: String(detail.size),
         inventory: {
           ...detail.inventory,
+          branchId: String(detail.inventory.branch.id),
           quantity: String(detail.inventory.quantity),
         },
         price: {
@@ -61,9 +65,9 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       const res = await pick({
         type: [types.images],
       });
-      setImage(res[0]);
+      setFile(res[0]);
     } catch {
-      setImage(null);
+      setFile(null);
     }
   };
 
@@ -85,7 +89,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
       product: values,
       setIsLoading: setIsLoading,
       successResponseHandler: successResponseHandler,
-      image: image,
+      image: file,
       oldImagePath: product?.imgPath || '',
     });
   };
@@ -98,17 +102,36 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
     return uri;
   };
 
+  const getInitialData = async () => {
+    const data = await getBranchesAPI();
+
+    if (data) {
+      const parsedBranches: IList[] = data.map(({ id, title }) => ({
+        value: id,
+        label: title,
+      }));
+      setBranches(parsedBranches);
+    }
+
+    getProductAPI({
+      id: productID,
+      setIsLoading: setIsLoading,
+      successResponseHandler: product => {
+        setFile({ uri: product.imgPath });
+        reset(setDefaultFormValue(product));
+        setProduct(product);
+      },
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
-      getProductAPI({
-        id: productID,
-        setIsLoading: setIsLoading,
-        successResponseHandler: product => {
-          setImage({ uri: product.imgPath });
-          reset(setDefaultFormValue(product));
-          setProduct(product);
-        },
-      });
+      getInitialData();
+
+      return () => {
+        reset();
+        setFile(undefined);
+      };
     }, []),
   );
 
@@ -122,12 +145,12 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
           variant="outline"
         />
 
-        {image?.uri && (
+        {file?.uri && (
           <View style={styles.imageContainer}>
             <Image
               style={styles.image}
               source={{
-                uri: getImageUri(image.uri),
+                uri: getImageUri(file.uri),
               }}
             />
           </View>
@@ -232,6 +255,46 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
                   />
                 )}
               />
+
+              <View style={dropdownStyles.dropdownContainer}>
+                <Controller
+                  name={`details.${index}.inventory.branchId`}
+                  control={control}
+                  rules={{
+                    required: 'Выберите место',
+                  }}
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Dropdown
+                      style={[dropdownStyles.dropdown]}
+                      placeholderStyle={dropdownStyles.dropdownText}
+                      selectedTextStyle={dropdownStyles.dropdownText}
+                      inputSearchStyle={[
+                        dropdownStyles.inputSearch,
+                        dropdownStyles.dropdownText,
+                      ]}
+                      containerStyle={dropdownStyles.listContainer}
+                      backgroundColor={'#c8c4c452'}
+                      data={branches}
+                      search
+                      maxHeight={250}
+                      labelField="label"
+                      valueField="value"
+                      dropdownPosition="top"
+                      placeholder={
+                        branches.find(branch => branch.value === +value)
+                          ?.label || 'Место'
+                      }
+                      searchPlaceholder="Поиск..."
+                      value={value}
+                      onBlur={() => onBlur()}
+                      onChange={item => {
+                        onChange(item.value);
+                      }}
+                    />
+                  )}
+                />
+              </View>
+
               <View style={styles.actionTypeButton}>
                 <Button
                   label="-"
@@ -255,6 +318,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
                   size: '',
                   inventory: {
                     quantity: '1',
+                    branchId: '',
                   },
                 });
               }}
@@ -264,7 +328,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         </View>
         <Button
           label="Сохранить"
-          disabled={isLoading || !isValid || !image}
+          disabled={isLoading || !isValid || !file}
           onPress={handleSubmit(submitHandler)}
         />
         <Button

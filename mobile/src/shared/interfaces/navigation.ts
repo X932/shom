@@ -17,7 +17,7 @@ export type PrivateScreenList = {
   Sales: undefined;
   ProductCreate: undefined;
   ProductsList: undefined;
-  ProductView: IProduct;
+  ProductView: Pick<IProduct, 'id'>;
   ProductUpdate: Pick<IProduct, 'id'>;
 };
 

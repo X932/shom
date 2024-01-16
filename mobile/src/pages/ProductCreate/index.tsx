@@ -1,4 +1,4 @@
-import { Button, Input } from '@components';
+import { Button, dropdownStyles, Input } from '@components';
 import { colors } from '@styles';
 import { useCallback, useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
@@ -210,7 +210,7 @@ export const ProductCreate = () => {
                   />
                 )}
               />
-              <View style={styles.dropdownContainer}>
+              <View style={dropdownStyles.dropdownContainer}>
                 <Controller
                   name={`details.${index}.branchId`}
                   control={control}
@@ -219,14 +219,14 @@ export const ProductCreate = () => {
                   }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.dropdownText}
-                      selectedTextStyle={styles.dropdownText}
+                      style={[dropdownStyles.dropdown]}
+                      placeholderStyle={dropdownStyles.dropdownText}
+                      selectedTextStyle={dropdownStyles.dropdownText}
                       inputSearchStyle={[
-                        styles.inputSearch,
-                        styles.dropdownText,
+                        dropdownStyles.inputSearch,
+                        dropdownStyles.dropdownText,
                       ]}
-                      containerStyle={styles.listContainer}
+                      containerStyle={dropdownStyles.listContainer}
                       backgroundColor={'#c8c4c452'}
                       data={branches}
                       search

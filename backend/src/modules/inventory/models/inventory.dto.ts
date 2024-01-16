@@ -12,4 +12,8 @@ export class CreateUpdateInventoryDto {
   @IsNumber()
   @Transform(({ value }) => Number(value))
   quantity: number;
+
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  branchId: number;
 }

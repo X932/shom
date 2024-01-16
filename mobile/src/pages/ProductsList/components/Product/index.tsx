@@ -8,22 +8,14 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { IProduct } from '../../interface';
 import { styles } from './styles';
 
-export const Product: FC<IProduct> = ({
-  title,
-  description,
-  imgPath,
-  ...restProps
-}) => {
+export const Product: FC<IProduct> = ({ title, description, imgPath, id }) => {
   const navigation = useNavigation<DrawerNavigationProp<PrivateScreenList>>();
 
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('ProductView', {
-          title: title,
-          description: description,
-          imgPath: imgPath,
-          ...restProps,
+          id: id,
         })
       }
       activeOpacity={1}

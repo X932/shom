@@ -31,6 +31,9 @@ export class InventoryEntity {
   @ManyToOne(
     () => BranchesEntity,
     (branch: BranchesEntity) => branch.inventories,
+    {
+      cascade: true,
+    },
   )
   @JoinColumn({ name: 'branch_id' })
   branch: BranchesEntity;

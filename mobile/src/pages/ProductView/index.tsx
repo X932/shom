@@ -1,18 +1,20 @@
 import { Button, Card } from '@components';
 import { MEDIA_BASE_URL } from '@env';
 import { PrivateNavigatorScreenProps } from '@interfaces';
+import { useFocusEffect } from '@react-navigation/native';
 import { MainLayout } from '@ui-layouts';
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { Image, Modal, ScrollView, Text, View } from 'react-native';
 import { IProduct } from '../ProductsList/interface';
-import { deleteProductAPI } from './service';
+import { deleteProductAPI, getProductAPI } from './service';
 import { styles } from './styles';
 
 export const ProductView: FC<PrivateNavigatorScreenProps> = ({
   route,
   navigation,
 }) => {
-  const product = route.params as IProduct;
+  const { id: productID } = route.params as Pick<IProduct, 'id'>;
+  const [product, setProduct] = useState<IProduct | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,12 +30,24 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
   const deleteHandler = () => {
     setIsLoading(true);
     deleteProductAPI({
-      id: product.id,
+      id: productID,
       setIsLoading: setIsLoading,
       successResponseHandler: successResponseHandler,
       errorResponseHandler: errorResponseHandler,
     });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getProductAPI({
+        id: productID,
+        setIsLoading: setIsLoading,
+        successResponseHandler: product => {
+          setProduct(product);
+        },
+      });
+    }, []),
+  );
 
   return (
     <ScrollView>
@@ -48,7 +62,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalHeader}>
-                Уверены, что хотите удалить {product.title.toLowerCase()}?
+                Уверены, что хотите удалить {product?.title.toLowerCase()}?
               </Text>
               <View style={styles.buttonsContainer}>
                 <Button
@@ -82,20 +96,20 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
               label="Изменить"
               variant="outline"
               onPress={() =>
-                navigation.navigate('ProductUpdate', { id: product.id })
+                navigation.navigate('ProductUpdate', { id: product?.id })
               }
             />
           </View>
         </View>
 
         <View style={styles.content}>
-          <Text style={[styles.textColor, styles.title]}>{product.title}</Text>
+          <Text style={[styles.textColor, styles.title]}>{product?.title}</Text>
           <Text style={[styles.textColor, styles.description]}>
-            {product.description}
+            {product?.description}
           </Text>
           <Card>
             <View style={styles.detailsContainer}>
-              {product.details.map(({ id, price, size, inventory }, index) => (
+              {product?.details.map(({ id, price, size, inventory }, index) => (
                 <View
                   style={[
                     styles.detailContainer,
@@ -103,13 +117,16 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
                   ]}
                   key={id}>
                   <Text style={[styles.textColor, styles.detailText]}>
-                    {inventory.quantity} шт
-                  </Text>
-                  <Text style={[styles.textColor, styles.detailText]}>
                     Возраст: {size}
                   </Text>
                   <Text style={[styles.textColor, styles.detailText]}>
                     {price.amount} сом
+                  </Text>
+                  <Text style={[styles.textColor, styles.detailText]}>
+                    {inventory.quantity} шт
+                  </Text>
+                  <Text style={[styles.textColor, styles.detailText]}>
+                    {inventory.branch.title}
                   </Text>
                 </View>
               ))}
@@ -117,7 +134,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
           </Card>
           <Image
             source={{
-              uri: MEDIA_BASE_URL + product.imgPath,
+              uri: MEDIA_BASE_URL + product?.imgPath,
               method: 'GET',
             }}
             style={styles.image}

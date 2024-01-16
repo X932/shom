@@ -5,6 +5,7 @@ import { ProductsPricesEntity } from './models/products-prices.entity';
 import { ProductsEntity } from './models/products.entity';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import { BranchesModule } from '../branches/branches.module';
 import { MediaService } from '../media/media.service';
 
 @Module({
@@ -16,6 +17,7 @@ import { MediaService } from '../media/media.service';
       ProductsDetailsEntity,
       ProductsPricesEntity,
     ]),
+    BranchesModule,
   ],
 })
 export class ProductsModule {}

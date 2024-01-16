@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseProduct } from './models/products.type';
@@ -19,10 +23,11 @@ export class ProductsService {
 
   public async create(product: CreateProductDto) {
     const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
     try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
       const isProductExist =
         (
           await this.find({
@@ -84,12 +89,6 @@ export class ProductsService {
         id: params?.id,
         title: params?.title,
       },
-      relations: {
-        details: {
-          price: true,
-          inventory: true,
-        },
-      },
     });
   }
 
@@ -101,24 +100,69 @@ export class ProductsService {
       relations: {
         details: {
           price: true,
-          inventory: true,
+          inventory: {
+            branch: true,
+          },
         },
       },
     });
   }
 
-  public async update(product: UpdateProductDto) {
+  public async update(updateProductDto: UpdateProductDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    const isProductExist =
+      (
+        await this.find({
+          id: updateProductDto.id,
+        })
+      ).length > 0;
+
+    if (!isProductExist) {
+      throw new NotFoundException('Продукт не найден');
+    }
+
     try {
-      await this.productsRepository.save({
-        id: product.id,
-        title: product.title,
-        description: product.description,
-        imgPath: product.imgPath,
-        details: product.details,
-        inventories: product.details.map(({ inventory }) => inventory),
-      });
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const product = new ProductsEntity();
+      product.id = updateProductDto.id;
+      product.title = updateProductDto.title;
+      product.imgPath = updateProductDto.imgPath;
+      product.description = updateProductDto.description;
+
+      const newProductDetails: ProductsDetailsEntity[] =
+        updateProductDto.details.map((productDetails) => {
+          const newDetails = new ProductsDetailsEntity();
+          newDetails.product = product;
+          newDetails.id = productDetails.id;
+          newDetails.size = productDetails.size;
+
+          newDetails.inventory = new InventoryEntity();
+          newDetails.inventory.id = productDetails.inventory.id;
+          newDetails.inventory.quantity = productDetails.inventory.quantity;
+
+          newDetails.inventory.branch = new BranchesEntity();
+          newDetails.inventory.branch.id = productDetails.inventory.branchId;
+
+          newDetails.price = new ProductsPricesEntity();
+          newDetails.price.id = productDetails.price.id;
+          newDetails.price.amount = productDetails.price.amount;
+
+          return newDetails;
+        });
+      await queryRunner.manager.save<ProductsDetailsEntity>(newProductDetails);
+
+      product.details = newProductDetails;
+      await queryRunner.manager.save<ProductsEntity>(product);
+
+      await queryRunner.commitTransaction();
     } catch (error: any) {
+      await queryRunner.rollbackTransaction();
       throw new BadRequestException(error.message);
+    } finally {
+      await queryRunner.release();
     }
   }
 

@@ -6,8 +6,9 @@ interface IPrice {
 }
 
 interface ICreateUpdateInventory
-  extends Partial<Omit<IInventory, 'quantity' | 'id'>> {
+  extends Partial<Omit<IInventory, 'quantity' | 'id' | 'branch'>> {
   quantity: string;
+  branchId: string;
 }
 
 export interface IUpdateDetail {

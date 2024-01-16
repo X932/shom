@@ -13,4 +13,8 @@ export class BranchesService {
   public async getList(): Promise<BranchesEntity[]> {
     return await this.branchesRepository.find();
   }
+
+  public async getById(id: number): Promise<BranchesEntity> {
+    return await this.branchesRepository.findOneBy({ id: id });
+  }
 }

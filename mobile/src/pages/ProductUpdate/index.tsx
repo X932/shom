@@ -132,7 +132,7 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
         reset();
         setFile(undefined);
       };
-    }, []),
+    }, [productID]),
   );
 
   return (

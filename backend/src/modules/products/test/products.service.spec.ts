@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { getNewProductSub, findOneProductSub } from './subs';
+import { findOneProductSub, getNewProductSub } from './subs';
 import { ProductsEntity } from '../models/products.entity';
 import { ProductsService } from '../products.service';
+import { BranchesService } from '../../branches/branches.service';
+import { BranchesEntity } from '../../branches/models/branches.entity';
 
 type MockType<T> = {
   [P in keyof T]?: jest.Mock<{}>;
@@ -29,12 +31,19 @@ describe('ProductsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductsService,
+        BranchesService,
         {
           provide: getRepositoryToken(ProductsEntity),
           useValue: {
             find: jest.fn((params) =>
               Promise.resolve(findOneProductSub(params)),
             ),
+          },
+        },
+        {
+          provide: getRepositoryToken(BranchesEntity),
+          useValue: {
+            find: jest.fn((params) => Promise.resolve()),
           },
         },
         {

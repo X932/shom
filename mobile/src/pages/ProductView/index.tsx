@@ -46,7 +46,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
           setProduct(product);
         },
       });
-    }, []),
+    }, [productID]),
   );
 
   return (

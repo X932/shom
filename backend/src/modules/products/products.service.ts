@@ -12,6 +12,7 @@ import { CreateProductDto, UpdateProductDto } from './models/products.dto';
 import { ProductsEntity } from './models/products.entity';
 import { InventoryEntity } from '../inventory/models/inventory.entity';
 import { BranchesEntity } from '../branches/models/branches.entity';
+import { BranchesService } from '../branches/branches.service';
 
 @Injectable()
 export class ProductsService {
@@ -19,6 +20,7 @@ export class ProductsService {
     @InjectRepository(ProductsEntity)
     private readonly productsRepository: Repository<ProductsEntity>,
     private readonly dataSource: DataSource,
+    private readonly branchesService: BranchesService,
   ) {}
 
   public async create(product: CreateProductDto) {
@@ -132,26 +134,30 @@ export class ProductsService {
       product.imgPath = updateProductDto.imgPath;
       product.description = updateProductDto.description;
 
-      const newProductDetails: ProductsDetailsEntity[] =
-        updateProductDto.details.map((productDetails) => {
-          const newDetails = new ProductsDetailsEntity();
-          newDetails.product = product;
-          newDetails.id = productDetails.id;
-          newDetails.size = productDetails.size;
+      const newProductDetails: ProductsDetailsEntity[] = [];
 
-          newDetails.inventory = new InventoryEntity();
-          newDetails.inventory.id = productDetails.inventory.id;
-          newDetails.inventory.quantity = productDetails.inventory.quantity;
+      for (const key in updateProductDto.details) {
+        const productDetails = updateProductDto.details[key];
 
-          newDetails.inventory.branch = new BranchesEntity();
-          newDetails.inventory.branch.id = productDetails.inventory.branchId;
+        const newDetails = new ProductsDetailsEntity();
+        newDetails.id = productDetails.id;
+        newDetails.size = productDetails.size;
 
-          newDetails.price = new ProductsPricesEntity();
-          newDetails.price.id = productDetails.price.id;
-          newDetails.price.amount = productDetails.price.amount;
+        newDetails.inventory = new InventoryEntity();
+        newDetails.inventory.product = product;
+        newDetails.inventory.id = productDetails.inventory.id;
+        newDetails.inventory.quantity = productDetails.inventory.quantity;
 
-          return newDetails;
-        });
+        newDetails.inventory.branch = await this.branchesService.getById(
+          productDetails.inventory.branchId,
+        );
+
+        newDetails.price = new ProductsPricesEntity();
+        newDetails.price.id = productDetails.price.id;
+        newDetails.price.amount = productDetails.price.amount;
+
+        newProductDetails.push(newDetails);
+      }
       await queryRunner.manager.save<ProductsDetailsEntity>(newProductDetails);
 
       product.details = newProductDetails;

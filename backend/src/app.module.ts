@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { InvoiceDetailsEntity } from './modules/invoices/models/invoice-details.entity';
 import { InvoicesEntity } from './modules/invoices/models/invoices.entity';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
@@ -62,6 +63,7 @@ import { UsersModule } from './modules/users/users.module';
         BranchesEntity,
         AccountsEntity,
         InvoicesEntity,
+        InvoiceDetailsEntity,
       ],
       synchronize: true,
     }),

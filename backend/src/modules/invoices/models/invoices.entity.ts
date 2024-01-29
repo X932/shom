@@ -5,8 +5,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { InvoiceDetailsEntity } from './invoice-details.entity';
 import { AccountsEntity } from '../../accounts/models/accounts.entity';
 
 @Entity('invoices')
@@ -15,10 +17,10 @@ export class InvoicesEntity {
   id: number;
 
   @Column({ name: 'net_amount' })
-  netAmount: string;
+  netAmount: number;
 
   @Column({ name: 'gross_amount' })
-  grossAmount: string;
+  grossAmount: number;
 
   @Exclude()
   @CreateDateColumn({ name: 'created_at' })
@@ -27,4 +29,10 @@ export class InvoicesEntity {
   @ManyToOne(() => AccountsEntity, (account) => account.invoices)
   @JoinColumn({ name: 'account_id' })
   account: AccountsEntity;
+
+  @OneToMany(
+    () => InvoiceDetailsEntity,
+    (invoiceDetails: InvoiceDetailsEntity) => invoiceDetails.invoice,
+  )
+  invoiceDetails: InvoiceDetailsEntity[];
 }

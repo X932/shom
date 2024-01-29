@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ProductsDetailsEntity } from './products-details.entity';
+import { InvoiceDetailsEntity } from '../../invoices/models/invoice-details.entity';
 import { InventoryEntity } from '../../inventory/models/inventory.entity';
 
 @Entity('products')
@@ -54,6 +55,12 @@ export class ProductsEntity {
     },
   )
   inventories: InventoryEntity[];
+
+  @OneToMany(
+    () => InvoiceDetailsEntity,
+    (invoiceDetails: InvoiceDetailsEntity) => invoiceDetails.product,
+  )
+  invoiceDetails: InvoiceDetailsEntity[];
 
   @Exclude()
   @DeleteDateColumn({ name: 'deleted_at' })

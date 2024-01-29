@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { InvoicesEntity } from '../../invoices/models/invoices.entity';
 
 @Entity('accounts')
 export class AccountsEntity {
@@ -17,4 +19,7 @@ export class AccountsEntity {
   @Exclude()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @OneToMany(() => InvoicesEntity, (invoice) => invoice.account)
+  invoices: InvoicesEntity[];
 }

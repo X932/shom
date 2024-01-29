@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { InvoicesEntity } from './modules/invoices/models/invoices.entity';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { AccountsEntity } from './modules/accounts/models/accounts.entity';
 import { BranchesEntity } from './modules/branches/models/branches.entity';
@@ -36,6 +38,7 @@ import { UsersModule } from './modules/users/users.module';
     InventoryModule,
     BranchesModule,
     AccountsModule,
+    InvoicesModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..'),
@@ -58,6 +61,7 @@ import { UsersModule } from './modules/users/users.module';
         InventoryEntity,
         BranchesEntity,
         AccountsEntity,
+        InvoicesEntity,
       ],
       synchronize: true,
     }),

@@ -33,7 +33,7 @@ export class ProductsDetailsEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  product: ProductsEntity;
+  products: ProductsEntity[];
 
   @OneToOne(() => ProductsPricesEntity, { cascade: true })
   @JoinColumn({ name: 'price_id' })
@@ -48,6 +48,6 @@ export class ProductsDetailsEntity {
   inventory: InventoryEntity;
 
   @Exclude()
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
 }

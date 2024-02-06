@@ -38,6 +38,6 @@ export class InvoiceDetailsEntity {
   productDetails: ProductsDetailsEntity;
 
   @Exclude()
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 }

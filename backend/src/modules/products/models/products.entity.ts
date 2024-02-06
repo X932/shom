@@ -26,7 +26,7 @@ export class ProductsEntity {
   @Column({ name: 'img_path' })
   imgPath: string;
 
-  @ManyToMany(() => ProductsDetailsEntity, (details) => details.product, {
+  @ManyToMany(() => ProductsDetailsEntity, (details) => details.products, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -63,6 +63,6 @@ export class ProductsEntity {
   invoiceDetails: InvoiceDetailsEntity[];
 
   @Exclude()
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
 }

@@ -108,7 +108,7 @@ export class InvoicesService {
           );
 
           const newInvoiceDetails = new InvoiceDetailsEntity();
-          if (this.isLastProduct(index, invoiceDetailsQuantity)) {
+          if (index + 1 === invoiceDetailsQuantity) {
             newInvoiceDetails.discount = integerDiscount + remainderDiscount;
           } else {
             newInvoiceDetails.discount = integerDiscount;

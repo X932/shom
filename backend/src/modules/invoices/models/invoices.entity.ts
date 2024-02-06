@@ -8,6 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ColumnMoneyTransformer } from '@transformers/columnMoneyTransformer';
 import { InvoiceDetailsEntity } from './invoice-details.entity';
 import { AccountsEntity } from '../../accounts/models/accounts.entity';
 
@@ -16,14 +17,28 @@ export class InvoicesEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'net_amount' })
+  @Column({
+    name: 'net_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+    transformer: new ColumnMoneyTransformer(),
+  })
   netAmount: number;
 
-  @Column({ name: 'gross_amount' })
+  @Column({
+    name: 'gross_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+    transformer: new ColumnMoneyTransformer(),
+  })
   grossAmount: number;
 
   @Exclude()
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
   @ManyToOne(() => AccountsEntity, (account) => account.invoices)

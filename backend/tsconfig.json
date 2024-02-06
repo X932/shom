@@ -16,6 +16,7 @@
       "@interceptors/*": ["shared/interceptors/*"],
       "@decorators/*": ["shared/decorators/*"],
       "@pipes/*": ["shared/pipes/*"],
+      "@transformers/*": ["shared/transformers/*"],
       "@guards/*": ["shared/guards/*"]
     },
     "incremental": true,

@@ -38,7 +38,7 @@ export const ProductsList = () => {
         {isLoading && <Text>Loading . . .</Text>}
         {products.length > 0 ? (
           <FlatList
-            // todo create fetch more logic
+            // TODO create fetch more logic
             data={products}
             renderItem={({ item }) => <Product {...item} />}
             keyExtractor={item => String(item.id)}

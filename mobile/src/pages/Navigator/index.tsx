@@ -130,7 +130,7 @@ export const Navigator = (): JSX.Element => {
                 name="Sales"
                 component={Sales}
                 options={{
-                  title: 'Продажи',
+                  title: 'Продать',
                   headerTitleAlign: 'center',
                 }}
               />

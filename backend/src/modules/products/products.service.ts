@@ -91,6 +91,14 @@ export class ProductsService {
         id: params?.id,
         title: params?.title,
       },
+      relations: {
+        details: {
+          inventory: {
+            branch: true,
+          },
+          price: true,
+        },
+      },
     });
   }
 

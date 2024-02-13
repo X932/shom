@@ -8,7 +8,7 @@ import {
 
 @Entity('products_prices')
 export class ProductsPricesEntity {
-  // todo - add column valid_until
+  // TODO - add column valid_until
   @PrimaryGeneratedColumn()
   id: number;
 

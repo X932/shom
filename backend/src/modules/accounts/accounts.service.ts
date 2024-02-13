@@ -13,4 +13,8 @@ export class AccountsService {
   public async isExist(id: number): Promise<boolean> {
     return await this.accountsRepository.exist({ where: { id: id } });
   }
+
+  public async getList(): Promise<AccountsEntity[]> {
+    return await this.accountsRepository.find();
+  }
 }

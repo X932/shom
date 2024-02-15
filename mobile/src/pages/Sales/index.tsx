@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, dropdownStyles, Input } from '@components';
@@ -13,7 +13,7 @@ import { IProduct } from '../ProductsList/interface';
 import { getProductsAPI } from '../ProductsList/service';
 import { styles } from './styles';
 import { saleProducts } from './service';
-import { IOrderDetails, ISaleForm } from './interface';
+import { IOrderDetails, ISaleForm, ITotalProductsData } from './interface';
 import { ProductsList } from './components/ProductsList';
 import { ISelectedProduct } from './components/SelectedProductCard/interface';
 
@@ -25,6 +25,24 @@ export const Sales = () => {
   const [showProductsList, setShowProductsList] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [accounts, setAccounts] = useState<IList[]>([]);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  const getTotalSelectedProductsData = (): ITotalProductsData => {
+    let totalCount = 0;
+    let totalPriceAmount = 0;
+    selectedProducts.forEach(({ quantity, priceAmount }) => {
+      totalCount += quantity;
+      totalPriceAmount += priceAmount * quantity;
+    });
+    return {
+      totalCount: totalCount,
+      totalPriceAmount: totalPriceAmount,
+    };
+  };
+
+  const totalSelectedProductsData = useMemo(getTotalSelectedProductsData, [
+    selectedProducts,
+  ]);
 
   const {
     control,
@@ -46,16 +64,6 @@ export const Sales = () => {
   const resetForm = () => {
     reset();
     setSelectedProducts([]);
-  };
-
-  const getSelectedProductsQuantity = (
-    selectedProducts: ISelectedProduct[],
-  ): number => {
-    let totalCount = 0;
-    selectedProducts.forEach(({ quantity }) => {
-      totalCount += quantity;
-    });
-    return totalCount;
   };
 
   const parseOrderDetails = (): IOrderDetails[] =>
@@ -135,19 +143,22 @@ export const Sales = () => {
               products={products}
               selectedProducts={selectedProducts}
               setSelectedProducts={setSelectedProducts}
-              getSelectedProductsQuantity={getSelectedProductsQuantity}
+              totalSelectedProductsData={totalSelectedProductsData}
             />
           </>
         ) : (
-          <View style={{ flex: 1, gap: 16 }}>
+          <View style={styles.saleFormContainer}>
             <Button
               label="Выбрать продукты"
               disabled={false}
               onPress={() => setShowProductsList(true)}
               variant="outline"
             />
-            <Text style={styles.ordersQuantityLabel}>
-              Выбрано продуктов: {getSelectedProductsQuantity(selectedProducts)}
+            <Text style={[styles.textBlack, styles.textStyle]}>
+              Выбрано продуктов: {totalSelectedProductsData.totalCount} шт
+            </Text>
+            <Text style={[styles.textBlack, styles.textStyle]}>
+              Сумма продуктов: {totalSelectedProductsData.totalPriceAmount} сом
             </Text>
             <Controller
               name="accountId"
@@ -194,12 +205,22 @@ export const Sales = () => {
                   placeholder="Сумма скидки"
                   keyboardType="numeric"
                   cursorColor={colors.black['100']}
-                  onChangeText={value => onChange(allowOnlyNumber(value))}
+                  onChangeText={value => {
+                    onChange(allowOnlyNumber(value));
+                    setDiscountAmount(Number(allowOnlyNumber(value)));
+                  }}
                   errorMessage={errors.discount?.message}
                   {...props}
                 />
               )}
             />
+
+            <Text style={[styles.textBlack, styles.textStyle]}>
+              Итого:{' '}
+              {totalSelectedProductsData.totalPriceAmount -
+                Number(discountAmount)}{' '}
+              сом
+            </Text>
 
             <Button
               label="Продать"

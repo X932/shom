@@ -12,3 +12,8 @@ export interface IOrderDetails {
 export interface ISaleRequestBody extends ISaleForm {
   details: IOrderDetails[];
 }
+
+export interface ITotalProductsData {
+  totalCount: number;
+  totalPriceAmount: number;
+}

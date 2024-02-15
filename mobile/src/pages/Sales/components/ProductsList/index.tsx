@@ -11,14 +11,14 @@ export const ProductsList: FC<IProductsListProps> = ({
   products,
   selectedProducts,
   setSelectedProducts,
-  getSelectedProductsQuantity,
+  totalSelectedProductsData,
 }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(
     ProductsTabIndex.ALL_PRODUCTS,
   );
 
   const getTabLabel = (): string =>
-    `Выб-ые продукты (${getSelectedProductsQuantity(selectedProducts)})`;
+    `Выб-ые продукты (${totalSelectedProductsData.totalCount})`;
 
   return (
     <View style={styles.container}>

@@ -29,6 +29,9 @@ export const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 20,
   },
+  textDanger: {
+    color: colors.red,
+  },
   textColor: {
     color: colors.black['100'],
   },

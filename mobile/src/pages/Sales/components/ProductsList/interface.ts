@@ -5,5 +5,6 @@ import { IProduct } from '../../../ProductsList/interface';
 export interface IProductsListProps {
   selectedProducts: ISelectedProduct[];
   setSelectedProducts: Dispatch<SetStateAction<ISelectedProduct[]>>;
+  getSelectedProductsQuantity: (selectedProducts: ISelectedProduct[]) => number;
   products: IProduct[];
 }

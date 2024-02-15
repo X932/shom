@@ -36,18 +36,15 @@ export const ProductsList = () => {
     <MainLayout>
       <SafeAreaView style={styles.container}>
         {isLoading && <Text>Loading . . .</Text>}
-        {products.length > 0 ? (
-          <FlatList
-            // TODO create fetch more logic
-            data={products}
-            renderItem={({ item }) => <Product {...item} />}
-            keyExtractor={item => String(item.id)}
-            onEndReachedThreshold={0.7}
-            onEndReached={() => console.log('end of list')}
-          />
-        ) : (
-          <Text>Пусто</Text>
-        )}
+        <FlatList
+          // TODO create fetch more logic
+          data={products}
+          renderItem={({ item }) => <Product {...item} />}
+          keyExtractor={item => String(item.id)}
+          onEndReachedThreshold={0.7}
+          onEndReached={() => console.log('end of list')}
+          ListEmptyComponent={<Text>Пусто</Text>}
+        />
       </SafeAreaView>
     </MainLayout>
   );

@@ -10,8 +10,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  text: {
+  textDanger: {
+    color: colors.red,
+  },
+  textBlack: {
     color: colors.black['100'],
+  },
+  textStyle: {
     fontSize: fontSizes['4']['0'],
     lineHeight: fontSizes['4']['1'],
   },

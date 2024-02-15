@@ -235,7 +235,7 @@ export const ProductCreate = () => {
                       dropdownPosition="top"
                       valueField="value"
                       placeholder={isDropdownFocus ? '...' : 'Место'}
-                      searchPlaceholder="Поиск..."
+                      renderInputSearch={() => <></>}
                       value={value}
                       onFocus={() => setIsDropdownFocus(true)}
                       onBlur={() => {

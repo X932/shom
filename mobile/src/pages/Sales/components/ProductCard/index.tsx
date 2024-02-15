@@ -42,42 +42,57 @@ export const ProductCard: FC<IProductCardProps> = ({
             style={styles.image}
           />
           <View>
-            <Text style={styles.text}>{product.title}</Text>
-            {product.details.map((details, index) => (
-              <View key={details.id}>
-                <View style={styles.details}>
-                  <View>
-                    <Text style={styles.text}>
-                      {details.size} г. - {details.price.amount} сом
-                    </Text>
-                    <Text style={styles.text}>
-                      {details.inventory.quantity}шт -{' '}
-                      {details.inventory.branch.title}
-                    </Text>
-                  </View>
+            <Text style={[styles.textStyle, styles.textBlack]}>
+              {product.title}
+            </Text>
+            {product.details.map((details, index) => {
+              const isExist = details.inventory.quantity > 0;
 
-                  <View>
-                    <Button
-                      label="+"
-                      onPress={() =>
-                        handleSelectProduct({
-                          imgPath: product.imgPath,
-                          priceAmount: details.price.amount,
-                          productDetailsId: details.id,
-                          productId: product.id,
-                          quantity: 1,
-                          size: details.size,
-                          branchTitle: details.inventory.branch.title,
-                          productTitle: product.title,
-                        })
-                      }
-                      variant="outline"
-                    />
+              return (
+                <View key={details.id}>
+                  <View style={styles.details}>
+                    <View>
+                      <Text style={[styles.textStyle, styles.textBlack]}>
+                        {details.size} г. - {details.price.amount} сом
+                      </Text>
+                      <Text
+                        style={
+                          isExist
+                            ? [styles.textStyle, styles.textBlack]
+                            : [styles.textDanger, styles.textStyle]
+                        }>
+                        {isExist
+                          ? `${details.inventory.quantity} шт`
+                          : 'Нет в наличии'}{' '}
+                        - {details.inventory.branch.title}
+                      </Text>
+                    </View>
+
+                    {isExist && (
+                      <View>
+                        <Button
+                          label="+"
+                          onPress={() =>
+                            handleSelectProduct({
+                              imgPath: product.imgPath,
+                              priceAmount: details.price.amount,
+                              productDetailsId: details.id,
+                              productId: product.id,
+                              quantity: 1,
+                              size: details.size,
+                              branchTitle: details.inventory.branch.title,
+                              productTitle: product.title,
+                            })
+                          }
+                          variant="outline"
+                        />
+                      </View>
+                    )}
                   </View>
+                  {index + 1 !== product.details.length && <Divider />}
                 </View>
-                {index + 1 !== product.details.length && <Divider />}
-              </View>
-            ))}
+              );
+            })}
           </View>
         </View>
       </Card>

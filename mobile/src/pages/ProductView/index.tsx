@@ -122,9 +122,15 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
                   <Text style={[styles.textColor, styles.detailText]}>
                     {price.amount} сом
                   </Text>
-                  <Text style={[styles.textColor, styles.detailText]}>
-                    {inventory.quantity} шт
-                  </Text>
+                  {inventory.quantity > 0 ? (
+                    <Text style={[styles.textColor, styles.detailText]}>
+                      {inventory.quantity} шт
+                    </Text>
+                  ) : (
+                    <Text style={[styles.textDanger, styles.detailText]}>
+                      Нет в наличии
+                    </Text>
+                  )}
                   <Text style={[styles.textColor, styles.detailText]}>
                     {inventory.branch.title}
                   </Text>

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
+import { IProduct } from '@interfaces';
 import { ISelectedProduct } from '../SelectedProductCard/interface';
-import { IProduct } from '../../../ProductsList/interface';
 import { ITotalProductsData } from '../../interface';
 
 export interface IProductsListProps {

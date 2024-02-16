@@ -1,11 +1,11 @@
 import { axiosInstance } from '@axios-instance';
-import { IResponseWrapper } from '@interfaces';
+import { IResponseWrapper, IProduct, TProductParams } from '@interfaces';
 import { showErrorToast } from '@utils';
-import { IProduct } from './interface';
 
 interface IGetProductsAPIParams {
   successResponseHandler: (data: IProduct[]) => void;
   setIsLoading: (state: boolean) => void;
+  params?: Partial<TProductParams>;
 }
 
 enum Endpoints {
@@ -15,11 +15,13 @@ enum Endpoints {
 export const getProductsAPI = async ({
   successResponseHandler,
   setIsLoading,
+  params,
 }: IGetProductsAPIParams) => {
   try {
     const { data } = await axiosInstance<IResponseWrapper<IProduct[]>>({
       method: 'GET',
       url: Endpoints.PRODUCTS,
+      params: params,
     });
     successResponseHandler(data.payload);
   } catch (error: any) {

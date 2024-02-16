@@ -1,11 +1,10 @@
 import { Card } from '@components';
 import { MEDIA_BASE_URL } from '@env';
-import { PrivateScreenList } from '@interfaces';
+import { PrivateScreenList, IProduct } from '@interfaces';
 import type { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { FC } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { IProduct } from '../../interface';
 import { styles } from './styles';
 
 export const Product: FC<IProduct> = ({ title, description, imgPath, id }) => {

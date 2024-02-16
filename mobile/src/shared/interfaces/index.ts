@@ -4,3 +4,4 @@ export * from './inventory';
 export * from './branch';
 export * from './list';
 export * from './account';
+export * from './product';

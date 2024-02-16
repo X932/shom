@@ -19,3 +19,5 @@ export interface IProduct {
   description: string;
   details: IDetail[];
 }
+
+export type TProductParams = Pick<IProduct, 'id' | 'title'>;

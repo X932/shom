@@ -2,9 +2,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { MainLayout } from '@ui-layouts';
 import { useCallback, useState } from 'react';
 import { FlatList, SafeAreaView, Text } from 'react-native';
+import { getProductsAPI } from '@services';
+import { IProduct } from '@interfaces';
 import { Product } from './components/Product';
-import { IProduct } from './interface';
-import { getProductsAPI } from './service';
 import { styles } from './styles';
 
 export const ProductsList = () => {

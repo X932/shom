@@ -1,7 +1,6 @@
 import { axiosInstance } from '@axios-instance';
-import { IResponseWrapper } from '@interfaces';
+import { IResponseWrapper, IProduct } from '@interfaces';
 import { showErrorToast, showSuccessToast } from '@utils';
-import { IProduct } from '../ProductsList/interface';
 
 interface IDeleteProductAPIParams {
   successResponseHandler: () => void;

@@ -13,7 +13,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { TrimPipe } from '@pipes/trim.pipe';
-import { CreateProductDto, UpdateProductDto } from './models/products.dto';
+import {
+  CreateProductDto,
+  GetProductDto,
+  UpdateProductDto,
+} from './models/products.dto';
 import { ProductsService } from './products.service';
 
 @UseGuards(JwtAuthGuard)
@@ -28,8 +32,8 @@ export class ProductsController {
   }
 
   @Get()
-  find(@Query('id') id?: string) {
-    return this.productsService.find({ id: Number(id) || undefined });
+  find(@Query() getProductsDto: GetProductDto) {
+    return this.productsService.find(getProductsDto);
   }
 
   @Get(':id')

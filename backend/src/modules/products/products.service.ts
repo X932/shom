@@ -5,10 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { BaseProduct } from './models/products.type';
 import { ProductsDetailsEntity } from './models/products-details.entity';
 import { ProductsPricesEntity } from './models/products-prices.entity';
-import { CreateProductDto, UpdateProductDto } from './models/products.dto';
+import {
+  CreateProductDto,
+  GetProductDto,
+  UpdateProductDto,
+} from './models/products.dto';
 import { ProductsEntity } from './models/products.entity';
 import { InventoryEntity } from '../inventory/models/inventory.entity';
 import { BranchesEntity } from '../branches/models/branches.entity';
@@ -85,21 +88,27 @@ export class ProductsService {
     }
   }
 
-  public async find(params?: Partial<BaseProduct>): Promise<ProductsEntity[]> {
-    return await this.productsRepository.find({
-      where: {
-        id: params?.id,
-        title: params?.title,
-      },
-      relations: {
-        details: {
-          inventory: {
-            branch: true,
-          },
-          price: true,
-        },
-      },
-    });
+  public async find(
+    getProductDto?: Partial<GetProductDto>,
+  ): Promise<ProductsEntity[]> {
+    const { title = '', id } = getProductDto;
+
+    const query = this.productsRepository
+      .createQueryBuilder('product')
+      .where('LOWER(product.title) LIKE LOWER(:title)', {
+        title: `%${title}%`,
+      });
+
+    if (id) {
+      query.andWhere('product.id = :id', { id: id });
+    }
+
+    return await query
+      .leftJoinAndSelect('product.details', 'details')
+      .leftJoinAndSelect('details.price', 'price')
+      .leftJoinAndSelect('details.inventory', 'inventory')
+      .leftJoinAndSelect('inventory.branch', 'branch')
+      .getMany();
   }
 
   public async findOne(id: number): Promise<ProductsEntity> {

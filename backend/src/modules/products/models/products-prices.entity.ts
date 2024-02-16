@@ -17,5 +17,5 @@ export class ProductsPricesEntity {
 
   @Exclude()
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-  deletedAt?: Date;
+  deletedAt: Date;
 }

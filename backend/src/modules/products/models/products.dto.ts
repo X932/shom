@@ -9,6 +9,18 @@ import { Transform, Type } from 'class-transformer';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 import { CreateUpdateInventoryDto } from '../../inventory/models/inventory.dto';
 
+export class GetProductDto {
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => value?.trim())
+  title: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  id: number;
+}
+
 class CreateProductPriceDto {
   @IsNumber()
   @Transform(({ value }) => Number(value))

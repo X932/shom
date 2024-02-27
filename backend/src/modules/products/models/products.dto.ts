@@ -7,9 +7,10 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
+import { PaginationDto } from '@common-types/pagination.dto';
 import { CreateUpdateInventoryDto } from '../../inventory/models/inventory.dto';
 
-export class GetProductDto {
+export class GetProductDto extends PaginationDto {
   @IsString()
   @IsOptional()
   @Transform(({ value }) => value?.trim())

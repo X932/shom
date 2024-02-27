@@ -1,4 +1,5 @@
 import { axiosInstance } from '@axios-instance';
+import { httpExceptionHandler } from '@utils';
 import { ISignUpForm } from './interface';
 
 interface ISignUpAPIParams {
@@ -20,10 +21,6 @@ export const signUpAPI = async ({
     });
     dispatchSignUp(credentials.phone);
   } catch (error: any) {
-    if (error.response) {
-      showErrorToast(error.response.data.message);
-    } else {
-      showErrorToast(error.message);
-    }
+    httpExceptionHandler(error);
   }
 };

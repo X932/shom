@@ -10,6 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { MEDIA_BASE_URL } from '@env';
 import { Dropdown } from 'react-native-element-dropdown';
 import { getBranchesAPI } from '@services';
+import { GuardLayout } from '@ui-layouts';
 import { getProductAPI } from '../ProductView/service';
 import { styles } from './styles';
 import { updateProductAPI } from './service';
@@ -135,207 +136,211 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   );
 
   return (
-    <ScrollView style={styles.viewContainer}>
-      <View style={styles.formContainer}>
-        <Button
-          label="Выбрать фото"
-          disabled={isLoading}
-          onPress={selectFile}
-          variant="outline"
-        />
+    <GuardLayout>
+      <ScrollView style={styles.viewContainer}>
+        <View style={styles.formContainer}>
+          <Button
+            label="Выбрать фото"
+            disabled={isLoading}
+            onPress={selectFile}
+            variant="outline"
+          />
 
-        {file?.uri && (
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: getImageUri(file.uri),
+          {file?.uri && (
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: getImageUri(file.uri),
+                }}
+              />
+            </View>
+          )}
+          <View style={styles.productTypesContainer}>
+            <Text style={{ textAlign: 'left' }}>Название</Text>
+            <Controller
+              name="title"
+              control={control}
+              rules={{
+                required: { value: true, message: 'Обязательное поле' },
               }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  onChangeText={value => field.onChange(value)}
+                  placeholder="Название"
+                  keyboardType="default"
+                  cursorColor={colors.black['100']}
+                  errorMessage={errors.title?.message}
+                />
+              )}
             />
           </View>
-        )}
-        <View style={styles.productTypesContainer}>
-          <Text style={{ textAlign: 'left' }}>Название</Text>
           <Controller
-            name="title"
+            name="description"
             control={control}
-            rules={{ required: { value: true, message: 'Обязательное поле' } }}
             render={({ field }) => (
               <Input
                 {...field}
                 onChangeText={value => field.onChange(value)}
-                placeholder="Название"
+                placeholder="Описание"
                 keyboardType="default"
                 cursorColor={colors.black['100']}
-                errorMessage={errors.title?.message}
+                numberOfLines={4}
+                textAlignVertical="top"
+                errorMessage={errors.description?.message}
+                multiline
               />
             )}
           />
-        </View>
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              onChangeText={value => field.onChange(value)}
-              placeholder="Описание"
-              keyboardType="default"
-              cursorColor={colors.black['100']}
-              numberOfLines={4}
-              textAlignVertical="top"
-              errorMessage={errors.description?.message}
-              multiline
-            />
-          )}
-        />
-        <View style={styles.productTypesContainer}>
-          {fields.map((field, index) => (
-            <View style={styles.productType} key={field.id}>
-              <Controller
-                name={`details.${index}.inventory.quantity`}
-                control={control}
-                rules={{
-                  required: { value: true, message: 'Обязательное поле' },
-                  pattern: { value: /^\d*$/, message: 'Только цифры' },
-                }}
-                render={({ field: { onChange, ...props } }) => (
-                  <Input
-                    placeholder="Количество"
-                    keyboardType="numeric"
-                    cursorColor={colors.black['100']}
-                    onChangeText={value => onChange(allowOnlyNumber(value))}
-                    errorMessage={
-                      errors.details &&
-                      errors.details[index]?.inventory?.quantity?.message
-                    }
-                    {...props}
-                  />
-                )}
-              />
-              <Controller
-                name={`details.${index}.size`}
-                control={control}
-                rules={{
-                  required: { value: true, message: 'Обязательное поле' },
-                  pattern: { value: /^\d*$/, message: 'Только цифры' },
-                }}
-                render={({ field: { onChange, ...props } }) => (
-                  <Input
-                    placeholder="Размер"
-                    keyboardType="numeric"
-                    cursorColor={colors.black['100']}
-                    onChangeText={value => onChange(allowOnlyNumber(value))}
-                    errorMessage={
-                      errors.details && errors.details[index]?.size?.message
-                    }
-                    {...props}
-                  />
-                )}
-              />
-              <Controller
-                name={`details.${index}.price.amount`}
-                control={control}
-                rules={{
-                  required: { value: true, message: 'Обязательное поле' },
-                  pattern: { value: /^\d*$/, message: 'Только цифры' },
-                }}
-                render={({ field: { onChange, ...props } }) => (
-                  <Input
-                    placeholder="Цена"
-                    keyboardType="numeric"
-                    cursorColor={colors.black['100']}
-                    onChangeText={value => onChange(allowOnlyNumber(value))}
-                    errorMessage={
-                      errors.details &&
-                      errors.details[index]?.price?.amount?.message
-                    }
-                    {...props}
-                  />
-                )}
-              />
-
-              <View style={dropdownStyles.dropdownContainer}>
+          <View style={styles.productTypesContainer}>
+            {fields.map((field, index) => (
+              <View style={styles.productType} key={field.id}>
                 <Controller
-                  name={`details.${index}.inventory.branchId`}
+                  name={`details.${index}.inventory.quantity`}
                   control={control}
                   rules={{
-                    required: 'Выберите место',
+                    required: { value: true, message: 'Обязательное поле' },
+                    pattern: { value: /^\d*$/, message: 'Только цифры' },
                   }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <Dropdown
-                      style={[dropdownStyles.dropdown]}
-                      placeholderStyle={dropdownStyles.dropdownText}
-                      selectedTextStyle={dropdownStyles.dropdownText}
-                      inputSearchStyle={[
-                        dropdownStyles.inputSearch,
-                        dropdownStyles.dropdownText,
-                      ]}
-                      containerStyle={dropdownStyles.listContainer}
-                      backgroundColor={'#c8c4c452'}
-                      data={branches}
-                      search
-                      maxHeight={250}
-                      labelField="label"
-                      valueField="value"
-                      dropdownPosition="top"
-                      placeholder={
-                        branches.find(branch => branch.value === +value)
-                          ?.label || 'Место'
+                  render={({ field: { onChange, ...props } }) => (
+                    <Input
+                      placeholder="Количество"
+                      keyboardType="numeric"
+                      cursorColor={colors.black['100']}
+                      onChangeText={value => onChange(allowOnlyNumber(value))}
+                      errorMessage={
+                        errors.details &&
+                        errors.details[index]?.inventory?.quantity?.message
                       }
-                      searchPlaceholder="Поиск..."
-                      value={value}
-                      onBlur={() => onBlur()}
-                      onChange={item => {
-                        onChange(item.value);
-                      }}
+                      {...props}
                     />
                   )}
                 />
-              </View>
-
-              <View style={styles.actionTypeButton}>
-                <Button
-                  label="-"
-                  onPress={() => {
-                    remove(index);
+                <Controller
+                  name={`details.${index}.size`}
+                  control={control}
+                  rules={{
+                    required: { value: true, message: 'Обязательное поле' },
+                    pattern: { value: /^\d*$/, message: 'Только цифры' },
                   }}
-                  variant="danger"
+                  render={({ field: { onChange, ...props } }) => (
+                    <Input
+                      placeholder="Размер"
+                      keyboardType="numeric"
+                      cursorColor={colors.black['100']}
+                      onChangeText={value => onChange(allowOnlyNumber(value))}
+                      errorMessage={
+                        errors.details && errors.details[index]?.size?.message
+                      }
+                      {...props}
+                    />
+                  )}
                 />
-              </View>
-            </View>
-          ))}
+                <Controller
+                  name={`details.${index}.price.amount`}
+                  control={control}
+                  rules={{
+                    required: { value: true, message: 'Обязательное поле' },
+                    pattern: { value: /^\d*$/, message: 'Только цифры' },
+                  }}
+                  render={({ field: { onChange, ...props } }) => (
+                    <Input
+                      placeholder="Цена"
+                      keyboardType="numeric"
+                      cursorColor={colors.black['100']}
+                      onChangeText={value => onChange(allowOnlyNumber(value))}
+                      errorMessage={
+                        errors.details &&
+                        errors.details[index]?.price?.amount?.message
+                      }
+                      {...props}
+                    />
+                  )}
+                />
 
-          <View style={styles.actionTypeButton}>
-            <Button
-              label="+"
-              onPress={() => {
-                append({
-                  price: {
-                    amount: '',
-                  },
-                  size: '',
-                  inventory: {
-                    quantity: '1',
-                    branchId: '',
-                  },
-                });
-              }}
-              variant="outline"
-            />
+                <View style={dropdownStyles.dropdownContainer}>
+                  <Controller
+                    name={`details.${index}.inventory.branchId`}
+                    control={control}
+                    rules={{
+                      required: 'Выберите место',
+                    }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Dropdown
+                        style={[dropdownStyles.dropdown]}
+                        placeholderStyle={dropdownStyles.dropdownText}
+                        selectedTextStyle={dropdownStyles.dropdownText}
+                        inputSearchStyle={[
+                          dropdownStyles.inputSearch,
+                          dropdownStyles.dropdownText,
+                        ]}
+                        containerStyle={dropdownStyles.listContainer}
+                        backgroundColor={'#c8c4c452'}
+                        data={branches}
+                        search
+                        maxHeight={250}
+                        labelField="label"
+                        valueField="value"
+                        dropdownPosition="top"
+                        placeholder={
+                          branches.find(branch => branch.value === +value)
+                            ?.label || 'Место'
+                        }
+                        searchPlaceholder="Поиск..."
+                        value={value}
+                        onBlur={() => onBlur()}
+                        onChange={item => {
+                          onChange(item.value);
+                        }}
+                      />
+                    )}
+                  />
+                </View>
+
+                <View style={styles.actionTypeButton}>
+                  <Button
+                    label="-"
+                    onPress={() => {
+                      remove(index);
+                    }}
+                    variant="danger"
+                  />
+                </View>
+              </View>
+            ))}
+
+            <View style={styles.actionTypeButton}>
+              <Button
+                label="+"
+                onPress={() => {
+                  append({
+                    price: {
+                      amount: '',
+                    },
+                    size: '',
+                    inventory: {
+                      quantity: '1',
+                      branchId: '',
+                    },
+                  });
+                }}
+                variant="outline"
+              />
+            </View>
           </View>
+          <Button
+            label="Сохранить"
+            disabled={isLoading || !isValid || !file}
+            onPress={handleSubmit(submitHandler)}
+          />
+          <Button
+            label="Отменить"
+            onPress={() => redirectToViewProduct(product as IProduct)}
+            variant="outline"
+          />
         </View>
-        <Button
-          label="Сохранить"
-          disabled={isLoading || !isValid || !file}
-          onPress={handleSubmit(submitHandler)}
-        />
-        <Button
-          label="Отменить"
-          onPress={() => redirectToViewProduct(product as IProduct)}
-          variant="outline"
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </GuardLayout>
   );
 };

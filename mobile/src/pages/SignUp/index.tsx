@@ -48,10 +48,9 @@ export const SignUp: FC<PublicNavigatorScreenProps> = ({
   useEffect(() => {
     (async () => {
       const phoneNumber = await getPhoneNumber();
-      dispatch(setPhoneNumber({ phoneNumber: phoneNumber }));
 
       if (phoneNumber) {
-        navigate('SignIn');
+        dispatch(setPhoneNumber({ phoneNumber: phoneNumber }));
       }
     })();
   }, []);

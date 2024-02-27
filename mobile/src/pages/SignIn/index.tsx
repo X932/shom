@@ -37,6 +37,7 @@ export const SignIn: FC<PublicNavigatorScreenProps> = ({
     savePhoneNumber(phoneNumber);
     reset();
   };
+
   const signIn = (values: ISignInForm) => {
     signInAPI({
       signInCredentials: values,

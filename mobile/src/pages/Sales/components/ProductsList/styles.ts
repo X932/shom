@@ -14,4 +14,7 @@ export const styles = StyleSheet.create({
   tabIndicator: {
     backgroundColor: colors.black['90'],
   },
+  listContainer: {
+    marginTop: 12,
+  },
 });

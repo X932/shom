@@ -3,15 +3,20 @@ import Toast from 'react-native-toast-message';
 import { store } from '@app-store';
 import { Navigator } from '@pages';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 function App(): JSX.Element {
   return (
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <Navigator />
-        <Toast topOffset={8} />
-      </Provider>
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <Navigator />
+          <Toast topOffset={8} />
+        </Provider>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }
 

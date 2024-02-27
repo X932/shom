@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { IDataList } from '@common-types/data-list';
 import { ProductsDetailsEntity } from './models/products-details.entity';
 import { ProductsPricesEntity } from './models/products-prices.entity';
 import {
@@ -26,6 +27,17 @@ export class ProductsService {
     private readonly branchesService: BranchesService,
   ) {}
 
+  private async isExist(
+    getProductDto: Partial<GetProductDto>,
+  ): Promise<boolean> {
+    return await this.productsRepository.exist({
+      where: {
+        id: getProductDto.id,
+        title: getProductDto.title,
+      },
+    });
+  }
+
   public async create(product: CreateProductDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
@@ -33,12 +45,9 @@ export class ProductsService {
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
-      const isProductExist =
-        (
-          await this.find({
-            title: product.title,
-          })
-        ).length > 0;
+      const isProductExist = await this.isExist({
+        title: product.title,
+      });
 
       if (isProductExist) {
         throw new BadRequestException();
@@ -89,9 +98,9 @@ export class ProductsService {
   }
 
   public async find(
-    getProductDto?: Partial<GetProductDto>,
-  ): Promise<ProductsEntity[]> {
-    const { title = '', id } = getProductDto;
+    getProductDto?: GetProductDto,
+  ): Promise<IDataList<ProductsEntity>> {
+    const { title = '', id, rowsLimit, rowsOffset } = getProductDto;
 
     const query = this.productsRepository
       .createQueryBuilder('product')
@@ -103,12 +112,16 @@ export class ProductsService {
       query.andWhere('product.id = :id', { id: id });
     }
 
-    return await query
+    const [products, totalCount] = await query
       .leftJoinAndSelect('product.details', 'details')
       .leftJoinAndSelect('details.price', 'price')
       .leftJoinAndSelect('details.inventory', 'inventory')
       .leftJoinAndSelect('inventory.branch', 'branch')
-      .getMany();
+      .take(rowsLimit)
+      .skip(rowsOffset * rowsLimit)
+      .getManyAndCount();
+
+    return { data: products, totalCount: totalCount };
   }
 
   public async findOne(id: number): Promise<ProductsEntity> {
@@ -130,12 +143,9 @@ export class ProductsService {
   public async update(updateProductDto: UpdateProductDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
-    const isProductExist =
-      (
-        await this.find({
-          id: updateProductDto.id,
-        })
-      ).length > 0;
+    const isProductExist = await this.isExist({
+      id: updateProductDto.id,
+    });
 
     if (!isProductExist) {
       throw new NotFoundException('Продукт не найден');

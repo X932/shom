@@ -2,7 +2,7 @@ import type { DrawerScreenProps } from '@react-navigation/drawer';
 import type { ParamListBase } from '@react-navigation/native';
 import { IProduct } from './product';
 
-type PublicScrenList = {
+export type PublicScrenList = {
   SignUp: undefined;
   SignIn: undefined;
   SuccessSignUp: undefined;

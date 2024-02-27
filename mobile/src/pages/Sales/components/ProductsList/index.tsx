@@ -22,6 +22,7 @@ import { styles } from './styles';
 import { ProductsTabIndex } from './constants';
 
 const INITIAL_PARAMS: TProductParams = {
+  title: '',
   rowsLimit: 2,
   rowsOffset: 0,
 };

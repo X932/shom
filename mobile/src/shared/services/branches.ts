@@ -1,3 +1,4 @@
+import { httpExceptionHandler } from '@utils';
 import { IBranch, IResponseWrapper } from '@interfaces';
 import { axiosInstance } from '@axios-instance';
 
@@ -13,6 +14,6 @@ export const getBranchesAPI = async () => {
     });
     return data.payload;
   } catch (error: any) {
-    console.log(error.message);
+    httpExceptionHandler(error);
   }
 };

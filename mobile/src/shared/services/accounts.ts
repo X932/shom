@@ -1,3 +1,4 @@
+import { httpExceptionHandler } from '@utils';
 import { IAccount, IResponseWrapper } from '@interfaces';
 import { axiosInstance } from '@axios-instance';
 
@@ -13,6 +14,6 @@ export const getAccountsAPI = async () => {
     });
     return data.payload;
   } catch (error: any) {
-    console.log(error.message);
+    httpExceptionHandler(error);
   }
 };

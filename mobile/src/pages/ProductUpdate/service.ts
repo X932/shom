@@ -1,6 +1,6 @@
 import { axiosInstance } from '@axios-instance';
 import { IResponseWrapper } from '@interfaces';
-import { showErrorToast, showSuccessToast } from '@utils';
+import { httpExceptionHandler, showErrorToast, showSuccessToast } from '@utils';
 import { IUpdateProductForm } from './interface';
 
 interface IUpdateProductAPIParams {
@@ -60,11 +60,7 @@ export const updateProductAPI = async (params: IUpdateProductAPIParams) => {
     showSuccessToast(data.message);
     successResponseHandler(product.id);
   } catch (error: any) {
-    if (error.response) {
-      showErrorToast(error.response.data.message);
-    } else {
-      showErrorToast(error.message);
-    }
+    httpExceptionHandler(error);
   } finally {
     setIsLoading(false);
   }

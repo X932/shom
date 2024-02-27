@@ -1,4 +1,5 @@
 import { IInventory } from '@interfaces';
+import { IPagination } from './pagination';
 
 interface IPrice {
   id: number;
@@ -20,4 +21,5 @@ export interface IProduct {
   details: IDetail[];
 }
 
-export type TProductParams = Pick<IProduct, 'id' | 'title'>;
+export type TProductParams = Partial<Pick<IProduct, 'id' | 'title'>> &
+  IPagination;

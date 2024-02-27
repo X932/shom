@@ -1,11 +1,9 @@
 import { FC, PropsWithChildren, useEffect } from 'react';
-import { Image, View } from 'react-native';
 import { useAppDispatch } from '@hooks';
-import { getToken, removeToken } from '@utils';
 import { authentication } from '@slices';
-import { styles } from './styles';
+import { getToken, removeToken } from '@utils';
 
-export const AuthLayout: FC<PropsWithChildren> = ({ children }) => {
+export const GuardLayout: FC<PropsWithChildren> = ({ children }) => {
   const dispatch = useAppDispatch();
 
   const checkAuth = async () => {
@@ -23,10 +21,5 @@ export const AuthLayout: FC<PropsWithChildren> = ({ children }) => {
     checkAuth();
   }, []);
 
-  return (
-    <View style={styles.layoutContainer}>
-      <Image source={require('../../images/logo.jpeg')} style={styles.logo} />
-      <View style={styles.contentContainer}>{children}</View>
-    </View>
-  );
+  return <>{children}</>;
 };

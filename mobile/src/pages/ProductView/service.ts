@@ -1,6 +1,6 @@
 import { axiosInstance } from '@axios-instance';
 import { IResponseWrapper, IProduct } from '@interfaces';
-import { showErrorToast, showSuccessToast } from '@utils';
+import { httpExceptionHandler, showSuccessToast } from '@utils';
 
 interface IDeleteProductAPIParams {
   successResponseHandler: () => void;
@@ -39,11 +39,7 @@ export const deleteProductAPI = async ({
     successResponseHandler();
   } catch (error: any) {
     errorResponseHandler();
-    if (error.response) {
-      showErrorToast(error.response.data.message);
-    } else {
-      showErrorToast(error.message);
-    }
+    httpExceptionHandler(error);
   } finally {
     setIsLoading(false);
   }
@@ -61,11 +57,7 @@ export const getProductAPI = async ({
     });
     successResponseHandler(data.payload);
   } catch (error: any) {
-    if (error.response) {
-      showErrorToast(error.response.data.message);
-    } else {
-      showErrorToast(error.message);
-    }
+    httpExceptionHandler(error);
   } finally {
     setIsLoading(false);
   }

@@ -164,13 +164,11 @@ export const Sales = () => {
                     containerStyle={dropdownStyles.listContainer}
                     backgroundColor={'#c8c4c452'}
                     data={accounts}
-                    search
                     maxHeight={250}
                     labelField="label"
                     dropdownPosition="top"
                     valueField="value"
                     placeholder={'Метод оплаты'}
-                    renderInputSearch={() => <></>}
                     value={value}
                     onChange={item => {
                       onChange(item.value);

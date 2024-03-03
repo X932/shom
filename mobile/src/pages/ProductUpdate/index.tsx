@@ -278,7 +278,6 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
                         containerStyle={dropdownStyles.listContainer}
                         backgroundColor={'#c8c4c452'}
                         data={branches}
-                        search
                         maxHeight={250}
                         labelField="label"
                         valueField="value"

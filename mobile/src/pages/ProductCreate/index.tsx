@@ -232,13 +232,11 @@ export const ProductCreate = () => {
                         containerStyle={dropdownStyles.listContainer}
                         backgroundColor={'#c8c4c452'}
                         data={branches}
-                        search
                         maxHeight={250}
                         labelField="label"
                         dropdownPosition="top"
                         valueField="value"
                         placeholder={isDropdownFocus ? '...' : 'Место'}
-                        renderInputSearch={() => <></>}
                         value={value}
                         onFocus={() => setIsDropdownFocus(true)}
                         onBlur={() => {

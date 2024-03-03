@@ -19,6 +19,7 @@ import { removePhoneNumber, removeToken } from '@utils';
 import { PrivateScreenList } from '@interfaces';
 import { ProductView } from '../ProductView';
 import { ProductUpdate } from '../ProductUpdate';
+import { Statistic } from '../Statistic';
 import { styles } from './styles';
 
 const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = [
@@ -131,6 +132,14 @@ export const Navigator = (): JSX.Element => {
                 component={Sales}
                 options={{
                   title: 'Продать',
+                  headerTitleAlign: 'center',
+                }}
+              />
+              <Drawer.Screen
+                name="Statistic"
+                component={Statistic}
+                options={{
+                  title: 'Статистика',
                   headerTitleAlign: 'center',
                 }}
               />

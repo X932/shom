@@ -1,8 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, EntityManager } from 'typeorm';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { InvoiceDetailsEntity } from './models/invoice-details.entity';
-import { CreateInvoiceDto } from './models/invoices.dto';
+import {
+  CreateInvoiceDto,
+  GetStatisticParamsDto,
+  IStatisticQueryResult,
+  ITotalAmountQueryResult,
+  TStatisticResponse,
+} from './models/invoices.dto';
 import { InvoicesEntity } from './models/invoices.entity';
+import { MONDAY_INDEX, StatisticType } from './models/invoices.constant';
 import { AccountsService } from '../accounts/accounts.service';
 import { ProductsEntity } from '../products/models/products.entity';
 import { AccountsEntity } from '../accounts/models/accounts.entity';
@@ -16,10 +24,6 @@ export class InvoicesService {
     private readonly accountsService: AccountsService,
     private readonly dataSource: DataSource,
   ) {}
-
-  private isLastProduct(index: number, quantity: number): boolean {
-    return index + 1 === quantity;
-  }
 
   public async create(createInvoiceDto: CreateInvoiceDto) {
     const isAccountExist: boolean = await this.accountsService.isExist(
@@ -138,6 +142,67 @@ export class InvoicesService {
         newInvoice.invoiceDetails = savedInvoiceDetails;
         await manager.save(newInvoice);
       });
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  private async getWeeklyStatistic(
+    currentDate: Date,
+  ): Promise<TStatisticResponse> {
+    const startWeekDate = format(
+      startOfWeek(currentDate, { weekStartsOn: MONDAY_INDEX }),
+      'yyyy-MM-dd HH:mm:ss',
+    );
+    const endWeekDate = format(
+      endOfWeek(currentDate, { weekStartsOn: MONDAY_INDEX }),
+      'yyyy-MM-dd HH:mm:ss',
+    );
+
+    return await this.dataSource.transaction(async (manager: EntityManager) => {
+      const { totalAmount }: ITotalAmountQueryResult = await manager
+        .createQueryBuilder(InvoicesEntity, 'invoice')
+        .select('CAST(SUM(invoice.net_amount) AS FLOAT)', 'totalAmount')
+        .where('invoice.created_at BETWEEN :startDate AND :endDate', {
+          startDate: startWeekDate,
+          endDate: endWeekDate,
+        })
+        .getRawOne();
+
+      const invoices: IStatisticQueryResult[] = await manager
+        .createQueryBuilder(InvoicesEntity, 'invoice')
+        .select('CAST(SUM(invoice.net_amount) AS FLOAT)', 'amount')
+        .addSelect('CAST(invoice.created_at AS DATE)', 'createdAt')
+        .where('invoice.created_at BETWEEN :startDate AND :endDate', {
+          startDate: startWeekDate,
+          endDate: endWeekDate,
+        })
+        .groupBy('CAST(invoice.created_at AS DATE)')
+        .orderBy('CAST(invoice.created_at AS DATE)')
+        .getRawMany();
+
+      return {
+        totalAmount: totalAmount,
+        data: invoices.reduce<IStatisticQueryResult[]>(
+          (previousValue, currentValue) => {
+            // TODO till creating expenses
+            return [...previousValue, currentValue, { amount: 130 }];
+          },
+          [],
+        ),
+      };
+    });
+  }
+
+  public async getStatistic(
+    getStatisticParams: GetStatisticParamsDto,
+  ): Promise<TStatisticResponse> {
+    const { currentDate, type } = getStatisticParams;
+
+    try {
+      if (type === StatisticType.WEEK) {
+        return this.getWeeklyStatistic(currentDate);
+      }
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }

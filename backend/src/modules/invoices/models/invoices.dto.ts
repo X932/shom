@@ -42,16 +42,3 @@ export class GetStatisticParamsDto {
   @Transform(({ value }) => Number(value))
   type: StatisticType;
 }
-
-export interface TStatisticResponse extends ITotalAmountQueryResult {
-  data: IStatisticQueryResult[];
-}
-
-export interface ITotalAmountQueryResult {
-  totalAmount: number;
-}
-
-export interface IStatisticQueryResult {
-  amount: number;
-  createdAt?: Date;
-}

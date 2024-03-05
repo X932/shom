@@ -9,12 +9,12 @@ export interface IStatisticParams {
   type: StatisticType;
 }
 
-interface IStatistic {
+export interface IStatistic {
   amount: number;
-  createdAt: Date;
+  period: string;
 }
 
 export interface IStatisticResponse {
-  totalAmount: number;
+  maxAmount: number;
   data: IStatistic[];
 }

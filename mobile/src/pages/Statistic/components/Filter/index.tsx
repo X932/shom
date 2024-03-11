@@ -7,6 +7,10 @@ import { IFilterPeriod, IFilterProps, IFilterType } from './interface';
 import { STATISTIC_TYPES } from '../../constant';
 import { StatisticType } from '../../interface';
 
+const MONDAY_INDEX = 1;
+const MAX_WEEK_PERIODS = 20;
+const MAX_MONTH_PERIODS = 10;
+
 export const Filter: FC<IFilterProps> = ({ params, setParams }) => {
   const [periods, setPeriods] = useState<IFilterPeriod[]>([]);
 
@@ -14,19 +18,22 @@ export const Filter: FC<IFilterProps> = ({ params, setParams }) => {
     const newPeriods: IFilterPeriod[] = [];
 
     if (type === StatisticType.WEEK) {
-      for (let index = 0; index < 20; index++) {
+      for (let index = 0; index < MAX_WEEK_PERIODS; index++) {
         const date = addWeeks(new Date(), -index);
 
         newPeriods.push({
           label: `${format(
-            startOfWeek(date, { weekStartsOn: 1 }),
+            startOfWeek(date, { weekStartsOn: MONDAY_INDEX }),
             'dd.MM.yy',
-          )}-${format(endOfWeek(date, { weekStartsOn: 1 }), 'dd.MM.yy')}`,
+          )}-${format(
+            endOfWeek(date, { weekStartsOn: MONDAY_INDEX }),
+            'dd.MM.yy',
+          )}`,
           value: date.toISOString(),
         });
       }
     } else {
-      for (let index = 0; index < 10; index++) {
+      for (let index = 0; index < MAX_MONTH_PERIODS; index++) {
         const date = addMonths(new Date(), -index);
 
         newPeriods.push({

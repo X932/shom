@@ -1,28 +1,23 @@
-import { dropdownStyles } from '@components';
-import { colors } from '@styles';
-import { GuardLayout, MainLayout } from '@ui-layouts';
 import { Text, View, useWindowDimensions } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
 import { BarChart, barDataItem } from 'react-native-gifted-charts';
 import { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
+import { GuardLayout, MainLayout } from '@ui-layouts';
+import { colors } from '@styles';
 import { IResponseWrapper } from '@interfaces';
 import { httpExceptionHandler } from '@utils';
 import { getStatisticAPI } from './service';
 import { IStatistic, IStatisticParams, StatisticType } from './interface';
-import {
-  STATISTIC_COLORS,
-  STATISTIC_TYPES,
-  Y_AXIS_SECTION_QUANTITY,
-} from './constant';
+import { STATISTIC_COLORS, Y_AXIS_SECTION_QUANTITY } from './constant';
 import { styles } from './styles';
+import { Filter } from './components/Filter';
 
 export const Statistic = () => {
   const { width } = useWindowDimensions();
 
   const [params, setParams] = useState<IStatisticParams>({
-    currentDate: new Date(),
+    currentDate: new Date().toISOString(),
     type: StatisticType.WEEK,
   });
 
@@ -79,30 +74,7 @@ export const Statistic = () => {
     <GuardLayout>
       <MainLayout>
         <View style={styles.container}>
-          <Dropdown
-            style={[dropdownStyles.dropdown]}
-            placeholderStyle={dropdownStyles.dropdownText}
-            selectedTextStyle={dropdownStyles.dropdownText}
-            inputSearchStyle={[
-              dropdownStyles.inputSearch,
-              dropdownStyles.dropdownText,
-            ]}
-            containerStyle={dropdownStyles.listContainer}
-            backgroundColor={'#c8c4c452'}
-            data={STATISTIC_TYPES}
-            maxHeight={250}
-            labelField="label"
-            dropdownPosition="top"
-            valueField="value"
-            placeholder="Тип"
-            value={params.type}
-            onChange={item => {
-              setParams({
-                type: item.value,
-                currentDate: new Date(),
-              });
-            }}
-          />
+          <Filter params={params} setParams={setParams} />
 
           <View style={styles.chartContainer}>
             <BarChart

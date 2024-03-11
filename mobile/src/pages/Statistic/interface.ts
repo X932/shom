@@ -5,7 +5,7 @@ export enum StatisticType {
 }
 
 export interface IStatisticParams {
-  currentDate: Date;
+  currentDate: string;
   type: StatisticType;
 }
 

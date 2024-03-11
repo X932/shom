@@ -48,11 +48,58 @@
           "builtin",
           "external",
           "internal",
-          "parent",
           "sibling",
+          "parent",
           "index",
           "object"
-        ]
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@pages",
+            "group": "internal"
+          },
+          {
+            "pattern": "@styles",
+            "group": "internal"
+          },
+          {
+            "pattern": "@services",
+            "group": "internal"
+          },
+          {
+            "pattern": "@utils",
+            "group": "internal"
+          },
+          {
+            "pattern": "@interfaces",
+            "group": "internal"
+          },
+          {
+            "pattern": "@components",
+            "group": "internal"
+          },
+          {
+            "pattern": "@axios-instance",
+            "group": "internal"
+          },
+          {
+            "pattern": "@ui-layouts",
+            "group": "internal"
+          },
+          {
+            "pattern": "@hooks",
+            "group": "internal"
+          },
+          {
+            "pattern": "@app-store",
+            "group": "internal"
+          },
+          {
+            "pattern": "@slices",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["internal"]
       }
     ]
   },

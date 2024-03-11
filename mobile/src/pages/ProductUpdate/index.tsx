@@ -1,20 +1,20 @@
-import { Button, dropdownStyles, Input } from '@components';
-import { colors } from '@styles';
 import { FC, useCallback, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
-import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { IList, PrivateNavigatorScreenProps, IProduct } from '@interfaces';
 import { useFocusEffect } from '@react-navigation/native';
 import { MEDIA_BASE_URL } from '@env';
 import { Dropdown } from 'react-native-element-dropdown';
+import { IList, PrivateNavigatorScreenProps, IProduct } from '@interfaces';
+import { allowOnlyNumber } from '@utils';
+import { colors } from '@styles';
+import { Button, dropdownStyles, Input } from '@components';
 import { getBranchesAPI } from '@services';
 import { GuardLayout } from '@ui-layouts';
-import { getProductAPI } from '../ProductView/service';
 import { styles } from './styles';
 import { updateProductAPI } from './service';
 import { IUpdateDetail, IUpdateProductForm } from './interface';
+import { getProductAPI } from '../ProductView/service';
 
 export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   route,

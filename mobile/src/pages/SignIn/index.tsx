@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Divider, Input } from '@components';
 import { colors } from '@styles';
 import { PublicNavigatorScreenProps } from '@interfaces';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication, setPhoneNumber } from '@slices';
-import { Controller, useForm } from 'react-hook-form';
 import { savePhoneNumber } from '@utils';
 import { styles } from './styles';
 import { signInAPI } from './service';

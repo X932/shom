@@ -1,9 +1,9 @@
 import { Provider } from 'react-redux';
 import Toast from 'react-native-toast-message';
-import { store } from '@app-store';
-import { Navigator } from '@pages';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { store } from '@app-store';
+import { Navigator } from '@pages';
 
 const queryClient = new QueryClient();
 

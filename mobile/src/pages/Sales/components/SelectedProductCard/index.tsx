@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Image, Text, View } from 'react-native';
-import { Button, Card } from '@components';
 import { MEDIA_BASE_URL } from '@env';
+import { Button, Card } from '@components';
 import { ISelectedProduct, ISelectedProductCardProps } from './interface';
 import { styles } from './styles';
 

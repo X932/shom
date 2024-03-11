@@ -1,10 +1,10 @@
-import { Button, Card } from '@components';
 import { MEDIA_BASE_URL } from '@env';
-import { PrivateNavigatorScreenProps, IProduct } from '@interfaces';
 import { useFocusEffect } from '@react-navigation/native';
-import { GuardLayout, MainLayout } from '@ui-layouts';
 import { FC, useCallback, useState } from 'react';
 import { Image, Modal, ScrollView, Text, View } from 'react-native';
+import { GuardLayout, MainLayout } from '@ui-layouts';
+import { PrivateNavigatorScreenProps, IProduct } from '@interfaces';
+import { Button, Card } from '@components';
 import { deleteProductAPI, getProductAPI } from './service';
 import { styles } from './styles';
 

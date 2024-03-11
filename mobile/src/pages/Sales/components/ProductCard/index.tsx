@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { Image, Text, View } from 'react-native';
-import { Button, Card, Divider } from '@components';
 import { MEDIA_BASE_URL } from '@env';
-import { ISelectedProduct } from '../SelectedProductCard/interface';
+import { Button, Card, Divider } from '@components';
 import { IProductCardProps } from './interface';
 import { styles } from './styles';
+import { ISelectedProduct } from '../SelectedProductCard/interface';
 
 export const ProductCard: FC<IProductCardProps> = ({
   product,

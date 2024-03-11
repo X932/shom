@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
-import { IResponseWrapper } from '../interfaces/responseWrapper';
 import { showErrorToast } from './errorToast';
+import { IResponseWrapper } from '../interfaces/responseWrapper';
 
 export const httpExceptionHandler = (error: AxiosError<IResponseWrapper>) => {
   if (error.response) {

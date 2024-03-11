@@ -1,6 +1,9 @@
-import { GuardLayout, MainLayout } from '@ui-layouts';
 import { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, Text } from 'react-native';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import { GuardLayout, MainLayout } from '@ui-layouts';
 import { getProductsAPI } from '@services';
 import {
   IDataList,
@@ -11,10 +14,7 @@ import {
 import { Input } from '@components';
 import { colors } from '@styles';
 import { useDebounce } from '@hooks';
-import { RefreshControl } from 'react-native-gesture-handler';
-import { useQuery } from 'react-query';
 import { httpExceptionHandler } from '@utils';
-import { AxiosError } from 'axios';
 import { Product } from './components/Product';
 import { styles } from './styles';
 

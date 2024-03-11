@@ -1,12 +1,12 @@
-import { Button, dropdownStyles, Input } from '@components';
-import { colors } from '@styles';
 import { useCallback, useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
-import { allowOnlyNumber } from '@utils';
 import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useFocusEffect } from '@react-navigation/native';
+import { allowOnlyNumber } from '@utils';
+import { colors } from '@styles';
+import { Button, dropdownStyles, Input } from '@components';
 import { getBranchesAPI } from '@services';
 import { IList } from '@interfaces';
 import { GuardLayout } from '@ui-layouts';

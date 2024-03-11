@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react';
 import { View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
 import { AuthLayout } from '@ui-layouts';
 import { Button, Divider, Input } from '@components';
 import { colors } from '@styles';
@@ -7,7 +8,6 @@ import { PublicNavigatorScreenProps } from '@interfaces';
 import { savePhoneNumber, getPhoneNumber, showErrorToast } from '@utils';
 import { setPhoneNumber } from '@slices';
 import { useAppDispatch } from '@hooks';
-import { Controller, useForm } from 'react-hook-form';
 import { styles } from './styles';
 import { signUpAPI } from './service';
 import { ISignUpForm } from './interface';

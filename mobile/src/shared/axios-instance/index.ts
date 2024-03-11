@@ -1,8 +1,8 @@
-import { IResponseWrapper } from '@interfaces';
 import axios, { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
-import { getToken, removeToken, showErrorToast } from '@utils';
 import { BACKEND_API } from '@env';
+import { getToken, removeToken, showErrorToast } from '@utils';
+import { IResponseWrapper } from '@interfaces';
 
 enum HTTP_STATUS {
   Unauthorized = 401,

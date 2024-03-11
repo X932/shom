@@ -17,10 +17,10 @@ import { useAppDispatch, useAppSelector } from '@hooks';
 import { authentication } from '@slices';
 import { removePhoneNumber, removeToken } from '@utils';
 import { PrivateScreenList } from '@interfaces';
+import { styles } from './styles';
 import { ProductView } from '../ProductView';
 import { ProductUpdate } from '../ProductUpdate';
 import { Statistic } from '../Statistic';
-import { styles } from './styles';
 
 const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = [
   'ProductView',

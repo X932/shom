@@ -2,6 +2,8 @@ import { Tab } from '@rneui/base';
 import { FC, useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import { RefreshControl } from 'react-native-gesture-handler';
 import { getProductsAPI } from '@services';
 import {
   IDataList,
@@ -9,17 +11,15 @@ import {
   IResponseWrapper,
   TProductParams,
 } from '@interfaces';
-import { AxiosError } from 'axios';
 import { httpExceptionHandler } from '@utils';
-import { RefreshControl } from 'react-native-gesture-handler';
 import { useDebounce } from '@hooks';
 import { Input } from '@components';
 import { colors } from '@styles';
-import { ProductCard } from '../ProductCard';
-import { SelectedProductCard } from '../SelectedProductCard';
 import { IProductsListProps } from './interface';
 import { styles } from './styles';
 import { ProductsTabIndex } from './constants';
+import { ProductCard } from '../ProductCard';
+import { SelectedProductCard } from '../SelectedProductCard';
 
 const INITIAL_PARAMS: TProductParams = {
   title: '',

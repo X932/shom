@@ -4,11 +4,13 @@ import { pick, types } from 'react-native-document-picker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useFocusEffect } from '@react-navigation/native';
-import { allowOnlyNumber } from '@utils';
+import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import { allowOnlyNumber, httpExceptionHandler } from '@utils';
 import { colors } from '@styles';
 import { Button, dropdownStyles, Input } from '@components';
 import { getBranchesAPI } from '@services';
-import { IList } from '@interfaces';
+import { IBranch, IList, IResponseWrapper } from '@interfaces';
 import { GuardLayout } from '@ui-layouts';
 import { styles } from './styles';
 import { createProductAPI } from './service';
@@ -19,6 +21,21 @@ export const ProductCreate = () => {
   const [isDropdownFocus, setIsDropdownFocus] = useState(false);
   const [branches, setBranches] = useState<IList[]>([]);
   const [file, setFile] = useState<any>();
+
+  useQuery({
+    queryKey: ['branches'],
+    queryFn: () => getBranchesAPI(),
+    onSuccess: (branches: IBranch[]) => {
+      const parsedBranches: IList[] = branches.map(({ id, title }) => ({
+        value: id,
+        label: title,
+      }));
+      setBranches(parsedBranches);
+    },
+    onError: (error: AxiosError<IResponseWrapper>) => {
+      httpExceptionHandler(error);
+    },
+  });
 
   const {
     control,
@@ -72,22 +89,8 @@ export const ProductCreate = () => {
     });
   };
 
-  const getBranches = async () => {
-    const data = await getBranchesAPI();
-
-    if (data) {
-      const parsedBranches: IList[] = data.map(({ id, title }) => ({
-        value: id,
-        label: title,
-      }));
-      setBranches(parsedBranches);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      getBranches();
-
       return () => {
         reset();
         setFile(undefined);

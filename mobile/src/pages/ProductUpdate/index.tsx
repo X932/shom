@@ -5,8 +5,16 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import { MEDIA_BASE_URL } from '@env';
 import { Dropdown } from 'react-native-element-dropdown';
-import { IList, PrivateNavigatorScreenProps, IProduct } from '@interfaces';
-import { allowOnlyNumber } from '@utils';
+import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import {
+  IList,
+  PrivateNavigatorScreenProps,
+  IProduct,
+  IBranch,
+  IResponseWrapper,
+} from '@interfaces';
+import { allowOnlyNumber, httpExceptionHandler } from '@utils';
 import { colors } from '@styles';
 import { Button, dropdownStyles, Input } from '@components';
 import { getBranchesAPI } from '@services';
@@ -26,6 +34,21 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<any>();
   const [branches, setBranches] = useState<IList[]>([]);
+
+  useQuery({
+    queryKey: ['branches'],
+    queryFn: () => getBranchesAPI(),
+    onSuccess: (branches: IBranch[]) => {
+      const parsedBranches: IList[] = branches.map(({ id, title }) => ({
+        value: id,
+        label: title,
+      }));
+      setBranches(parsedBranches);
+    },
+    onError: (error: AxiosError<IResponseWrapper>) => {
+      httpExceptionHandler(error);
+    },
+  });
 
   const setDefaultFormValue = (product: IProduct) => {
     return {
@@ -103,16 +126,6 @@ export const ProductUpdate: FC<PrivateNavigatorScreenProps> = ({
   };
 
   const getInitialData = async () => {
-    const data = await getBranchesAPI();
-
-    if (data) {
-      const parsedBranches: IList[] = data.map(({ id, title }) => ({
-        value: id,
-        label: title,
-      }));
-      setBranches(parsedBranches);
-    }
-
     getProductAPI({
       id: productID,
       setIsLoading: setIsLoading,

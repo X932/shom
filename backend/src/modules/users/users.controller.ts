@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from '@guards/jwt.guard';
 import {
   Body,
   Controller,
@@ -9,6 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '@guards/jwt.guard';
 import { UserDto } from './models/users.dto';
 import { UsersService } from './users.service';
 

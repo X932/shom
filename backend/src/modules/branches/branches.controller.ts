@@ -1,5 +1,5 @@
-import { JwtAuthGuard } from '@guards/jwt.guard';
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@guards/jwt.guard';
 import { BranchesService } from './branches.service';
 import { BranchesEntity } from './models/branches.entity';
 

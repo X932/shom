@@ -1,7 +1,7 @@
-import { IDataList } from '@common-types/data-list';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { IDataList } from '@common-types/data-list';
 import { GetInventoryDto } from './models/inventory.dto';
 import { InventoryEntity } from './models/inventory.entity';
 

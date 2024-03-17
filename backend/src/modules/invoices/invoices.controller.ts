@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from '@guards/jwt.guard';
 import {
   Body,
   Controller,
@@ -8,6 +7,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto, GetStatisticParamsDto } from './models/invoices.dto';

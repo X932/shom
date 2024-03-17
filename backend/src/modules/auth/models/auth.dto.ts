@@ -1,5 +1,5 @@
-import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 import { IsOptional, IsString } from 'class-validator';
+import { IsNotBlank } from '@decorators/IsNotBlank.decorator';
 
 class UserCredentials {
   @IsString()

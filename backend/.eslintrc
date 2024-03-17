@@ -22,7 +22,38 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "internal", "external", "sibling", "parent"]
+        "groups": ["builtin", "external", "internal", "sibling", "parent"],
+        "pathGroups": [
+          {
+            "pattern": "@utils/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@common-types/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@interceptors/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@decorators/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@pipes/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@transformers/*",
+            "group": "internal"
+          },
+          {
+            "pattern": "@guards/*",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["internal"]
       }
     ],
     "spaced-comment": ["warn", "always"],

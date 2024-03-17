@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { ColumnMoneyTransformer } from '@transformers/columnMoneyTransformer';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ColumnMoneyTransformer } from '@transformers/columnMoneyTransformer';
+import { AccountsHistoryEntity } from '../../accounts-history/models/accounts-history.entity';
 import { InvoicesEntity } from '../../invoices/models/invoices.entity';
 
 @Entity('accounts')
@@ -32,4 +33,10 @@ export class AccountsEntity {
 
   @OneToMany(() => InvoicesEntity, (invoice) => invoice.account)
   invoices: InvoicesEntity[];
+
+  @OneToMany(
+    () => AccountsHistoryEntity,
+    (accountHistory) => accountHistory.account,
+  )
+  accountHistory: AccountsHistoryEntity[];
 }

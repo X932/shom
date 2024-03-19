@@ -3,7 +3,7 @@ import { IResponseWrapper } from '@interfaces';
 import { IStatisticParams, IStatisticResponse } from './interface';
 
 enum Endpoints {
-  STATISTIC = '/invoices/statistic',
+  STATISTIC = '/accounts-history/statistic',
 }
 
 export const getStatisticAPI = async (params: IStatisticParams) => {

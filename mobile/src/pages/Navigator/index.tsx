@@ -21,7 +21,7 @@ import { styles } from './styles';
 import { ProductView } from '../ProductView';
 import { ProductUpdate } from '../ProductUpdate';
 import { Statistic } from '../Statistic';
-import { ExpenseCreate } from '../ExpenseCreate';
+import { TransactionCreate } from '../TransactionCreate';
 
 const EXCLUDED_DRAWER_ROUTES: (keyof PrivateScreenList)[] = [
   'ProductView',
@@ -145,10 +145,10 @@ export const Navigator = (): JSX.Element => {
                 }}
               />
               <Drawer.Screen
-                name="ExpenseCreate"
-                component={ExpenseCreate}
+                name="TransactionCreate"
+                component={TransactionCreate}
                 options={{
-                  title: 'Добавить расход',
+                  title: 'Добавить транзакцию',
                   headerTitleAlign: 'center',
                 }}
               />

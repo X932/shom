@@ -20,7 +20,7 @@ export type PrivateScreenList = {
   ProductView: Pick<IProduct, 'id'>;
   ProductUpdate: Pick<IProduct, 'id'>;
   Statistic: undefined;
-  ExpenseCreate: undefined;
+  TransactionCreate: undefined;
 };
 
 export type PrivateNavigatorScreenProps = DrawerScreenProps<

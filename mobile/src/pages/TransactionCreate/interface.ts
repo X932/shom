@@ -1,4 +1,4 @@
-export interface ICreateExpenseForm {
+export interface ITransactionCreateForm {
   amount: string;
   description: string;
   branchId: string;

@@ -60,7 +60,7 @@ export class AccountsHistoryService {
     );
     const endMonthDate = format(endOfMonth(currentDate), 'yyyy-MM-dd HH:mm:ss');
 
-    const invoices: IMonthlyStatisticQueryResult[] =
+    const histories: IMonthlyStatisticQueryResult[] =
       await this.accountsHistoryRepository
         .createQueryBuilder('account_history')
         .select('CAST(SUM(account_history.amount) AS FLOAT)', 'amount')
@@ -77,7 +77,7 @@ export class AccountsHistoryService {
         .getRawMany();
 
     let maxAmount = 0;
-    const statistic = invoices.reduce<IStatistic[]>(
+    const statistic = histories.reduce<IStatistic[]>(
       (previousValue, currentValue) => {
         if (maxAmount < currentValue.amount) {
           maxAmount = currentValue.amount;
@@ -124,7 +124,7 @@ export class AccountsHistoryService {
       'yyyy-MM-dd HH:mm:ss',
     );
 
-    const invoices: IWeeklyStatisticQueryResult[] =
+    const histories: IWeeklyStatisticQueryResult[] =
       await this.accountsHistoryRepository
         .createQueryBuilder('account_history')
         .select('CAST(SUM(account_history.amount) AS FLOAT)', 'amount')
@@ -138,7 +138,7 @@ export class AccountsHistoryService {
         .getRawMany();
 
     let maxAmount = 0;
-    const statistic = invoices.reduce<IStatistic[]>(
+    const statistic = histories.reduce<IStatistic[]>(
       (previousValue, currentValue) => {
         if (maxAmount < currentValue.amount) {
           maxAmount = currentValue.amount;

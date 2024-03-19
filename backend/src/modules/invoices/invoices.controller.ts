@@ -1,16 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
 import { InvoicesService } from './invoices.service';
-import { CreateInvoiceDto, GetStatisticParamsDto } from './models/invoices.dto';
+import { CreateInvoiceDto } from './models/invoices.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('invoices')
@@ -21,10 +13,5 @@ export class InvoicesController {
   @UsePipes(TrimPipe)
   create(@Body() createInvoiceDto: CreateInvoiceDto) {
     return this.invoicesService.create(createInvoiceDto);
-  }
-
-  @Get('statistic')
-  getStatistic(@Query() getStatisticParams: GetStatisticParamsDto) {
-    return this.invoicesService.getStatistic(getStatisticParams);
   }
 }

@@ -11,25 +11,25 @@ import { GuardLayout, MainLayout } from '@ui-layouts';
 import { Button, Input, dropdownStyles } from '@components';
 import { colors } from '@styles';
 import { allowOnlyNumber, httpExceptionHandler } from '@utils';
-import { getBranchesAPI } from '@services';
-import { IBranch, IList, IResponseWrapper } from '@interfaces';
+import { IAccount, IList, IResponseWrapper } from '@interfaces';
+import { getAccountsAPI } from '@services';
 import { ITransactionCreateForm } from './interface';
 import { styles } from './styles';
 
 export const TransactionCreate = () => {
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [branches, setBranches] = useState<IList[]>([]);
+  const [accounts, setAccounts] = useState<IList[]>([]);
 
   useQuery({
-    queryKey: ['branches'],
-    queryFn: () => getBranchesAPI(),
-    onSuccess: (branches: IBranch[]) => {
-      const parsedBranches: IList[] = branches.map(({ id, title }) => ({
+    queryKey: ['accounts'],
+    queryFn: () => getAccountsAPI(),
+    onSuccess: (accounts: IAccount[]) => {
+      const parsedBranches: IList[] = accounts.map(({ id, title }) => ({
         value: id,
         label: title,
       }));
-      setBranches(parsedBranches);
+      setAccounts(parsedBranches);
     },
     onError: (error: AxiosError<IResponseWrapper>) => {
       httpExceptionHandler(error);
@@ -107,12 +107,12 @@ export const TransactionCreate = () => {
                 ]}
                 containerStyle={dropdownStyles.listContainer}
                 backgroundColor={'#c8c4c452'}
-                data={branches}
+                data={accounts}
                 maxHeight={250}
                 labelField="label"
                 dropdownPosition="top"
                 valueField="value"
-                placeholder="Место"
+                placeholder="Метод оплаты"
                 value={value}
                 onBlur={() => {
                   onBlur();

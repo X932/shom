@@ -25,11 +25,11 @@ export const TransactionCreate = () => {
     queryKey: ['accounts'],
     queryFn: () => getAccountsAPI(),
     onSuccess: (accounts: IAccount[]) => {
-      const parsedBranches: IList[] = accounts.map(({ id, title }) => ({
+      const parsedAccounts: IList[] = accounts.map(({ id, title }) => ({
         value: id,
         label: title,
       }));
-      setAccounts(parsedBranches);
+      setAccounts(parsedAccounts);
     },
     onError: (error: AxiosError<IResponseWrapper>) => {
       httpExceptionHandler(error);

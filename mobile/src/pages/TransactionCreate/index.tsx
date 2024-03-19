@@ -13,11 +13,11 @@ import { colors } from '@styles';
 import { allowOnlyNumber, httpExceptionHandler } from '@utils';
 import { getBranchesAPI } from '@services';
 import { IBranch, IList, IResponseWrapper } from '@interfaces';
-import { ICreateExpenseForm } from './interface';
+import { ITransactionCreateForm } from './interface';
 import { styles } from './styles';
 
-export const ExpenseCreate = () => {
-  const [expenseDate, setExpenseDate] = useState(new Date());
+export const TransactionCreate = () => {
+  const [transactionDate, setTransactionDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [branches, setBranches] = useState<IList[]>([]);
 
@@ -41,7 +41,7 @@ export const ExpenseCreate = () => {
     reset,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<ICreateExpenseForm>({
+  } = useForm<ITransactionCreateForm>({
     defaultValues: {
       description: '',
       branchId: '',
@@ -55,7 +55,7 @@ export const ExpenseCreate = () => {
       <MainLayout>
         <View style={styles.container}>
           <Button
-            label={format(expenseDate, 'dd MMMM yyyy', { locale: ru })}
+            label={format(transactionDate, 'dd MMMM yyyy', { locale: ru })}
             onPress={() => setOpen(true)}
             variant="outline"
           />
@@ -64,10 +64,10 @@ export const ExpenseCreate = () => {
             modal
             mode="date"
             open={open}
-            date={expenseDate}
+            date={transactionDate}
             onConfirm={date => {
               setOpen(false);
-              setExpenseDate(date);
+              setTransactionDate(date);
             }}
             onCancel={() => setOpen(false)}
           />

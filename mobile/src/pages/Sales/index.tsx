@@ -29,8 +29,8 @@ export const Sales = () => {
   useQuery({
     queryKey: ['accounts'],
     queryFn: () => getAccountsAPI(),
-    onSuccess: (branches: IAccount[]) => {
-      const parsedBranches: IList[] = branches.map(({ id, title }) => ({
+    onSuccess: (accounts: IAccount[]) => {
+      const parsedBranches: IList[] = accounts.map(({ id, title }) => ({
         value: id,
         label: title,
       }));

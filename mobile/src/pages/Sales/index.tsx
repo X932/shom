@@ -3,12 +3,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { Dropdown } from 'react-native-element-dropdown';
+import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
 import { Button, dropdownStyles, Input } from '@components';
 import { GuardLayout, MainLayout } from '@ui-layouts';
 import { getAccountsAPI } from '@services';
-import { IList } from '@interfaces';
+import { IAccount, IList, IResponseWrapper } from '@interfaces';
 import { colors } from '@styles';
-import { allowOnlyNumber, showErrorToast } from '@utils';
+import { allowOnlyNumber, httpExceptionHandler, showErrorToast } from '@utils';
 import { styles } from './styles';
 import { saleProducts } from './service';
 import { IOrderDetails, ISaleForm, ITotalProductsData } from './interface';
@@ -23,6 +25,21 @@ export const Sales = () => {
   const [accounts, setAccounts] = useState<IList[]>([]);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  useQuery({
+    queryKey: ['accounts'],
+    queryFn: () => getAccountsAPI(),
+    onSuccess: (branches: IAccount[]) => {
+      const parsedBranches: IList[] = branches.map(({ id, title }) => ({
+        value: id,
+        label: title,
+      }));
+      setAccounts(parsedBranches);
+    },
+    onError: (error: AxiosError<IResponseWrapper>) => {
+      httpExceptionHandler(error);
+    },
+  });
 
   const getTotalSelectedProductsData = (): ITotalProductsData => {
     let totalCount = 0;
@@ -92,22 +109,8 @@ export const Sales = () => {
     });
   };
 
-  const getAccounts = async (): Promise<void> => {
-    const data = await getAccountsAPI();
-
-    if (data) {
-      const parsedAccounts: IList[] = data.map(({ id, title }) => ({
-        value: id,
-        label: title,
-      }));
-      setAccounts(parsedAccounts);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      getAccounts();
-
       return () => {
         resetForm();
       };

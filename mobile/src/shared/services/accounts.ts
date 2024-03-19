@@ -1,4 +1,3 @@
-import { httpExceptionHandler } from '@utils';
 import { IAccount, IResponseWrapper } from '@interfaces';
 import { axiosInstance } from '@axios-instance';
 
@@ -7,13 +6,9 @@ enum Endpoints {
 }
 
 export const getAccountsAPI = async () => {
-  try {
-    const { data } = await axiosInstance<IResponseWrapper<IAccount[]>>({
-      method: 'GET',
-      url: Endpoints.ACCOUNTS,
-    });
-    return data.payload;
-  } catch (error: any) {
-    httpExceptionHandler(error);
-  }
+  const { data } = await axiosInstance<IResponseWrapper<IAccount[]>>({
+    method: 'GET',
+    url: Endpoints.ACCOUNTS,
+  });
+  return data.payload;
 };

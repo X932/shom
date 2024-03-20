@@ -23,3 +23,8 @@ export class UpdateRoleDto implements IRole {
   @Type(() => EndpointDto)
   endpoints: EndpointDto[];
 }
+
+export class RoleIdDto implements Pick<IRole, 'id'> {
+  @IsNumber()
+  id: number;
+}

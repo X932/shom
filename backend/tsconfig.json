@@ -17,6 +17,7 @@
       "@decorators/*": ["shared/decorators/*"],
       "@pipes/*": ["shared/pipes/*"],
       "@transformers/*": ["shared/transformers/*"],
+      "@constants/*": ["shared/constants/*"],
       "@guards/*": ["shared/guards/*"]
     },
     "incremental": true,

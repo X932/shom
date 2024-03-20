@@ -1,11 +1,12 @@
 import { Body, Controller, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
+import { ROUTES } from '@constants/routes';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './models/invoices.dto';
 
 @UseGuards(JwtAuthGuard)
-@Controller('invoices')
+@Controller(ROUTES.INVOICES)
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 

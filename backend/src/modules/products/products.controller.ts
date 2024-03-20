@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
+import { ROUTES } from '@constants/routes';
 import {
   CreateProductDto,
   GetProductDto,
@@ -21,7 +22,7 @@ import {
 import { ProductsService } from './products.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('products')
+@Controller(ROUTES.PRODUCTS)
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 

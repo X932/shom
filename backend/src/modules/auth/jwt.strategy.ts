@@ -33,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(req: Request, parsedJWT: IJWT) {
     const user = await this.findUserByID(parsedJWT.sub);
     // GET /api/users/24 -> GET /api/users
-    const currentEndpoint = req.method + ' ' + req.path.split(/\/\d/)[0];
+    const currentEndpoint = req.path.split(/\/\d/)[0] + ' ' + req.method;
 
     const permission = user?.role?.endpoints.find(
       // GET /api/users/:id -> GET /api/users

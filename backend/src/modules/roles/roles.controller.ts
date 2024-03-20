@@ -12,11 +12,12 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
 import { TrimPipe } from '@pipes/trim.pipe';
+import { ROUTES } from '@constants/routes';
 import { RoleDto, UpdateRoleDto } from './models/roles.dto';
 import { RolesService } from './roles.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('roles')
+@Controller(ROUTES.ROLES)
 export class RolesController {
   constructor(private rolesService: RolesService) {}
 

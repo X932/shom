@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { RolesEntity } from '../../roles/models/roles.entity';
 
 @Entity('users')
@@ -12,6 +13,7 @@ export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Exclude()
   @Column()
   password: string;
 

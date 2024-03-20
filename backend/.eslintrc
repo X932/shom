@@ -49,6 +49,10 @@
             "group": "internal"
           },
           {
+            "pattern": "@constants/*",
+            "group": "internal"
+          },
+          {
             "pattern": "@guards/*",
             "group": "internal"
           }

@@ -1,0 +1,17 @@
+export enum ROUTES {
+  BASE = '/api',
+  AUTH = '/auth',
+  SIGN_IN = '/sign-in',
+  SIGN_UP = '/sign-up',
+  ACCOUNTS = '/accounts',
+  ACCOUNTS_HISTORY = '/accounts-history',
+  ACCOUNTS_STATISTIC = '/statistic',
+  BRANCHES = '/branches',
+  ENDPOINTS = '/endpoints',
+  INVENTORY = '/inventory',
+  INVOICES = '/invoices',
+  MEDIA = '/media',
+  PRODUCTS = '/products',
+  ROLES = '/roles',
+  USERS = '/users',
+}

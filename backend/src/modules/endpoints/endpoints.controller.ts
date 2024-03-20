@@ -10,11 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@guards/jwt.guard';
+import { ROUTES } from '@constants/routes';
 import { CreateEndpointDto, EndpointDto } from './models/endpoints.dto';
 import { EndpointsService } from './endpoints.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('endpoints')
+@Controller(ROUTES.ENDPOINTS)
 export class EndpointsController {
   constructor(private endpointsService: EndpointsService) {}
 

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { IUser } from './models/users.type';
 import { UsersEntity } from './models/users.entity';
+import { UpdateUserDto } from './models/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,7 +53,7 @@ export class UsersService {
     await this.usersRepository.delete({ id: id });
   }
 
-  public async update(params: Partial<IUser>): Promise<void> {
+  public async update(params: UpdateUserDto): Promise<void> {
     const isUserExist = (await this.find({ id: params.id })).length > 0;
 
     if (!isUserExist || !params.id) {
@@ -61,7 +62,10 @@ export class UsersService {
 
     const hashedPassword =
       params.password && (await this.hashPassword(params.password));
-
-    await this.usersRepository.save({ ...params, password: hashedPassword });
+    try {
+      await this.usersRepository.save({ ...params, password: hashedPassword });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

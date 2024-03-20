@@ -8,12 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ROUTES } from '@constants/routes';
 import { JwtAuthGuard } from '@guards/jwt.guard';
-import { UserDto } from './models/users.dto';
+import { UpdateUserDto } from './models/users.dto';
 import { UsersService } from './users.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('users')
+@Controller(ROUTES.USERS)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -28,7 +29,7 @@ export class UsersController {
   }
 
   @Put()
-  update(@Body() user: Partial<UserDto>) {
+  update(@Body() user: UpdateUserDto) {
     return this.usersService.update(user);
   }
 }

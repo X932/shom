@@ -87,7 +87,9 @@ export const Sales = () => {
   const submitHandler = (values: ISaleForm): void => {
     setIsLoading(true);
 
-    if (!Number(values.accountId) || !Number(values.discount)) {
+    const discountAmount = Number(values.discount) ? values.discount : '0';
+
+    if (!Number(values.accountId) || isNaN(+discountAmount)) {
       showErrorToast('Данные не верные');
       return;
     }
@@ -100,6 +102,7 @@ export const Sales = () => {
     saleProducts({
       order: {
         ...values,
+        discount: discountAmount,
         details: parseOrderDetails(),
       },
       setIsLoading: setIsLoading,

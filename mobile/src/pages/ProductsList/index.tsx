@@ -33,7 +33,7 @@ export const ProductsList = () => {
   const debouncedSearchText = useDebounce(searchText);
 
   const { data: productsResponse, isLoading } = useQuery({
-    queryKey: ['products', params],
+    queryKey: ['page-products', params],
     queryFn: () => getProductsAPI(params),
     onSuccess: (response: IDataList<IProduct>) => {
       successResponseHandler(response);
@@ -101,11 +101,12 @@ export const ProductsList = () => {
             }
             data={products}
             renderItem={({ item }) => <Product {...item} />}
-            keyExtractor={item => String(item.id)}
+            keyExtractor={item => String(item.id + Math.random())}
             onEndReachedThreshold={1}
-            ListEmptyComponent={<Text>Загрузка . . .</Text>}
+            ListEmptyComponent={
+              isLoading ? <Text>Загрузка . . .</Text> : <Text>Пусто</Text>
+            }
             onEndReached={() => fetchMoreHandler()}
-            // ListFooterComponent={ListEndLoader()}
           />
         </SafeAreaView>
       </MainLayout>

@@ -43,7 +43,7 @@ export const ProductsList: FC<IProductsListProps> = ({
   const debouncedSearchText = useDebounce(searchText);
 
   const { data: productsResponse, isLoading } = useQuery({
-    queryKey: ['products', params],
+    queryKey: ['sale-products', params],
     queryFn: () => getProductsAPI(params),
     onSuccess: (response: IDataList<IProduct>) => {
       successResponseHandler(response);
@@ -132,7 +132,7 @@ export const ProductsList: FC<IProductsListProps> = ({
             )}
             style={styles.listContainer}
             ListEmptyComponent={<Text>Загрузка . . .</Text>}
-            keyExtractor={item => String(item.id)}
+            keyExtractor={item => String(item.id + Math.random())}
             onEndReachedThreshold={1}
             onEndReached={() => fetchMoreHandler()}
           />

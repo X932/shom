@@ -14,6 +14,7 @@ export const Input: FC<TextInputProps & IInputProps> = forwardRef(
             inputStyles.structure,
             !multiline && inputStyles.inputHeight,
           ]}
+          multiline
           {...props}
         />
         {errorMessage && <Text style={inputStyles.error}>{errorMessage}</Text>}

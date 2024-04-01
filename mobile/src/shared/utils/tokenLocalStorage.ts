@@ -23,7 +23,7 @@ export const removeToken = async (): Promise<boolean> => {
   try {
     await AsyncStorage.removeItem(TOKEN_KEY);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 };

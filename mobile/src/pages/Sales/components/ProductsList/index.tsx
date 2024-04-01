@@ -17,7 +17,7 @@ import { Input } from '@components';
 import { colors } from '@styles';
 import { IProductsListProps } from './interface';
 import { styles } from './styles';
-import { ProductsTabIndex } from './constants';
+import { ProductsTabIndex } from './constant';
 import { ProductCard } from '../ProductCard';
 import { SelectedProductCard } from '../SelectedProductCard';
 

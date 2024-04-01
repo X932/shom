@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { InvoiceDetailsEntity } from './models/invoice-details.entity';
 import { CreateInvoiceDto } from './models/invoices.dto';
-
 import { InvoicesEntity } from './models/invoices.entity';
+import { AccountsHistoryEntity } from '../accounts-history/models/accounts-history.entity';
+import { ACCOUNT_HISTORY_TYPES } from '../accounts-history/models/accounts-history.constant';
 import { AccountsService } from '../accounts/accounts.service';
 import { ProductsEntity } from '../products/models/products.entity';
 import { AccountsEntity } from '../accounts/models/accounts.entity';
@@ -138,6 +138,14 @@ export class InvoicesService {
         newInvoice.account = foundAccount;
         newInvoice.invoiceDetails = savedInvoiceDetails;
         await manager.save(newInvoice);
+
+        const newAccountHistory = new AccountsHistoryEntity();
+        newAccountHistory.account = foundAccount;
+        newAccountHistory.amount = newInvoice.netAmount;
+        newAccountHistory.description = 'Продажа продуктов';
+        newAccountHistory.isExcludedFromStatistic = false;
+        newAccountHistory.type = ACCOUNT_HISTORY_TYPES.INCOME;
+        await manager.save(newAccountHistory);
       });
     } catch (error: any) {
       throw new BadRequestException(error.message);

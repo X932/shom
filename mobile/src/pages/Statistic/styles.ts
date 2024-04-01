@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   tooltipContainer: {
     marginBottom: 8,
     backgroundColor: colors.white,
-    padding: 4,
+    padding: 6,
     borderRadius: 4,
   },
 });

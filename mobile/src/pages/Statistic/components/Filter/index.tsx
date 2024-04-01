@@ -25,7 +25,7 @@ export const Filter: FC<IFilterProps> = ({ params, setParams }) => {
           label: `${format(
             startOfWeek(date, { weekStartsOn: MONDAY_INDEX }),
             'dd.MM.yy',
-          )}-${format(
+          )} - ${format(
             endOfWeek(date, { weekStartsOn: MONDAY_INDEX }),
             'dd.MM.yy',
           )}`,

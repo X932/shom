@@ -9,7 +9,7 @@ import {
   startOfYear,
 } from 'date-fns';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource, EntityManager } from 'typeorm';
 import {
   MONDAY_INDEX,
   StatisticType,
@@ -17,8 +17,8 @@ import {
 import {
   IMonthlyStatisticQueryResult,
   IStatistic,
+  IStatisticMaxAmount,
   IStatisticResponse,
-  IWeeklyStatisticQueryResult,
 } from './models/accounts-history.type';
 import { AccountsHistoryEntity } from './models/accounts-history.entity';
 import { GetStatisticParamsDto } from './models/accounts-history.dto';
@@ -28,6 +28,7 @@ export class AccountsHistoryService {
   constructor(
     @InjectRepository(AccountsHistoryEntity)
     private readonly accountsHistoryRepository: Repository<AccountsHistoryEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   public async getStatistic(
@@ -60,51 +61,38 @@ export class AccountsHistoryService {
     );
     const endMonthDate = format(endOfMonth(currentDate), 'yyyy-MM-dd HH:mm:ss');
 
-    const histories: IMonthlyStatisticQueryResult[] =
-      await this.accountsHistoryRepository
-        .createQueryBuilder('account_history')
-        .select('CAST(SUM(account_history.amount) AS FLOAT)', 'amount')
-        .addSelect(
-          "DATE_PART('WEEK', CAST(account_history.created_at AS DATE))",
-          'weekNumber',
-        )
-        .where('account_history.created_at BETWEEN :startDate AND :endDate', {
-          startDate: startMonthDate,
-          endDate: endMonthDate,
-        })
-        .groupBy("DATE_PART('WEEK', CAST(account_history.created_at AS DATE))")
-        .orderBy("DATE_PART('WEEK', CAST(account_history.created_at AS DATE))")
-        .getRawMany();
+    const history: IMonthlyStatisticQueryResult[] =
+      await this.accountsHistoryRepository.query(
+        `select
+          account_history.type AS type,
+          CAST(SUM(account_history.amount) AS FLOAT) AS amount,
+          DATE_PART('WEEK', CAST(account_history.created_at AS DATE)) AS "weekNumber"
+        from accounts_history account_history
+        where account_history.created_at BETWEEN $1 AND $2
+        group by DATE_PART('WEEK', CAST(account_history.created_at AS DATE)), type`,
+        [startMonthDate, endMonthDate],
+      );
 
     let maxAmount = 0;
-    const statistic = histories.reduce<IStatistic[]>(
-      (previousValue, currentValue) => {
-        if (maxAmount < currentValue.amount) {
-          maxAmount = currentValue.amount;
-        }
+    const statistic: IStatistic[] = history.map((data) => {
+      if (maxAmount < data.amount) {
+        maxAmount = data.amount;
+      }
 
-        const startDay = startOfWeek(
-          addWeeks(startOfYear(currentDate), currentValue.weekNumber - 1),
-          { weekStartsOn: MONDAY_INDEX },
-        );
-        const endDay = endOfWeek(startDay, { weekStartsOn: MONDAY_INDEX });
+      const startDay = startOfWeek(
+        addWeeks(startOfYear(currentDate), data.weekNumber - 1),
+        { weekStartsOn: MONDAY_INDEX },
+      );
+      const endDay = endOfWeek(startDay, { weekStartsOn: MONDAY_INDEX });
 
-        const income: IStatistic = {
-          amount: currentValue.amount,
-          period: `${format(startDay, 'dd.MM.yyyy')}-${format(
-            endDay,
-            'dd.MM.yyyy',
-          )}`,
-        };
-        // TODO till creating expenses
-        const expense: IStatistic = {
-          amount: 130,
-          period: '',
-        };
-        return [...previousValue, income, expense];
-      },
-      [],
-    );
+      const income: IStatistic = {
+        amount: data.amount,
+        period: `${format(startDay, 'dd')} - ${format(endDay, 'dd')}`,
+        type: data.type,
+      };
+
+      return income;
+    });
 
     return {
       maxAmount: maxAmount,
@@ -124,43 +112,37 @@ export class AccountsHistoryService {
       'yyyy-MM-dd HH:mm:ss',
     );
 
-    const histories: IWeeklyStatisticQueryResult[] =
-      await this.accountsHistoryRepository
-        .createQueryBuilder('account_history')
-        .select('CAST(SUM(account_history.amount) AS FLOAT)', 'amount')
-        .addSelect('CAST(account_history.created_at AS DATE)', 'createdAt')
-        .where('account_history.created_at BETWEEN :startDate AND :endDate', {
-          startDate: startWeekDate,
-          endDate: endWeekDate,
-        })
-        .groupBy('CAST(account_history.created_at AS DATE)')
-        .orderBy('CAST(account_history.created_at AS DATE)')
-        .getRawMany();
+    return await this.dataSource.transaction(async (manager: EntityManager) => {
+      const statistic: IStatistic[] = await manager.query(
+        `select 
+          CAST(SUM(account_history.amount) AS FLOAT) AS amount,
+          TO_CHAR(account_history.created_at, 'DD.MM') AS period,
+          account_history.type AS type
+        from accounts_history account_history
+        where account_history.created_at BETWEEN $1 AND $2
+        group by period, type
+        order by period`,
+        [startWeekDate, endWeekDate],
+      );
 
-    let maxAmount = 0;
-    const statistic = histories.reduce<IStatistic[]>(
-      (previousValue, currentValue) => {
-        if (maxAmount < currentValue.amount) {
-          maxAmount = currentValue.amount;
-        }
+      const maxAmount: IStatisticMaxAmount[] = await manager.query(
+        `select
+          MAX(amount) as "maxAmount"
+          from (select 
+                  CAST(SUM(account_history.amount) AS FLOAT) AS amount,
+                  TO_CHAR(account_history.created_at, 'DD.MM') AS period,
+                  account_history.type AS type
+                from accounts_history account_history
+                where account_history.created_at BETWEEN $1 AND $2
+                group by period, type
+                order by period) as sub_query`,
+        [startWeekDate, endWeekDate],
+      );
 
-        const income: IStatistic = {
-          amount: currentValue.amount,
-          period: format(currentValue.createdAt, 'dd.MM.yyyy'),
-        };
-        // TODO till creating expenses
-        const expense: IStatistic = {
-          amount: 120,
-          period: '',
-        };
-        return [...previousValue, income, expense];
-      },
-      [],
-    );
-
-    return {
-      maxAmount: maxAmount,
-      data: statistic,
-    };
+      return {
+        maxAmount: maxAmount[0].maxAmount || 0,
+        data: statistic,
+      };
+    });
   }
 }

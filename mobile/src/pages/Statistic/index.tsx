@@ -8,7 +8,12 @@ import { colors } from '@styles';
 import { IResponseWrapper } from '@interfaces';
 import { httpExceptionHandler } from '@utils';
 import { getStatisticAPI } from './service';
-import { IStatistic, IStatisticParams, StatisticType } from './interface';
+import {
+  ACCOUNT_HISTORY_TYPES,
+  IStatistic,
+  IStatisticParams,
+  StatisticType,
+} from './interface';
 import { STATISTIC_COLORS, Y_AXIS_SECTION_QUANTITY } from './constant';
 import { styles } from './styles';
 import { Filter } from './components/Filter';
@@ -22,7 +27,7 @@ export const Statistic = () => {
   });
 
   const { data: statisticResponse } = useQuery({
-    queryKey: ['products', params],
+    queryKey: ['statistic', params],
     queryFn: () => getStatisticAPI(params),
     onError: (error: AxiosError<IResponseWrapper>) => {
       httpExceptionHandler(error);
@@ -49,12 +54,12 @@ export const Statistic = () => {
   const parseStatistic = (
     statistic: IStatistic[] | undefined,
   ): barDataItem[] | undefined => {
-    return statistic?.map((statistic, index) => {
-      const isExpense = index % 2;
+    return statistic?.map(statistic => {
+      const isExpense = statistic.type === ACCOUNT_HISTORY_TYPES.EXPENSE;
       return {
         value: statistic.amount,
-        spacing: isExpense ? 36 : 6,
-        label: isExpense ? undefined : statistic.period,
+        spacing: 20,
+        label: statistic.period,
         frontColor: isExpense
           ? STATISTIC_COLORS.EXPENSE[0]
           : STATISTIC_COLORS.INCOME[0],
@@ -88,7 +93,7 @@ export const Statistic = () => {
               )}
               leftShiftForTooltip={8}
               leftShiftForLastIndexTooltip={8}
-              barWidth={20}
+              barWidth={80}
               width={width - 100}
               endSpacing={8}
               initialSpacing={8}
@@ -103,7 +108,6 @@ export const Statistic = () => {
               maxValue={stepValue * Y_AXIS_SECTION_QUANTITY + stepValue}
               noOfSections={Y_AXIS_SECTION_QUANTITY}
               yAxisLabelTexts={yAxisLabels}
-              labelWidth={68}
               xAxisLabelTextStyle={{ color: colors.white }}
             />
           </View>

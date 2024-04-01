@@ -36,13 +36,13 @@ axiosInstance.interceptors.response.use(
       case HTTP_STATUS.Unauthorized:
         showErrorToast('Вы не авторизованы');
         await removeToken();
-        return;
+        break;
       case HTTP_STATUS.Forbidden:
         showErrorToast('У вас нет доступа');
-        return;
+        break;
       default:
-        showErrorToast(error.response?.data.message || '');
-        return;
+        break;
     }
+    throw new Error(error.response?.data.message || 'Произошла ошибка');
   },
 );

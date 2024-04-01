@@ -15,6 +15,8 @@ import { IAccount, IList, IResponseWrapper } from '@interfaces';
 import { getAccountsAPI } from '@services';
 import { ITransactionCreateForm } from './interface';
 import { styles } from './styles';
+import { TRANSACTION_TYPES } from './constant';
+import { ACCOUNT_HISTORY_TYPES } from '../Statistic/interface';
 
 export const TransactionCreate = () => {
   const [transactionDate, setTransactionDate] = useState(new Date());
@@ -44,9 +46,10 @@ export const TransactionCreate = () => {
   } = useForm<ITransactionCreateForm>({
     defaultValues: {
       description: '',
-      branchId: '',
+      accountId: '',
       amount: '',
       createdAt: new Date().toISOString(),
+      type: ACCOUNT_HISTORY_TYPES.EXPENSE,
     },
   });
 
@@ -91,10 +94,10 @@ export const TransactionCreate = () => {
           />
 
           <Controller
-            name="branchId"
+            name="accountId"
             control={control}
             rules={{
-              required: 'Выберите место',
+              required: 'Выберите счёт',
             }}
             render={({ field: { onChange, value, onBlur } }) => (
               <Dropdown
@@ -112,12 +115,46 @@ export const TransactionCreate = () => {
                 labelField="label"
                 dropdownPosition="top"
                 valueField="value"
-                placeholder="Метод оплаты"
+                placeholder="Счёт"
                 value={value}
                 onBlur={() => {
                   onBlur();
                 }}
                 onChange={(item: IList) => {
+                  onChange(item.value);
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            name="type"
+            control={control}
+            rules={{
+              required: 'Выберите тип',
+            }}
+            render={({ field: { onChange, value, onBlur } }) => (
+              <Dropdown
+                style={[dropdownStyles.dropdown]}
+                placeholderStyle={dropdownStyles.dropdownText}
+                selectedTextStyle={dropdownStyles.dropdownText}
+                inputSearchStyle={[
+                  dropdownStyles.inputSearch,
+                  dropdownStyles.dropdownText,
+                ]}
+                containerStyle={dropdownStyles.listContainer}
+                backgroundColor={'#c8c4c452'}
+                data={TRANSACTION_TYPES}
+                maxHeight={250}
+                labelField="label"
+                dropdownPosition="top"
+                valueField="value"
+                placeholder="Тип"
+                value={value}
+                onBlur={() => {
+                  onBlur();
+                }}
+                onChange={(item: IList<string>) => {
                   onChange(item.value);
                 }}
               />
@@ -140,6 +177,11 @@ export const TransactionCreate = () => {
                 multiline
               />
             )}
+          />
+          <Button
+            label="Создать"
+            // disabled={isLoading || !isValid}
+            // onPress={handleSubmit(submitHandler)}
           />
         </View>
       </MainLayout>

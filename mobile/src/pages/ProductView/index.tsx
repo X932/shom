@@ -54,7 +54,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
         <MainLayout>
           <Modal
             animationType="fade"
-            transparent={false}
+            transparent={true}
             visible={isModalOpen}
             onRequestClose={() => {
               setIsModalOpen(false);

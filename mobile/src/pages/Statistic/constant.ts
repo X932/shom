@@ -14,10 +14,10 @@ export const STATISTIC_TYPES = [
     value: StatisticType.MONTH,
     label: 'Месяц',
   },
-  {
-    value: StatisticType.YEAR,
-    label: 'Год',
-  },
+  // { TODO add in backend
+  //   value: StatisticType.YEAR,
+  //   label: 'Год',
+  // },
 ];
 
 export const Y_AXIS_SECTION_QUANTITY = 6;

@@ -3,16 +3,24 @@ import { colors, fontSizes } from '@styles';
 
 export const styles = StyleSheet.create({
   modalContainer: {
-    display: 'flex',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
     width: 300,
-    display: 'flex',
+    backgroundColor: 'white',
+    padding: 24,
+    borderRadius: 20,
     alignItems: 'center',
   },
   modalHeader: {
     marginBottom: 8,
+    fontSize: fontSizes[3][0],
+    lineHeight: fontSizes[3][1],
+    color: colors.black['100'],
   },
   buttonsContainer: {
     display: 'flex',

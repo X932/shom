@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { InvoiceDetailsEntity } from './models/invoice-details.entity';
 import { CreateInvoiceDto } from './models/invoices.dto';
 import { InvoicesEntity } from './models/invoices.entity';
@@ -15,8 +14,6 @@ import { InventoryEntity } from '../inventory/models/inventory.entity';
 @Injectable()
 export class InvoicesService {
   constructor(
-    @InjectRepository(InvoicesEntity)
-    private readonly invoicesRepository: Repository<InvoicesEntity>,
     private readonly productDetailsService: ProductsDetailsService,
     private readonly accountsService: AccountsService,
     private readonly dataSource: DataSource,

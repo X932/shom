@@ -45,7 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } else if (!user) {
       throw new UnauthorizedException('Вы не авторизованы');
     } else if (!permission) {
-      throw new ForbiddenException();
+      throw new ForbiddenException('Доступ запрещён');
     }
   }
 }

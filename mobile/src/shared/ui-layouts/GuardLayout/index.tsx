@@ -18,7 +18,9 @@ export const GuardLayout: FC<PropsWithChildren> = ({ children }) => {
   };
 
   useEffect(() => {
-    checkAuth();
+    setTimeout(() => {
+      checkAuth();
+    }, 800);
   }, []);
 
   return <>{children}</>;

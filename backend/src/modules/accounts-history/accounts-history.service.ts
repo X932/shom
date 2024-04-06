@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   addWeeks,
   endOfMonth,
@@ -11,6 +15,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, EntityManager } from 'typeorm';
 import {
+  ACCOUNT_HISTORY_TYPES,
   MONDAY_INDEX,
   StatisticType,
 } from './models/accounts-history.constant';
@@ -21,7 +26,11 @@ import {
   IStatisticResponse,
 } from './models/accounts-history.type';
 import { AccountsHistoryEntity } from './models/accounts-history.entity';
-import { GetStatisticParamsDto } from './models/accounts-history.dto';
+import {
+  CreateAccountHistoryDto,
+  GetStatisticParamsDto,
+} from './models/accounts-history.dto';
+import { AccountsEntity } from '../accounts/models/accounts.entity';
 
 @Injectable()
 export class AccountsHistoryService {
@@ -30,6 +39,45 @@ export class AccountsHistoryService {
     private readonly accountsHistoryRepository: Repository<AccountsHistoryEntity>,
     private readonly dataSource: DataSource,
   ) {}
+
+  public async create(createAccountHistoryDto: CreateAccountHistoryDto) {
+    const { accountId, amount, createdAt, type, description } =
+      createAccountHistoryDto;
+
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const account = await manager.findOneBy(AccountsEntity, {
+        id: accountId,
+      });
+
+      if (!account) {
+        throw new NotFoundException('Счёт не найден');
+      }
+
+      const updatedAccount = new AccountsEntity();
+      Object.assign(updatedAccount, account);
+
+      if (type === ACCOUNT_HISTORY_TYPES.INCOME) {
+        updatedAccount.amount = updatedAccount.amount + amount;
+      } else {
+        updatedAccount.amount = updatedAccount.amount - amount;
+      }
+
+      if (updatedAccount.amount < 0) {
+        throw new BadRequestException('На счету недостаточно средств');
+      }
+
+      await manager.save(updatedAccount);
+
+      const newAccountHistory = new AccountsHistoryEntity();
+      newAccountHistory.account = updatedAccount;
+      newAccountHistory.amount = amount;
+      newAccountHistory.description = description;
+      newAccountHistory.isExcludedFromStatistic = false;
+      newAccountHistory.type = type;
+      newAccountHistory.createdAt = createdAt;
+      await manager.save(newAccountHistory);
+    });
+  }
 
   public async getStatistic(
     getStatisticParams: GetStatisticParamsDto,

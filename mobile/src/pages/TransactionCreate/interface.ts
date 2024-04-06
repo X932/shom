@@ -4,6 +4,6 @@ export interface ITransactionCreateForm {
   amount: string;
   description: string;
   accountId: string;
-  createdAt: string;
+  createdAt: Date;
   type: ACCOUNT_HISTORY_TYPES;
 }

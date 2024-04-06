@@ -16,9 +16,11 @@ import { getAccountsAPI } from '@services';
 import { ITransactionCreateForm } from './interface';
 import { styles } from './styles';
 import { TRANSACTION_TYPES } from './constant';
+import { createTransactionAPI } from './service';
 import { ACCOUNT_HISTORY_TYPES } from '../Statistic/interface';
 
 export const TransactionCreate = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [accounts, setAccounts] = useState<IList[]>([]);
@@ -48,10 +50,27 @@ export const TransactionCreate = () => {
       description: '',
       accountId: '',
       amount: '',
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
       type: ACCOUNT_HISTORY_TYPES.EXPENSE,
     },
   });
+
+  const successResponseHandler = () => {
+    reset();
+    setTransactionDate(new Date());
+  };
+
+  const submitHandler = (values: ITransactionCreateForm) => {
+    setIsLoading(true);
+    createTransactionAPI({
+      payload: {
+        ...values,
+        createdAt: transactionDate,
+      },
+      setIsLoading: setIsLoading,
+      successResponseHandler: successResponseHandler,
+    });
+  };
 
   return (
     <GuardLayout>
@@ -179,9 +198,9 @@ export const TransactionCreate = () => {
             )}
           />
           <Button
-            label="Создать"
-            // disabled={isLoading || !isValid}
-            // onPress={handleSubmit(submitHandler)}
+            label="Добавить"
+            disabled={isLoading || !isValid}
+            onPress={handleSubmit(submitHandler)}
           />
         </View>
       </MainLayout>

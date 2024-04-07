@@ -17,6 +17,7 @@ import {
 import { STATISTIC_COLORS, Y_AXIS_SECTION_QUANTITY } from './constant';
 import { styles } from './styles';
 import { Filter } from './components/Filter';
+import { Transactions } from './components/Transactions';
 
 export const Statistic = () => {
   const { width } = useWindowDimensions();
@@ -111,6 +112,10 @@ export const Statistic = () => {
               xAxisLabelTextStyle={{ color: colors.white }}
             />
           </View>
+
+          <Transactions
+            transactions={statisticResponse?.accountsHistory || []}
+          />
         </View>
       </MainLayout>
     </GuardLayout>

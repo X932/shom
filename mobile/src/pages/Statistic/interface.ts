@@ -22,7 +22,7 @@ export interface IStatistic {
   type: ACCOUNT_HISTORY_TYPES;
 }
 
-interface IAccountHistory {
+export interface IAccountHistory {
   id: number;
   amount: number;
   type: ACCOUNT_HISTORY_TYPES;

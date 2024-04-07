@@ -45,7 +45,7 @@ export const Statistic = () => {
   );
 
   const getYAxisLabels = (stepValue: number): string[] => {
-    return [0, 1, 2, 3, 4, 5].map(stepIndex => {
+    return [0, 1, 2, 3, 4].map(stepIndex => {
       return `${stepIndex * stepValue}`;
     });
   };
@@ -71,8 +71,8 @@ export const Statistic = () => {
   };
 
   const parsedStatistic = useMemo(
-    () => parseStatistic(statisticResponse?.data),
-    [statisticResponse?.data],
+    () => parseStatistic(statisticResponse?.statistic),
+    [statisticResponse?.statistic],
   );
 
   return (

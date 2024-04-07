@@ -34,13 +34,13 @@ export class AccountsHistoryEntity {
   @Column({ nullable: true })
   description?: string;
 
+  @Exclude()
   @Column({
     type: 'boolean',
     name: 'is_excluded_from_statistic',
   })
   isExcludedFromStatistic: boolean;
 
-  @Exclude()
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt?: Date;
 

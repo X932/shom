@@ -1,4 +1,5 @@
 import { ACCOUNT_HISTORY_TYPES } from './accounts-history.constant';
+import { AccountsHistoryEntity } from './accounts-history.entity';
 
 export interface IStatisticMaxAmount {
   maxAmount: number;
@@ -12,7 +13,8 @@ export interface IStatistic {
 
 export interface IStatisticResponse {
   maxAmount: number;
-  data: IStatistic[];
+  statistic: IStatistic[];
+  accountsHistory: AccountsHistoryEntity[];
 }
 
 export interface IWeeklyStatisticQueryResult {

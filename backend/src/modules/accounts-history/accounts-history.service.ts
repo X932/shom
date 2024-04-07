@@ -109,43 +109,60 @@ export class AccountsHistoryService {
     );
     const endMonthDate = format(endOfMonth(currentDate), 'yyyy-MM-dd HH:mm:ss');
 
-    const history: IMonthlyStatisticQueryResult[] =
-      await this.accountsHistoryRepository.query(
-        `select
-          account_history.type AS type,
-          CAST(SUM(account_history.amount) AS FLOAT) AS amount,
-          DATE_PART('WEEK', CAST(account_history.created_at AS DATE)) AS "weekNumber"
-        from accounts_history account_history
-        where account_history.created_at BETWEEN $1 AND $2
-        group by DATE_PART('WEEK', CAST(account_history.created_at AS DATE)), type`,
-        [startMonthDate, endMonthDate],
-      );
+    return await this.dataSource.transaction<IStatisticResponse>(
+      async (manager: EntityManager) => {
+        const accountsHistory = await manager
+          .createQueryBuilder(AccountsHistoryEntity, 'account_history')
+          .leftJoinAndSelect('account_history.account', 'account')
+          .andWhere(
+            'account_history.createdAt BETWEEN :createdAtStart AND :createdAtEnd',
+            {
+              createdAtStart: startMonthDate,
+              createdAtEnd: endMonthDate,
+            },
+          )
+          .orderBy('account_history.createdAt', 'DESC')
+          .getMany();
 
-    let maxAmount = 0;
-    const statistic: IStatistic[] = history.map((data) => {
-      if (maxAmount < data.amount) {
-        maxAmount = data.amount;
-      }
+        const history: IMonthlyStatisticQueryResult[] = await manager.query(
+          `select
+              account_history.type AS type,
+              CAST(SUM(account_history.amount) AS FLOAT) AS amount,
+              DATE_PART('WEEK', CAST(account_history.created_at AS DATE)) AS "weekNumber"
+            from accounts_history account_history
+            where account_history.created_at BETWEEN $1 AND $2
+            group by DATE_PART('WEEK', CAST(account_history.created_at AS DATE)), type`,
+          [startMonthDate, endMonthDate],
+        );
 
-      const startDay = startOfWeek(
-        addWeeks(startOfYear(currentDate), data.weekNumber - 1),
-        { weekStartsOn: MONDAY_INDEX },
-      );
-      const endDay = endOfWeek(startDay, { weekStartsOn: MONDAY_INDEX });
+        let maxAmount = 0;
+        const statistic: IStatistic[] = history.map((data) => {
+          if (maxAmount < data.amount) {
+            maxAmount = data.amount;
+          }
 
-      const income: IStatistic = {
-        amount: data.amount,
-        period: `${format(startDay, 'dd')} - ${format(endDay, 'dd')}`,
-        type: data.type,
-      };
+          const startDay = startOfWeek(
+            addWeeks(startOfYear(currentDate), data.weekNumber - 1),
+            { weekStartsOn: MONDAY_INDEX },
+          );
+          const endDay = endOfWeek(startDay, { weekStartsOn: MONDAY_INDEX });
 
-      return income;
-    });
+          const income: IStatistic = {
+            amount: data.amount,
+            period: `${format(startDay, 'dd')} - ${format(endDay, 'dd')}`,
+            type: data.type,
+          };
 
-    return {
-      maxAmount: maxAmount,
-      data: statistic,
-    };
+          return income;
+        });
+
+        return {
+          maxAmount: maxAmount,
+          statistic: statistic,
+          accountsHistory: accountsHistory,
+        };
+      },
+    );
   }
 
   private async getWeeklyStatistic(
@@ -160,22 +177,23 @@ export class AccountsHistoryService {
       'yyyy-MM-dd HH:mm:ss',
     );
 
-    return await this.dataSource.transaction(async (manager: EntityManager) => {
-      const statistic: IStatistic[] = await manager.query(
-        `select 
-          CAST(SUM(account_history.amount) AS FLOAT) AS amount,
-          TO_CHAR(account_history.created_at, 'DD.MM') AS period,
-          account_history.type AS type
-        from accounts_history account_history
-        where account_history.created_at BETWEEN $1 AND $2
-        group by period, type
-        order by period`,
-        [startWeekDate, endWeekDate],
-      );
+    return await this.dataSource.transaction<IStatisticResponse>(
+      async (manager: EntityManager) => {
+        const statistic: IStatistic[] = await manager.query(
+          `select 
+            CAST(SUM(account_history.amount) AS FLOAT) AS amount,
+            TO_CHAR(account_history.created_at, 'DD.MM') AS period,
+            account_history.type AS type
+          from accounts_history account_history
+          where account_history.created_at BETWEEN $1 AND $2
+          group by period, type
+          order by period`,
+          [startWeekDate, endWeekDate],
+        );
 
-      const maxAmount: IStatisticMaxAmount[] = await manager.query(
-        `select
-          MAX(amount) as "maxAmount"
+        const maxAmount: IStatisticMaxAmount[] = await manager.query(
+          `select
+            MAX(amount) as "maxAmount"
           from (select 
                   CAST(SUM(account_history.amount) AS FLOAT) AS amount,
                   TO_CHAR(account_history.created_at, 'DD.MM') AS period,
@@ -184,13 +202,28 @@ export class AccountsHistoryService {
                 where account_history.created_at BETWEEN $1 AND $2
                 group by period, type
                 order by period) as sub_query`,
-        [startWeekDate, endWeekDate],
-      );
+          [startWeekDate, endWeekDate],
+        );
 
-      return {
-        maxAmount: maxAmount[0].maxAmount || 0,
-        data: statistic,
-      };
-    });
+        const accountsHistory = await manager
+          .createQueryBuilder(AccountsHistoryEntity, 'account_history')
+          .leftJoinAndSelect('account_history.account', 'account')
+          .andWhere(
+            'account_history.createdAt BETWEEN :createdAtStart AND :createdAtEnd',
+            {
+              createdAtStart: startWeekDate,
+              createdAtEnd: endWeekDate,
+            },
+          )
+          .orderBy('account_history.createdAt', 'DESC')
+          .getMany();
+
+        return {
+          maxAmount: maxAmount[0].maxAmount || 0,
+          statistic: statistic,
+          accountsHistory: accountsHistory,
+        };
+      },
+    );
   }
 }

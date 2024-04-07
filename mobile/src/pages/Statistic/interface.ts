@@ -1,3 +1,5 @@
+import { IAccount } from '@interfaces';
+
 export enum StatisticType {
   WEEK = '7',
   MONTH = '5',
@@ -20,7 +22,17 @@ export interface IStatistic {
   type: ACCOUNT_HISTORY_TYPES;
 }
 
+interface IAccountHistory {
+  id: number;
+  amount: number;
+  type: ACCOUNT_HISTORY_TYPES;
+  description: string;
+  createdAt: Date;
+  account: IAccount;
+}
+
 export interface IStatisticResponse {
   maxAmount: number;
-  data: IStatistic[];
+  statistic: IStatistic[];
+  accountsHistory: IAccountHistory[];
 }

@@ -5,19 +5,21 @@ import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 import { GuardLayout, MainLayout } from '@ui-layouts';
 import { colors } from '@styles';
-import { IResponseWrapper } from '@interfaces';
+import { IAccount, IResponseWrapper } from '@interfaces';
 import { httpExceptionHandler } from '@utils';
 import { getStatisticAPI } from './service';
 import {
   ACCOUNT_HISTORY_TYPES,
   IStatistic,
   IStatisticParams,
+  IStatisticResponse,
   StatisticType,
 } from './interface';
 import { STATISTIC_COLORS, Y_AXIS_SECTION_QUANTITY } from './constant';
 import { styles } from './styles';
 import { Filter } from './components/Filter';
 import { Transactions } from './components/Transactions';
+import { Accounts } from './components/Accounts';
 
 export const Statistic = () => {
   const { width } = useWindowDimensions();
@@ -26,10 +28,21 @@ export const Statistic = () => {
     currentDate: new Date().toISOString(),
     type: StatisticType.WEEK,
   });
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   const { data: statisticResponse } = useQuery({
     queryKey: ['statistic', params],
     queryFn: () => getStatisticAPI(params),
+    onSuccess: (data: IStatisticResponse) => {
+      const accountsMap = new Map<string, IAccount>();
+
+      data.accountsHistory.forEach(transaction => {
+        accountsMap.set(transaction.account.title, transaction.account);
+      });
+
+      const uniqueAccounts = Array.from(accountsMap.values());
+      setAccounts(uniqueAccounts);
+    },
     onError: (error: AxiosError<IResponseWrapper>) => {
       httpExceptionHandler(error);
     },
@@ -112,6 +125,8 @@ export const Statistic = () => {
               xAxisLabelTextStyle={{ color: colors.white }}
             />
           </View>
+
+          <Accounts accounts={accounts} />
 
           <Transactions
             transactions={statisticResponse?.accountsHistory || []}

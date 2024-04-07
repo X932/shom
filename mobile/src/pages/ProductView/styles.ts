@@ -2,18 +2,11 @@ import { StyleSheet } from 'react-native';
 import { colors, fontSizes } from '@styles';
 
 export const styles = StyleSheet.create({
-  modalContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: 22,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
   modalContent: {
     width: 300,
     backgroundColor: 'white',
     padding: 24,
-    borderRadius: 20,
+    borderRadius: 16,
     alignItems: 'center',
   },
   modalHeader: {

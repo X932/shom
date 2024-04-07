@@ -4,7 +4,7 @@ import { FC, useCallback, useState } from 'react';
 import { Image, Modal, ScrollView, Text, View } from 'react-native';
 import { GuardLayout, MainLayout } from '@ui-layouts';
 import { PrivateNavigatorScreenProps, IProduct } from '@interfaces';
-import { Button, Card } from '@components';
+import { Button, Card, modalStyles } from '@components';
 import { deleteProductAPI, getProductAPI } from './service';
 import { styles } from './styles';
 
@@ -59,7 +59,7 @@ export const ProductView: FC<PrivateNavigatorScreenProps> = ({
             onRequestClose={() => {
               setIsModalOpen(false);
             }}>
-            <View style={styles.modalContainer}>
+            <View style={modalStyles.container}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalHeader}>
                   Уверены, что хотите удалить {product?.title.toLowerCase()}?

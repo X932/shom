@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 16,
-    gap: 8,
+    gap: 12,
   },
   header: {
     justifyContent: 'space-between',
@@ -18,13 +18,14 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: '700',
-    fontSize: fontSizes['4']['0'],
-    lineHeight: fontSizes['4']['1'],
+    fontSize: fontSizes['5']['0'],
+    lineHeight: fontSizes['5']['1'],
     marginBottom: 12,
+    color: colors.grey,
   },
   text: {
     color: colors.black['100'],
-    fontSize: fontSizes['3']['0'],
-    lineHeight: fontSizes['3']['1'],
+    fontSize: fontSizes['4']['0'],
+    lineHeight: fontSizes['4']['1'],
   },
 });

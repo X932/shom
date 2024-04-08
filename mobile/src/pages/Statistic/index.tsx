@@ -126,7 +126,7 @@ export const Statistic = () => {
             />
           </View>
 
-          <Accounts accounts={accounts} />
+          {accounts.length !== 0 && <Accounts accounts={accounts} />}
 
           <Transactions
             transactions={statisticResponse?.accountsHistory || []}

@@ -37,6 +37,7 @@ export class InvoicesService {
       createInvoiceDto.discount / invoiceDetailsQuantity,
     );
     const savedInvoiceDetails: InvoiceDetailsEntity[] = [];
+    let productsTitle = '';
     try {
       await this.dataSource.transaction(async (manager: EntityManager) => {
         for (let index = 0; index < createInvoiceDto.details.length; index++) {
@@ -116,6 +117,8 @@ export class InvoicesService {
           newInvoiceDetails.productDetails = foundProductDetails;
           const savedInvoiceDetail = await manager.save(newInvoiceDetails);
           savedInvoiceDetails.push(savedInvoiceDetail);
+
+          productsTitle += foundProduct.title + '. ';
         }
 
         if (totalAmount < createInvoiceDto.discount) {
@@ -139,7 +142,7 @@ export class InvoicesService {
         const newAccountHistory = new AccountsHistoryEntity();
         newAccountHistory.account = foundAccount;
         newAccountHistory.amount = newInvoice.netAmount;
-        newAccountHistory.description = 'Продажа продуктов';
+        newAccountHistory.description = 'Продажа: ' + productsTitle;
         newAccountHistory.isExcludedFromStatistic = false;
         newAccountHistory.type = ACCOUNT_HISTORY_TYPES.INCOME;
         await manager.save(newAccountHistory);

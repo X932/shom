@@ -1,3 +1,4 @@
+import { AccountsEntity } from './../../accounts/models/accounts.entity';
 import { ACCOUNT_HISTORY_TYPES } from './accounts-history.constant';
 import { AccountsHistoryEntity } from './accounts-history.entity';
 
@@ -15,6 +16,7 @@ export interface IStatisticResponse {
   maxAmount: number;
   statistic: IStatistic[];
   accountsHistory: AccountsHistoryEntity[];
+  accounts: AccountsEntity[];
 }
 
 export interface IWeeklyStatisticQueryResult {

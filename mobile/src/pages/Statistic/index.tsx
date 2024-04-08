@@ -5,14 +5,13 @@ import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 import { GuardLayout, MainLayout } from '@ui-layouts';
 import { colors } from '@styles';
-import { IAccount, IResponseWrapper } from '@interfaces';
+import { IResponseWrapper } from '@interfaces';
 import { httpExceptionHandler } from '@utils';
 import { getStatisticAPI } from './service';
 import {
   ACCOUNT_HISTORY_TYPES,
   IStatistic,
   IStatisticParams,
-  IStatisticResponse,
   StatisticType,
 } from './interface';
 import { STATISTIC_COLORS, Y_AXIS_SECTION_QUANTITY } from './constant';
@@ -28,21 +27,10 @@ export const Statistic = () => {
     currentDate: new Date().toISOString(),
     type: StatisticType.WEEK,
   });
-  const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   const { data: statisticResponse } = useQuery({
     queryKey: ['statistic', params],
     queryFn: () => getStatisticAPI(params),
-    onSuccess: (data: IStatisticResponse) => {
-      const accountsMap = new Map<string, IAccount>();
-
-      data.accountsHistory.forEach(transaction => {
-        accountsMap.set(transaction.account.title, transaction.account);
-      });
-
-      const uniqueAccounts = Array.from(accountsMap.values());
-      setAccounts(uniqueAccounts);
-    },
     onError: (error: AxiosError<IResponseWrapper>) => {
       httpExceptionHandler(error);
     },
@@ -126,7 +114,7 @@ export const Statistic = () => {
             />
           </View>
 
-          {accounts.length !== 0 && <Accounts accounts={accounts} />}
+          <Accounts accounts={statisticResponse?.accounts || []} />
 
           <Transactions
             transactions={statisticResponse?.accountsHistory || []}

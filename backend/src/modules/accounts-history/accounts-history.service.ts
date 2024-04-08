@@ -111,6 +111,10 @@ export class AccountsHistoryService {
 
     return await this.dataSource.transaction<IStatisticResponse>(
       async (manager: EntityManager) => {
+        const accounts = await manager
+          .createQueryBuilder(AccountsEntity, 'account')
+          .getMany();
+
         const accountsHistory = await manager
           .createQueryBuilder(AccountsHistoryEntity, 'account_history')
           .leftJoinAndSelect('account_history.account', 'account')
@@ -160,6 +164,7 @@ export class AccountsHistoryService {
           maxAmount: maxAmount,
           statistic: statistic,
           accountsHistory: accountsHistory,
+          accounts: accounts,
         };
       },
     );
@@ -179,6 +184,10 @@ export class AccountsHistoryService {
 
     return await this.dataSource.transaction<IStatisticResponse>(
       async (manager: EntityManager) => {
+        const accounts = await manager
+          .createQueryBuilder(AccountsEntity, 'account')
+          .getMany();
+
         const statistic: IStatistic[] = await manager.query(
           `select 
             CAST(SUM(account_history.amount) AS FLOAT) AS amount,
@@ -222,6 +231,7 @@ export class AccountsHistoryService {
           maxAmount: maxAmount[0].maxAmount || 0,
           statistic: statistic,
           accountsHistory: accountsHistory,
+          accounts: accounts,
         };
       },
     );

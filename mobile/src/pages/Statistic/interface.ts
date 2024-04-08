@@ -35,4 +35,5 @@ export interface IStatisticResponse {
   maxAmount: number;
   statistic: IStatistic[];
   accountsHistory: IAccountHistory[];
+  accounts: IAccount[];
 }

@@ -28,6 +28,6 @@ export function getResponseMessage(status: HttpStatus): string | undefined {
       return 'Вы не авторизованы';
 
     default:
-      return;
+      return '';
   }
 }

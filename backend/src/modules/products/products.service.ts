@@ -50,7 +50,7 @@ export class ProductsService {
       });
 
       if (isProductExist) {
-        throw new BadRequestException();
+        throw new BadRequestException('Продукт с таким названием существует');
       }
 
       const newProduct = new ProductsEntity();
@@ -89,9 +89,9 @@ export class ProductsService {
       await queryRunner.manager.save<ProductsEntity>(createdProduct);
 
       await queryRunner.commitTransaction();
-    } catch {
+    } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new BadRequestException();
+      throw new BadRequestException(error.message);
     } finally {
       await queryRunner.release();
     }
